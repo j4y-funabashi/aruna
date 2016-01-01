@@ -29,6 +29,10 @@ class Entry implements \JsonSerializable
             throw new RuntimeException($config['published'] . ' is not a valid date');
         }
 
+        if (!isset($config['content']) && !isset($config['photo'])) {
+            throw new RuntimeException('content or photo have to be set');
+        }
+
         $this->properties = $config;
     }
 

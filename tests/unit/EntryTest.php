@@ -37,6 +37,18 @@ class EntryTest extends UnitTest
     }
 
     /**
+    * @test
+    * @expectedException RuntimeException
+    */
+    public function it_throws_exception_if_content_or_photo_are_null()
+    {
+        $config = [
+            "h" => "entry"
+        ];
+        $SUT = new Entry($config);
+    }
+
+    /**
      * @test
      */
     public function it_has_a_json_representation()
@@ -44,12 +56,13 @@ class EntryTest extends UnitTest
         $config = [
             "h" => 'entry',
             "published" => "2016-01-01 01:00:00",
+            "content" => "yo",
             "anything" => "else"
         ];
         $SUT = new Entry($config);
 
         $this->assertEquals(
-            '{"published":"2016-01-01 01:00:00","anything":"else"}',
+            '{"published":"2016-01-01 01:00:00","content":"yo","anything":"else"}',
             json_encode($SUT)
         );
     }
