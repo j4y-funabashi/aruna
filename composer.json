@@ -1,0 +1,14 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Aruna\\": "app/src/",
+            "Test\\": "tests"
+        }
+    },
+    "require": {
+        "monolog/monolog": "^1.17"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    }
+}
