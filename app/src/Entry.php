@@ -20,10 +20,14 @@ class Entry implements \JsonSerializable
         }
         unset($config['h']);
 
-        $config['published'] = (isset($config['published']))
-            ? new DateTimeImmutable($config['published'])
-            : new DateTimeImmutable();
-        $config['published'] = $config['published']->format("Y-m-d H:i:s");
+        try {
+            $config['published'] = (isset($config['published']))
+                ? new DateTimeImmutable($config['published'])
+                : new DateTimeImmutable();
+            $config['published'] = $config['published']->format("Y-m-d H:i:s");
+        } catch (\Exception $e) {
+            throw new RuntimeException($config['published'] . ' is not a valid date');
+        }
 
         $this->properties = $config;
     }

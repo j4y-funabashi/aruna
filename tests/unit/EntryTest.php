@@ -15,10 +15,23 @@ class EntryTest extends UnitTest
     * @test
     * @expectedException RuntimeException
     */
-    public function it_throws_exception_if_h_is_invalid()
+    public function it_throws_exception_if_h_is_not_entry()
     {
         $config = [
-            "h" => "blahhahah"
+            "h" => "not_entry"
+        ];
+        $SUT = new Entry($config);
+    }
+
+    /**
+    * @test
+    * @expectedException RuntimeException
+    */
+    public function it_throws_exception_if_date_is_invalid()
+    {
+        $config = [
+            "h" => "entry",
+            "published" => "2wko1"
         ];
         $SUT = new Entry($config);
     }
