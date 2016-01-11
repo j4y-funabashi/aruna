@@ -12,7 +12,7 @@
     >
 
     <testsuites>
-        <testsuite name="REPTAR Test Suite">
+        <testsuite name="Test Suite">
             <directory>./tests/unit/</directory>
         </testsuite>
     </testsuites>
