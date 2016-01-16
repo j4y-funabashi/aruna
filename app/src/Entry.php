@@ -25,11 +25,30 @@ class Entry implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return $this->properties;
+        $out = $this->properties;
+        $out['published'] = $this->properties['published']->format("c");
+        return $out;
+    }
+
+    public function getFilePath()
+    {
+        return sprintf(
+            "%s/%s",
+            $this->properties['published']->format("Y"),
+            $this->properties['published']->format("YmdHis.u")
+        );
+    }
+
+    public function asJson()
+    {
+        return json_encode($this);
     }
 
     private function validateH($config)
     {
+        if (!isset($config['h'])) {
+            throw new RuntimeException('"h" is not defined');
+        }
         if ($config['h'] !== 'entry') {
             throw new RuntimeException($config['h'] . ' is not a valid "h"');
         }
@@ -41,7 +60,7 @@ class Entry implements \JsonSerializable
             $published = (isset($config['published']))
                 ? new DateTimeImmutable($config['published'])
                 : new DateTimeImmutable();
-            return $published->format("Y-m-d H:i:s");
+            return $published;
         } catch (\Exception $e) {
             throw new RuntimeException($config['published'] . ' is not a valid date');
         }
