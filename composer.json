@@ -2,13 +2,16 @@
     "autoload": {
         "psr-4": {
             "Aruna\\": "app/src/",
-            "Test\\": "tests"
+            "Test\\": "tests",
+            "CLI\\": "app/CLI/"
         }
     },
     "require": {
         "monolog/monolog": "^1.17",
         "league/flysystem": "^1.0",
-        "league/flysystem-memory": "^1.0"
+        "league/flysystem-memory": "^1.0",
+        "cilex/cilex": "^1.1",
+        "symfony/debug": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8"
