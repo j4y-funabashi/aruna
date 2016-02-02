@@ -2,32 +2,20 @@
 
 namespace Aruna;
 
-use DateTimeImmutable;
 use RuntimeException;
 
 /**
  * Class Entry
  * @author yourname
  */
-class Entry implements \JsonSerializable
+class Entry extends Post
 {
-    private $properties;
-
     public function __construct($config)
     {
         $this->validateH($config);
         $config['published'] = $this->validateDate($config);
         $this->checkEntryHasData($config);
-
-        unset($config['h']);
         $this->properties = $config;
-    }
-
-    public function jsonSerialize()
-    {
-        $out = $this->properties;
-        $out['published'] = $this->properties['published']->format("c");
-        return $out;
     }
 
     public function getFilePath()
@@ -39,10 +27,6 @@ class Entry implements \JsonSerializable
         );
     }
 
-    public function asJson()
-    {
-        return json_encode($this);
-    }
 
     private function validateH($config)
     {
@@ -51,18 +35,6 @@ class Entry implements \JsonSerializable
         }
         if ($config['h'] !== 'entry') {
             throw new RuntimeException($config['h'] . ' is not a valid "h"');
-        }
-    }
-
-    private function validateDate($config)
-    {
-        try {
-            $published = (isset($config['published']))
-                ? new DateTimeImmutable($config['published'])
-                : new DateTimeImmutable();
-            return $published;
-        } catch (\Exception $e) {
-            throw new RuntimeException($config['published'] . ' is not a valid date');
         }
     }
 

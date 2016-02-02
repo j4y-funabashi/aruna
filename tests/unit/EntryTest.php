@@ -55,15 +55,15 @@ class EntryTest extends UnitTest
     {
         $config = [
             "h" => 'entry',
-            "published" => "2016-01-01 01:00:00",
+            "published" => "2016-01-01T01:00:00",
             "content" => "yo",
             "anything" => "else"
         ];
         $SUT = new Entry($config);
 
         $this->assertEquals(
-            '{"published":"2016-01-01T01:00:00+00:00","content":"yo","anything":"else"}',
-            json_encode($SUT)
+            '{"h":"entry","published":"2016-01-01T01:00:00+00:00","content":"yo","anything":"else"}',
+            $SUT->asJson()
         );
     }
 }
