@@ -30,7 +30,7 @@ class CreateEntryHandlerTest extends SystemTest
         $command = new Aruna\CreateEntryCommand($entry);
         $newEntry = $handler->handle($command);
 
-        $expected = '{"published":"2015-01-01T01:01:01+00:00","content":"test"}';
+        $expected = '{"h":"entry","published":"2015-01-01T01:01:01+00:00","content":"test"}';
         $result = $filesystem->read($newEntry->getFilePath());
         $this->assertEquals($expected, $result);
     }
