@@ -2,6 +2,9 @@
 
 namespace Aruna;
 
+use League\Flysystem\FileExistsException;
+use RuntimeException;
+
 /**
  * Class EntryRepository
  * @author yourname
@@ -15,9 +18,13 @@ class EntryRepository
 
     public function save(Entry $entry)
     {
-        $this->filesystem->write(
-            $entry->getFilePath(),
-            $entry->asJson()
-        );
+        try {
+            $this->filesystem->write(
+                $entry->getFilePath(),
+                $entry->asJson()
+            );
+        } catch (FileExistsException $e) {
+            throw new RuntimeException($e->getMessage());
+        }
     }
 }
