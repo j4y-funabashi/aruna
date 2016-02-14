@@ -16,15 +16,27 @@ class EntryRepository
         $this->filesystem = $filesystem;
     }
 
-    public function save(Entry $entry)
+    public function save(Post $entry, $files)
     {
         try {
             $this->filesystem->write(
-                $entry->getFilePath(),
+                $entry->getFilePath().".json",
                 $entry->asJson()
             );
         } catch (FileExistsException $e) {
             throw new RuntimeException($e->getMessage());
+        }
+
+        foreach ($files as $uploadedFile) {
+            try {
+                $stream = fopen($uploadedFile->getRealPath(), 'r+');
+                $this->filesystem->writeStream(
+                    $entry->getFilePath().".".$uploadedFile->getClientOriginalExtension(),
+                    $stream
+                );
+            } catch (FileExistsException $e) {
+                throw new RuntimeException($e->getMessage());
+            }
         }
     }
 }

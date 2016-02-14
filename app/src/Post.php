@@ -13,12 +13,13 @@ class Post implements \JsonSerializable
 {
     protected $properties;
 
-    public function __construct($config)
+    public function __construct($config, $files = [])
     {
-        $this->validateH($config);
         $config['published'] = $this->validateDate($config);
-        $this->checkEntryHasData($config);
         $this->properties = $config;
+        foreach ($files as $file_key => $uploadedFile) {
+            $this->properties[$file_key] = $this->getFilePath().".".$uploadedFile->getClientOriginalExtension();
+        }
     }
 
     public function jsonSerialize()
@@ -48,10 +49,9 @@ class Post implements \JsonSerializable
     public function getFilePath()
     {
         return sprintf(
-            "%s/%s.%s.json",
+            "%s/%s",
             $this->properties['published']->format("Y"),
-            $this->properties['published']->format("YmdHis"),
-            substr(sha1($this->asJson()), 0, 8)
+            $this->properties['published']->format("YmdHis")
         );
     }
 }

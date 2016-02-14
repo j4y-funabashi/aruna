@@ -17,7 +17,7 @@ class CreateEntryHandlerTest extends SystemTest
     public function it_creates_new_note_in_storage()
     {
 
-        $adapter = new League\Flysystem\Memory\MemoryAdapter();
+        $adapter = new League\Flysystem\Adapter\Local("/tmp/aruna");
         $filesystem = new League\Flysystem\Filesystem($adapter);
         $noteStore = new Aruna\EntryRepository($filesystem);
         $handler = new Aruna\CreateEntryHandler($noteStore);
