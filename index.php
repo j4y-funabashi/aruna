@@ -21,9 +21,17 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.name' => 'ftp_up'
 ));
 
+$app['create_post.handler'] = $app->share(function () use ($app) {
+    $adapter = new League\Flysystem\Adapter\Local("/tmp/aruna");
+    $filesystem = new League\Flysystem\Filesystem($adapter);
+    $noteStore = new Aruna\EntryRepository($filesystem);
+    return new Aruna\CreateEntryHandler($noteStore);
+});
+
 $app['micropub.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\MicropubController(
-        $app["monolog"]
+        $app["monolog"],
+        $app["create_post.handler"]
     );
 });
 

@@ -13,33 +13,39 @@ class MicropubController
 {
 
     public function __construct(
-        $logger
+        $logger,
+        $handler
     ) {
         $this->logger = $logger;
+        $this->handler = $handler;
     }
 
     public function handle(Application $app, Request $request)
     {
-        $TMP_FILES_DIR = "/tmp/aruna";
-        $adapter = new \League\Flysystem\Adapter\Local("/tmp/aruna");
-        $filesystem = new \League\Flysystem\Filesystem($adapter);
-        $noteStore = new \Aruna\EntryRepository($filesystem);
-        $handler = new \Aruna\CreateEntryHandler($noteStore);
+        $entry = $this->buildEntryArray($request);
+        $files = $this->buildFilesArray($request);
 
-        // build $entry array from request parameters
+        $command = new \Aruna\CreateEntryCommand($entry, $files);
+        $newEntry = $this->handler->handle($command);
+
+        return $newEntry->getFilePath();
+    }
+
+    private function buildEntryArray($request)
+    {
         $entry = [];
         foreach ($request->request->all() as $key => $value) {
             $entry[$key] = $value;
         }
-        // build files array
+        return $entry;
+    }
+
+    private function buildFilesArray($request)
+    {
         $files = [];
         foreach ($request->files as $file_key => $uploadedFile) {
             $files[$file_key] = $uploadedFile;
         }
-
-        $command = new \Aruna\CreateEntryCommand($entry, $files);
-        $newEntry = $handler->handle($command);
-
-        return $newEntry->getFilePath();
+        return $files;
     }
 }
