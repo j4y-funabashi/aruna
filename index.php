@@ -14,11 +14,12 @@ ini_set('memory_limit', '1024M');
 $app = new Silex\Application();
 $app['debug'] = true;
 
+// SERVICES
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
-        'monolog.logfile' => 'php://stdout',
-        'monolog.name' => 'ftp_up'
-    ));
+    'monolog.logfile' => 'php://stdout',
+    'monolog.name' => 'ftp_up'
+));
 
 $app['micropub.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\MicropubController(
