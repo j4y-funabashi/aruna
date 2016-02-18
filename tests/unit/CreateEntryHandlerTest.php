@@ -24,11 +24,11 @@ class CreateEntryHandlerTest extends UnitTest
             "published" => "2015-01-01T01:01:01",
             "content" => "test"
         ];
-        $command = new Aruna\CreateEntryCommand($entry);
+        $command = new Aruna\CreateEntryCommand($entry, []);
 
         $newEntry = $SUT->handle($command);
 
-        $noteStore->save(new Aruna\Entry($entry))
+        $noteStore->save(new Aruna\Post($entry), [])
             ->shouldBeCalled();
     }
 }
