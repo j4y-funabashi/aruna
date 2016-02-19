@@ -3,6 +3,7 @@
 namespace Aruna\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Silex\Application;
 
 /**
@@ -26,7 +27,12 @@ class MicropubController
         $files = $this->buildFilesArray($request);
         $command = new \Aruna\CreateEntryCommand($entry, $files);
         $newEntry = $this->handler->handle($command);
-        return $newEntry->getFilePath();
+        $url = $app['url_generator']->generate(
+            'post',
+            array('post_id' => $newEntry->getPostId()),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        return $url;
     }
 
     private function buildEntryArray($request)
