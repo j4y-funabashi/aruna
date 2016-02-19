@@ -17,6 +17,7 @@ class Post implements \JsonSerializable
     {
         $config['published'] = $this->validateDate($config);
         $this->properties = $config;
+        $this->uid = uniqid();
         foreach ($files as $file_key => $uploadedFile) {
             $this->properties[$file_key] = $this->getFilePath().".".$uploadedFile->getClientOriginalExtension();
         }
@@ -53,5 +54,10 @@ class Post implements \JsonSerializable
             $this->properties['published']->format("Y"),
             $this->properties['published']->format("YmdHis")
         );
+    }
+
+    public function getUid()
+    {
+        return $this->uid;
     }
 }

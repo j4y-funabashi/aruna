@@ -20,14 +20,12 @@ class MicropubController
         $this->handler = $handler;
     }
 
-    public function handle(Application $app, Request $request)
+    public function createPost(Application $app, Request $request)
     {
         $entry = $this->buildEntryArray($request);
         $files = $this->buildFilesArray($request);
-
         $command = new \Aruna\CreateEntryCommand($entry, $files);
         $newEntry = $this->handler->handle($command);
-
         return $newEntry->getFilePath();
     }
 

@@ -11,7 +11,7 @@ $app['debug'] = true;
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.logfile' => 'php://stdout',
-    'monolog.name' => 'ftp_up'
+    'monolog.name' => 'aruna'
 ));
 
 $app['create_post.handler'] = $app->share(function () use ($app) {
@@ -33,6 +33,6 @@ $app->get("/micropub", function (Symfony\Component\HttpFoundation\Request $reque
     return "Micropub form goes here";
 });
 
-$app->post('/micropub', 'micropub.controller:handle');
+$app->post('/micropub', 'micropub.controller:createPost');
 
 $app->run();
