@@ -11,8 +11,9 @@ use Intervention\Image\ImageManagerStatic as Image;
 class ImageResizer
 {
 
-    public function __construct()
+    public function __construct($root_dir)
     {
+        $this->root_dir = $root_dir;
         Image::configure(array('driver' => 'imagick'));
     }
 
@@ -21,9 +22,9 @@ class ImageResizer
         if (!$entry->hasPhoto()) {
             return false;
         }
-        $img = Image::make("/tmp/aruna/".$entry->getPhotoPath());
+        $img = Image::make($this->root_dir."/".$entry->getPhotoPath());
         $img->fit(1080);
-        $out_path = "/tmp/aruna/".$base_path."_square.jpg";
+        $out_path = $this->root_dir."/".$entry->getFilePath()."_square.jpg";
         $img->save($out_path);
     }
 }
