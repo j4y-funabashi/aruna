@@ -31,7 +31,7 @@ $app['posts_repository'] = $app->share(function () use ($app) {
 $app['create_post.handler'] = $app->share(function () use ($app) {
     return new Aruna\CreateEntryHandler(
         $app['posts_repository'],
-        new Aruna\ImageResizer()
+        new Aruna\ImageResizer($app['filestore_root'])
     );
 });
 $app['micropub.controller'] = $app->share(function () use ($app) {
