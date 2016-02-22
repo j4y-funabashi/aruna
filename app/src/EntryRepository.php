@@ -59,7 +59,7 @@ class EntryRepository
     {
         try {
             $this->filesystem->write(
-                $entry->getFilePath()."_".$entry->getUid().".json",
+                $entry->getFilePath().".json",
                 $entry->asJson()
             );
         } catch (FileExistsException $e) {
@@ -70,7 +70,7 @@ class EntryRepository
             try {
                 $stream = fopen($uploadedFile->getRealPath(), 'r+');
                 $this->filesystem->writeStream(
-                    $entry->getFilePath()."_".$entry->getUid().".".$uploadedFile->getClientOriginalExtension(),
+                    $entry->getFilePath().".".$uploadedFile->getClientOriginalExtension(),
                     $stream
                 );
             } catch (FileExistsException $e) {

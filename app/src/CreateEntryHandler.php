@@ -22,7 +22,7 @@ class CreateEntryHandler
         $entry = $command->getEntry();
         $entry = new Post($entry, $files);
         $this->entryRepository->save($entry, $files);
-        $this->imageResizer->resize($entry, $entry->getFilePath()."_".$entry->getUid());
+        $this->imageResizer->resize($entry, $entry->getFilePath());
         return $entry;
     }
 }
