@@ -8,9 +8,12 @@ namespace Aruna;
  */
 class CreateEntryHandler
 {
-    public function __construct(EntryRepository $entryRepository)
-    {
+    public function __construct(
+        EntryRepository $entryRepository,
+        ImageResizer $imageResizer
+    ) {
         $this->entryRepository = $entryRepository;
+        $this->imageResizer = $imageResizer;
     }
 
     public function handle(CreateEntryCommand $command)
@@ -19,6 +22,7 @@ class CreateEntryHandler
         $entry = $command->getEntry();
         $entry = new Post($entry, $files);
         $this->entryRepository->save($entry, $files);
+        $this->imageResizer->resize($entry, $entry->getFilePath()."_".$entry->getUid());
         return $entry;
     }
 }

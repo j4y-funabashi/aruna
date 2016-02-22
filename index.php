@@ -6,19 +6,29 @@ Symfony\Component\Debug\ErrorHandler::register();
 
 $app = new Silex\Application();
 $app['debug'] = true;
+$app['filestore_root'] = "/tmp/aruna";
 
 // SERVICES
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
+$app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.logfile' => 'php://stdout',
     'monolog.name' => 'aruna'
 ));
+$app->register(new Silex\Provider\TwigServiceProvider(), array(
+    'twig.path' => __DIR__.'/views',
+));
 
-$app['create_post.handler'] = $app->share(function () use ($app) {
-    $adapter = new League\Flysystem\Adapter\Local("/tmp/aruna");
+$app['posts_repository'] = $app->share(function () use ($app) {
+    $adapter = new League\Flysystem\Adapter\Local($app['filestore_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
-    $noteStore = new Aruna\EntryRepository($filesystem);
-    return new Aruna\CreateEntryHandler($noteStore);
+    return new Aruna\EntryRepository($filesystem);
+});
+$app['create_post.handler'] = $app->share(function () use ($app) {
+    return new Aruna\CreateEntryHandler(
+        $app['posts_repository'],
+        new Aruna\ImageResizer()
+    );
 });
 
 $app['micropub.controller'] = $app->share(function () use ($app) {
@@ -27,12 +37,15 @@ $app['micropub.controller'] = $app->share(function () use ($app) {
         $app["create_post.handler"]
     );
 });
-
-// ROUTES
-$app->get("/micropub", function (Symfony\Component\HttpFoundation\Request $request) use ($app) {
-    return "Micropub form goes here";
+$app['posts.controller'] = $app->share(function () use ($app) {
+    return new Aruna\Controller\PostController($app['posts_repository']);
 });
 
+// ROUTES
+$app->get("/", 'posts.controller:feed')
+    ->bind('post_feed');
+$app->get("/p/{post_id}", 'posts.controller:getById')
+    ->bind('post');
 $app->post('/micropub', 'micropub.controller:createPost');
 
 $app->run();

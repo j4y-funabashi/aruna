@@ -57,6 +57,16 @@ class Post implements \JsonSerializable
         );
     }
 
+    public function hasPhoto()
+    {
+        return isset($this->properties['files']['photo']);
+    }
+
+    public function getPhotoPath()
+    {
+        return $this->properties['files']['photo'];
+    }
+
     public function getYear()
     {
         return $this->properties['published']->format("Y");
