@@ -17,7 +17,9 @@ class CreateEntryHandlerTest extends UnitTest
     public function it_creates_a_new_entry_and_passes_it_to_notestore()
     {
         $noteStore = $this->prophesize("\Aruna\EntryRepository");
-        $SUT = new Aruna\CreateEntryHandler($noteStore->reveal());
+        $SUT = new Aruna\CreateEntryHandler(
+            $noteStore->reveal()
+        );
 
         $entry = [
             "h" => "entry",

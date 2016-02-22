@@ -17,7 +17,7 @@ class ImageResizer
         Image::configure(array('driver' => 'imagick'));
     }
 
-    public function resize($entry, $base_path)
+    public function resize(Post $entry)
     {
         if (!$entry->hasPhoto()) {
             return false;
