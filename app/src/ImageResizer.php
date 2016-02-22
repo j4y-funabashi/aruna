@@ -21,9 +21,7 @@ class ImageResizer
         if (!$entry->hasPhoto()) {
             return false;
         }
-        var_dump($entry->getPhotoPath());
         $img = Image::make("/tmp/aruna/".$entry->getPhotoPath());
-        var_dump($img);
         $img->fit(1080);
         $out_path = "/tmp/aruna/".$base_path."_square.jpg";
         $img->save($out_path);
