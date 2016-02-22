@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4c9332bf0eacf7e043e4236c4b1cdd0d",
-    "content-hash": "fcfaf59a85a27e8b74c54d2acca8f9ea",
+    "hash": "f1929de5a06ed5a88a79c5aa39480064",
+    "content-hash": "4a78e11795d823a33a3ee7b8e9c79548",
     "packages": [
         {
             "name": "cilex/cilex",
@@ -377,6 +377,53 @@
                 "league"
             ],
             "time": "2015-06-26 18:25:54"
+        },
+        {
+            "name": "league/pipeline",
+            "version": "0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/pipeline.git",
+                "reference": "c6968e4adaf8ada7cfbfb3ca64a695e695a021e3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/pipeline/zipball/c6968e4adaf8ada7cfbfb3ca64a695e695a021e3",
+                "reference": "c6968e4adaf8ada7cfbfb3ca64a695e695a021e3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "henrikbjorn/phpspec-code-coverage": "^1.0",
+                "phpspec/phpspec": "^2.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\Pipeline\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "A plug and play pipeline implementation.",
+            "keywords": [
+                "composition",
+                "design pattern",
+                "pattern",
+                "pipeline",
+                "sequential"
+            ],
+            "time": "2015-12-06 21:51:05"
         },
         {
             "name": "monolog/monolog",
