@@ -19,7 +19,7 @@ class CreateEntryHandlerTest extends SystemTest
 
         $adapter = new League\Flysystem\Memory\MemoryAdapter();
         $filesystem = new League\Flysystem\Filesystem($adapter);
-        $noteStore = new Aruna\EntryRepository($filesystem);
+        $noteStore = new Aruna\PostRepository($filesystem);
         $handler = new Aruna\CreateEntryHandler($noteStore);
 
         $entry = [

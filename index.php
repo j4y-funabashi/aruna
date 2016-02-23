@@ -26,7 +26,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 $app['posts_repository'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local($app['filestore_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
-    return new Aruna\EntryRepository($filesystem);
+    return new Aruna\PostRepository($filesystem);
 });
 $app['create_post.handler'] = $app->share(function () use ($app) {
     return new Aruna\CreateEntryHandler(
