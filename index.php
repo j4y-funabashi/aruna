@@ -1,11 +1,6 @@
 <?php
 
-require_once __DIR__.'/vendor/autoload.php';
-
-Symfony\Component\Debug\ErrorHandler::register();
-
-$dotenv = new Dotenv\Dotenv("..");
-$dotenv->load();
+require_once __DIR__ . "/common.php";
 
 $app = new Silex\Application();
 $app['debug'] = true;
@@ -43,11 +38,6 @@ $app['posts.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\PostController($app['posts_repository']);
 });
 
-// ROUTES
-$app->get("/", 'posts.controller:feed')
-    ->bind('post_feed');
-$app->get("/p/{post_id}", 'posts.controller:getById')
-    ->bind('post');
-$app->post('/micropub', 'micropub.controller:createPost');
+require_once __DIR__ . "/app/routes.php";
 
 $app->run();
