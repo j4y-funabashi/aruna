@@ -59,8 +59,6 @@ class PostRepository
     {
         foreach ($files as $uploadedFile) {
             try {
-                $m = "Opening ".$uploadedFile->getRealPath();
-                print $m;
                 if ($uploadedFile->isReadable() === false) {
                     $m = "Could not read file ".$uploadedFile->getRealPath();
                     throw new \RuntimeException($m);
