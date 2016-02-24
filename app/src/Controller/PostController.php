@@ -22,7 +22,7 @@ class PostController
     public function feed(Request $request, Application $app)
     {
         $posts = $this->postRepository->listFromId($request->query->get('from_id'), 100);
-        var_dump($posts);
+        //var_dump($posts);
         return $app['twig']->render('feed.twig', array(
             'posts' => $posts,
         ));
@@ -31,7 +31,7 @@ class PostController
     public function getById(Application $app, $post_id)
     {
         $post = $this->postRepository->findById($post_id);
-        var_dump($post);
+        //var_dump($post);
         return new JsonResponse(
             ["items" => $post]
         );
