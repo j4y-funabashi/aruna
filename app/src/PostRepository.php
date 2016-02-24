@@ -6,10 +6,10 @@ use League\Flysystem\FileExistsException;
 use RuntimeException;
 
 /**
- * Class EntryRepository
+ * Class PostRepository
  * @author yourname
  */
-class EntryRepository
+class PostRepository
 {
     public function __construct($filesystem)
     {
@@ -57,18 +57,19 @@ class EntryRepository
 
     public function save(Post $entry, $files)
     {
-        try {
-            $this->filesystem->write(
-                $entry->getFilePath().".json",
-                $entry->asJson()
-            );
-        } catch (FileExistsException $e) {
-            throw new RuntimeException($e->getMessage());
-        }
-
         foreach ($files as $uploadedFile) {
             try {
-                $stream = fopen($uploadedFile->getRealPath(), 'r+');
+                $m = "Opening ".$uploadedFile->getRealPath();
+                print $m;
+                if ($uploadedFile->isReadable() === false) {
+                    $m = "Could not read file ".$uploadedFile->getRealPath();
+                    throw new \RuntimeException($m);
+                }
+                $stream = fopen($uploadedFile->getRealPath(), 'rb');
+                if (!$stream) {
+                    $m = "Could not open file ".$uploadedFile->getRealPath();
+                    throw new \RuntimeException($m);
+                }
                 $this->filesystem->writeStream(
                     $entry->getFilePath().".".$uploadedFile->getClientOriginalExtension(),
                     $stream
@@ -76,6 +77,15 @@ class EntryRepository
             } catch (FileExistsException $e) {
                 throw new RuntimeException($e->getMessage());
             }
+        }
+
+        try {
+            $this->filesystem->write(
+                $entry->getFilePath().".json",
+                $entry->asJson()
+            );
+        } catch (FileExistsException $e) {
+            throw new RuntimeException($e->getMessage());
         }
     }
 }
