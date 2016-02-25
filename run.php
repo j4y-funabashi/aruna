@@ -36,6 +36,7 @@ foreach ($json_files as $fileInfo) {
 
     // resize photo
     if (isset($post['files']['photo'])) {
+
         $photo_path = $posts_root."/".$post['files']['photo'];
         $photo = new SplFileInfo($photo_path);
         $out_path = $resized_root."/".$photo->getBaseName();
@@ -43,5 +44,7 @@ foreach ($json_files as $fileInfo) {
         $img = Intervention\Image\ImageManagerStatic::make($photo->getRealPath());
         $img->fit(1080);
         $img->save($out_path);
+        echo sprintf("\nResized %s to %s\n", $photo_path, $out_path);
+
     }
 }
