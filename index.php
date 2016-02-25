@@ -4,7 +4,7 @@ require_once __DIR__ . "/common.php";
 
 $app = new Silex\Application();
 $app['debug'] = true;
-$app['filestore_root'] = "/tmp/aruna";
+$app['posts_root'] = "/tmp/aruna/posts";
 
 // PROVIDERS
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
@@ -19,7 +19,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 
 // SERVICES
 $app['posts_repository'] = $app->share(function () use ($app) {
-    $adapter = new League\Flysystem\Adapter\Local($app['filestore_root']);
+    $adapter = new League\Flysystem\Adapter\Local($app['posts_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
     return new Aruna\PostRepository($filesystem);
 });
