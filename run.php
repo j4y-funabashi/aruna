@@ -2,12 +2,13 @@
 
 require_once __DIR__ . "/common.php";
 
-$filestore_root = "/tmp/aruna";
+$posts_root = "/tmp/aruna/posts";
+$resized_root = "/tmp/aruna/static_img";
 
 // GET SORTED LIST OF ALL JSON FILES
 $dir = new CallbackFilterIterator(
     new RecursiveIteratorIterator(
-        new RecursiveDirectoryIterator($filestore_root)
+        new RecursiveDirectoryIterator($posts_root)
     ),
     function ($current, $key, $iterator) {
         return substr($current, -4) == "json";
@@ -23,13 +24,24 @@ ksort($json_files);
 
 
 
+Intervention\Image\ImageManagerStatic::configure(array('driver' => 'imagick'));
 foreach ($json_files as $fileInfo) {
-    // read data from file
+    // read post array from json file
     $fileObject = $fileInfo->openFile();
     $data = [];
     while (!$fileObject->eof()) {
         $data[] = $fileObject->fgets();
     }
     $post = json_decode(implode("\n", $data), true);
-    var_dump($post);
+
+    // resize photo
+    if (isset($post['files']['photo'])) {
+        $photo_path = $posts_root."/".$post['files']['photo'];
+        $photo = new SplFileInfo($photo_path);
+        $out_path = $resized_root."/".$photo->getBaseName();
+
+        $img = Intervention\Image\ImageManagerStatic::make($photo->getRealPath());
+        $img->fit(1080);
+        $img->save($out_path);
+    }
 }
