@@ -17,7 +17,7 @@ class MicropubController
         $logger,
         $handler
     ) {
-        $this->logger = $logger;
+        $this->log = $logger;
         $this->handler = $handler;
     }
 
@@ -48,6 +48,9 @@ class MicropubController
     {
         $files = [];
         foreach ($request->files as $file_key => $uploadedFile) {
+            if (false === $uploadedFile->isValid()) {
+                throw new \RuntimeException("Upload Error: (".$uploadedFile->getError().")");
+            }
             $files[$file_key] = $uploadedFile;
         }
         return $files;

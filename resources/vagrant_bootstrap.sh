@@ -5,7 +5,8 @@ sudo apt-get update \
     php5-cli \
     php5-imagick
 
-sudo cp /vagrant/nginx.conf /etc/nginx/sites-enabled/default
+sudo cp /srv/aruna/nginx.conf /etc/nginx/sites-enabled/default \
+    && sudo cp /srv/aruna/php5-fpm.conf /etc/php5/fpm/pool.d/aruna.conf
 
-sudo service nginx restart
 sudo service php5-fpm restart
+sudo service nginx restart
