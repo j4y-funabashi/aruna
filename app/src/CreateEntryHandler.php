@@ -9,15 +9,15 @@ namespace Aruna;
 class CreateEntryHandler
 {
     public function __construct(
-        PostRepository $entryRepository
+        PostRepository $postRepository
     ) {
-        $this->entryRepository = $entryRepository;
+        $this->postRepository = $postRepository;
     }
 
     public function handle(CreateEntryCommand $command)
     {
         $post = new Post($command->getEntry(), $command->getFiles());
-        $this->entryRepository->save($post, $command->getFiles());
+        $this->postRepository->save($post, $command->getFiles());
         return $post;
     }
 }

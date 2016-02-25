@@ -27,6 +27,7 @@ class MicropubController
         $files = $this->buildFilesArray($request);
         $command = new \Aruna\CreateEntryCommand($entry, $files);
         $newEntry = $this->handler->handle($command);
+
         $url = $app['url_generator']->generate(
             'post',
             array('post_id' => $newEntry->getPostId()),
