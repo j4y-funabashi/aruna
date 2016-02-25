@@ -3,10 +3,10 @@
 namespace Aruna;
 
 /**
- * Class PostRepository
+ * Class PostRepositoryReader
  * @author yourname
  */
-class PostRepository
+class PostRepositoryReader
 {
     public function __construct($filesystem)
     {

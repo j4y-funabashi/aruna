@@ -6,10 +6,10 @@ use League\Flysystem\FileExistsException;
 use RuntimeException;
 
 /**
- * Class PostRepository
+ * Class PostRepositoryWriter
  * @author yourname
  */
-class PostRepository
+class PostRepositoryWriter
 {
     public function __construct($filesystem)
     {

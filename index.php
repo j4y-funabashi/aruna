@@ -18,14 +18,19 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 ));
 
 // SERVICES
-$app['posts_repository'] = $app->share(function () use ($app) {
+$app['posts_repository_reader'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local($app['posts_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
-    return new Aruna\PostRepository($filesystem);
+    return new Aruna\PostRepositoryReader($filesystem);
+});
+$app['posts_repository_writer'] = $app->share(function () use ($app) {
+    $adapter = new League\Flysystem\Adapter\Local($app['posts_root']);
+    $filesystem = new League\Flysystem\Filesystem($adapter);
+    return new Aruna\PostRepositoryWriter($filesystem);
 });
 $app['create_post.handler'] = $app->share(function () use ($app) {
     return new Aruna\CreateEntryHandler(
-        $app['posts_repository']
+        $app['posts_repository_writer']
     );
 });
 $app['micropub.controller'] = $app->share(function () use ($app) {
@@ -35,7 +40,7 @@ $app['micropub.controller'] = $app->share(function () use ($app) {
     );
 });
 $app['posts.controller'] = $app->share(function () use ($app) {
-    return new Aruna\Controller\PostController($app['posts_repository']);
+    return new Aruna\Controller\PostController($app['posts_repository_reader']);
 });
 
 require_once __DIR__ . "/app/routes.php";

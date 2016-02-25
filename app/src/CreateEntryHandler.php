@@ -9,7 +9,7 @@ namespace Aruna;
 class CreateEntryHandler
 {
     public function __construct(
-        PostRepository $postRepository
+        PostRepositoryWriter $postRepository
     ) {
         $this->postRepository = $postRepository;
     }
