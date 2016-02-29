@@ -1,9 +1,8 @@
 <?php
 
-require_once __DIR__ . "/common.php";
-
+require_once __DIR__ . "/../common.php";
 $posts_root = "/tmp/aruna/posts";
-$resized_root = "/tmp/aruna/static_img";
+$thumbnails_root = "/tmp/aruna/thumbnails";
 
 // GET SORTED LIST OF ALL JSON FILES
 $dir = new CallbackFilterIterator(
@@ -22,9 +21,16 @@ ksort($json_files);
 
 
 
+// BUILD PIPELINE
+use League\Pipeline\Pipeline;
+use Aruna\Action\ImageResizer;
+use Aruna\Action\ResizePhoto;
 
+$pipeline = (new Pipeline())
+    ->pipe(new ResizePhoto(new ImageResizer($posts_root, $thumbnails_root)));
 
-Intervention\Image\ImageManagerStatic::configure(array('driver' => 'imagick'));
+var_dump(posix_getpwuid(posix_geteuid()));
+// PUSH CONTENTS OF EACH FILE THROUGH PIPELINE
 foreach ($json_files as $fileInfo) {
     // read post array from json file
     $fileObject = $fileInfo->openFile();
@@ -34,16 +40,9 @@ foreach ($json_files as $fileInfo) {
     }
     $post = json_decode(implode("\n", $data), true);
 
-    // resize photo
-    if (isset($post['files']['photo'])) {
-
-        $photo_path = $posts_root."/".$post['files']['photo'];
-        $photo = new SplFileInfo($photo_path);
-        $out_path = $resized_root."/".$photo->getBaseName();
-
-        $img = Intervention\Image\ImageManagerStatic::make($photo->getRealPath());
-        $img->fit(1080);
-        $img->save($out_path);
-        echo sprintf("\nResized %s to %s\n", $photo_path, $out_path);
+    try {
+        $pipeline->process($post);
+    } catch (Exception $e) {
+        var_dump($e->getMessage());
     }
 }

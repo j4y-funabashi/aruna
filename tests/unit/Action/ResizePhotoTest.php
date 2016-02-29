@@ -12,7 +12,7 @@ class ResizePhotoTest extends UnitTest
 {
     public function setUp()
     {
-        $this->resizer = $this->prophesize("\Aruna\ImageResizer");
+        $this->resizer = $this->prophesize("\Aruna\Action\ImageResizer");
     }
 
     /**
