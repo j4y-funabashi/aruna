@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna\Action;
+namespace Aruna;
 
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -17,11 +17,14 @@ class ImageResizer
         Image::configure(array('driver' => 'imagick'));
     }
 
-    public function resize($photo_path)
+    public function resize($entry)
     {
-        $out_path = $this->root_dir."/".$photo_path;
-        $img = Image::make($this->root_dir."/".$photo_path);
+        if (!$entry->hasPhoto()) {
+            return false;
+        }
+        $img = Image::make($this->root_dir."/".$entry->getPhotoPath());
         $img->fit(1080);
+        $out_path = $this->root_dir."/".$entry->getFilePath()."_square.jpg";
         $img->save($out_path);
     }
 }
