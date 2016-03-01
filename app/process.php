@@ -29,7 +29,6 @@ use Aruna\Action\ResizePhoto;
 $pipeline = (new Pipeline())
     ->pipe(new ResizePhoto(new ImageResizer($posts_root, $thumbnails_root)));
 
-var_dump(posix_getpwuid(posix_geteuid()));
 // PUSH CONTENTS OF EACH FILE THROUGH PIPELINE
 foreach ($json_files as $fileInfo) {
     // read post array from json file
@@ -43,6 +42,7 @@ foreach ($json_files as $fileInfo) {
     try {
         $pipeline->process($post);
     } catch (Exception $e) {
+        print PHP_EOL."CRITICAL:";
         var_dump($e->getMessage());
     }
 }
