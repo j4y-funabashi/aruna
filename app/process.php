@@ -31,6 +31,8 @@ function readFileContents($fileInfo)
     return json_decode(implode("\n", $data), true);
 }
 
+
+
 use League\Pipeline\Pipeline;
 use Aruna\Action\ImageResizer;
 use Aruna\Action\ResizePhoto;
@@ -40,7 +42,11 @@ $thumbnails_root = "/tmp/aruna/thumbnails";
 
 // BUILD PIPELINE
 $pipeline = (new Pipeline())
-    ->pipe(new ResizePhoto(new ImageResizer($posts_root, $thumbnails_root)));
+    ->pipe(
+        new ResizePhoto(
+            new ImageResizer($posts_root, $thumbnails_root)
+        )
+    );
 
 // PUSH CONTENTS OF EACH FILE THROUGH PIPELINE
 foreach (listJsonFiles($posts_root) as $fileInfo) {
