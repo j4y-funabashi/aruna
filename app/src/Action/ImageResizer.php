@@ -22,8 +22,26 @@ class ImageResizer
     {
         $in_path = $this->root_dir."/".$photo_path;
         $out_path = $this->thumbnails_dir."/".$photo_path;
+        if (file_exists($out_path)) {
+            return;
+        }
+
+        $this->ensureDirectory(dirname($out_path));
+
         $img = Image::make($in_path);
         $img->fit(1080);
         $img->save($out_path);
+    }
+
+    protected function ensureDirectory($root)
+    {
+        if (!is_dir($root)) {
+            $umask = umask(0);
+            if (!mkdir($root, 0755, true)) {
+                throw new \Exception();
+            }
+            umask($umask);
+        }
+        return realpath($root);
     }
 }
