@@ -4,6 +4,7 @@ namespace Aruna\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Silex\Application;
 
 /**
@@ -33,7 +34,7 @@ class MicropubController
             array('post_id' => $newEntry->getPostId()),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        return $url;
+        return new Response("", Response::HTTP_ACCEPTED, ['Location' => $url]);
     }
 
     private function buildEntryArray($request)
