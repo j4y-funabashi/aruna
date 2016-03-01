@@ -36,6 +36,21 @@ class Post implements \JsonSerializable
         return json_encode($this);
     }
 
+    public function getFilePath()
+    {
+        return sprintf(
+            "%s/%s_%s",
+            $this->getYear(),
+            $this->properties['published']->format("YmdHis"),
+            $this->getUid()
+        );
+    }
+
+    public function getPostId()
+    {
+        return $this->properties['published']->format("YmdHis")."_".$this->getUid();
+    }
+
     protected function validateDate($config)
     {
         try {
@@ -48,38 +63,13 @@ class Post implements \JsonSerializable
         }
     }
 
-    public function getFilePath()
-    {
-        return sprintf(
-            "%s/%s_%s",
-            $this->getYear(),
-            $this->properties['published']->format("YmdHis"),
-            $this->getUid()
-        );
-    }
-
-    public function hasPhoto()
-    {
-        return isset($this->properties['files']['photo']);
-    }
-
-    public function getPhotoPath()
-    {
-        return $this->properties['files']['photo'];
-    }
-
-    public function getYear()
+    protected function getYear()
     {
         return $this->properties['published']->format("Y");
     }
 
-    public function getUid()
+    protected function getUid()
     {
         return $this->uid;
-    }
-
-    public function getPostId()
-    {
-        return $this->properties['published']->format("YmdHis")."_".$this->getUid();
     }
 }
