@@ -16,6 +16,12 @@ class AuthController
     private $client_id = "http://127.0.0.1:4567";
     private $redirect_uri = "http://127.0.0.1:4567/auth";
 
+    public function __construct(
+        $http
+    ) {
+        $this->http = $http;
+    }
+
     public function login(Application $app, Request $request)
     {
         return $app['twig']->render(
@@ -30,8 +36,7 @@ class AuthController
 
     public function auth(Application $app, Request $request)
     {
-        $http = new Client();
-        $response = $http->request(
+        $response = $this->http->request(
             'POST',
             $this->auth_url,
             [

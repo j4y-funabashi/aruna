@@ -46,7 +46,9 @@ $app['posts.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\PostController($app['posts_repository_reader']);
 });
 $app['auth.controller'] = $app->share(function () use ($app) {
-    return new Aruna\Controller\AuthController();
+    return new Aruna\Controller\AuthController(
+        new GuzzleHttp\Client()
+    );
 });
 
 require_once __DIR__ . "/app/routes.php";
