@@ -29,12 +29,19 @@ $root_dir = "/home/jayr/Pictures/2015";
 $micropub_endpoint = "http://lagertha.local/micropub";
 
 foreach (listJpgFiles($root_dir) as $fileInfo) {
-    print "Importing: ".$fileInfo->getRealPath().PHP_EOL;
+
     $in_path = $fileInfo->getRealPath();
 
     $img = Image::make($in_path);
     $iptc = $img->iptc();
-    $published = DateTimeImmutable::createFromFormat("Y:m:d H:i:s", $img->exif('DateTimeOriginal'));
+    if (false === $published = DateTimeImmutable::createFromFormat("Y:m:d H:i:s", $img->exif('DateTimeOriginal'))) {
+        $m = sprintf(
+            "Skipping %s [couldnt parse date]",
+            $in_path
+        );
+        print $m.PHP_EOL;
+        continue;
+    }
 
     $post = [
         [
