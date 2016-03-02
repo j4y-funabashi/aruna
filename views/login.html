@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <title>j4y</title>
+    </head>
+    <body>
+    <div class="container">
+
+        <form action="https://indieauth.com/auth" method="get">
+            <label for="indie_auth_url">Web Address:</label>
+            <input id="indie_auth_url" type="text" name="me" placeholder="yourdomain.com" />
+            <p><button type="submit">Sign In</button></p>
+            <input type="hidden" name="client_id" value="{{ client_id }}" />
+            <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}" />
+        </form>
+
+    </div>
+    </body>
+</html>
+

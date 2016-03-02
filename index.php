@@ -16,6 +16,8 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/views',
 ));
+$app->register(new Silex\Provider\FormServiceProvider());
+$app->register(new Silex\Provider\TranslationServiceProvider());
 
 // SERVICES
 $app['posts_repository_reader'] = $app->share(function () use ($app) {
@@ -41,6 +43,9 @@ $app['micropub.controller'] = $app->share(function () use ($app) {
 });
 $app['posts.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\PostController($app['posts_repository_reader']);
+});
+$app['auth.controller'] = $app->share(function () use ($app) {
+    return new Aruna\Controller\AuthController();
 });
 
 require_once __DIR__ . "/app/routes.php";
