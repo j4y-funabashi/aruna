@@ -24,6 +24,10 @@ class MicropubController
 
     public function createPost(Application $app, Request $request)
     {
+        if (null === $app['session']->get('user')) {
+            return new Response("", Response::HTTP_UNAUTHORIZED);
+        }
+
         $entry = $this->buildEntryArray($request);
         $files = $this->buildFilesArray($request);
         $command = new \Aruna\CreateEntryCommand($entry, $files);
