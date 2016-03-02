@@ -1,7 +1,21 @@
 # aruna
 
-PHP Indieweb Micropub library
+PHP Indieweb app
 
-```
-sudo cp nginx.conf /etc/nginx/sites-enabled/default && sudo /etc/init.d/nginx reload
-```
+## Features
+
+* Micropub
+* Resizes images to 1080 square
+* indieAuth
+* Saves data as json files
+* Uses an event sourced read/write model
+
+## TODO
+
+* Send WebMentions
+* Recieve WebMentions
+* LinkPreview
+* Update
+* Delete
+* Cache to db (sqlite)
+* POSSE to bridgy
