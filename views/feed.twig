@@ -11,7 +11,7 @@
         {% for post in posts %}
 
         <article class="h-{{ post.h }}">
-            <p><time class="dt-published" datetime="{{ post.published }}"></time></p>
+            <p><time class="dt-published" datetime="{{ post.published }}">{{ post.published }}</time></p>
 
             {% if post.title is defined %}
             <h1 class="p-name">{{ post.title }}</h1>
@@ -24,7 +24,7 @@
             {% endif %}
 
             {% if post.files.photo is defined %}
-            <a href="{{ post.files.photo }}">View Fullsize</a>
+            <img class="img-responsive" src="{{ post.files.photo }}" />
             {% endif %}
         </article>
 
