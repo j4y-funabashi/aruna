@@ -18,6 +18,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 ));
 $app->register(new Silex\Provider\FormServiceProvider());
 $app->register(new Silex\Provider\TranslationServiceProvider());
+$app->register(new Silex\Provider\SessionServiceProvider());
 
 // SERVICES
 $app['posts_repository_reader'] = $app->share(function () use ($app) {

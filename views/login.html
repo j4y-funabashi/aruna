@@ -8,7 +8,7 @@
     <body>
     <div class="container">
 
-        <form action="https://indieauth.com/auth" method="get">
+        <form action="{{ auth_url }}" method="get">
             <label for="indie_auth_url">Web Address:</label>
             <input id="indie_auth_url" type="text" name="me" placeholder="yourdomain.com" />
             <p><button type="submit">Sign In</button></p>

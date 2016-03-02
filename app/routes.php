@@ -8,6 +8,6 @@ $app->get("/p/{post_id}", 'posts.controller:getById')
 
 $app->get("/login", 'auth.controller:login')
     ->bind('login');
-$app->get("/auth", 'auth.controller:login')
+$app->get("/auth", 'auth.controller:auth')
     ->bind('auth');
 $app->post('/micropub', 'micropub.controller:createPost');
