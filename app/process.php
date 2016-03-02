@@ -50,6 +50,7 @@ $pipeline = (new Pipeline())
 
 // PUSH CONTENTS OF EACH FILE THROUGH PIPELINE
 foreach (listJsonFiles($posts_root) as $fileInfo) {
+    print "Processing: ".$fileInfo->getRealPath().PHP_EOL;
     try {
         $pipeline->process(readFileContents($fileInfo));
     } catch (Exception $e) {
