@@ -11,7 +11,8 @@ $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.logfile' => 'php://stdout',
-    'monolog.name' => 'aruna'
+    'monolog.name' => 'aruna',
+    'monolog.handler' => new Monolog\Handler\SyslogHandler('aruna')
 ));
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/views',
