@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-        <link rel="stylesheet" href="views/styles.css" type="text/css">
-        <title>My Webpage</title>
-    </head>
-    <body>
-    <div class="container">
+{% include 'head.html' %}
 
-        <div class="h-feed">
+<div class="container">
+    <div class="h-feed">
 
         {% for post in posts %}
 
@@ -31,7 +23,7 @@
 
             <p>
             <a href="{{ post.url }}">
-            <time class="dt-published" datetime="{{ post.published }}">{{ post.human_date }}</time>
+                <time class="dt-published" datetime="{{ post.published }}">{{ post.human_date }}</time>
             </a>
             </p>
 
@@ -40,7 +32,6 @@
         {% endfor %}
 
     </div>
+</div>
 
-    </div>
-    </body>
-</html>
+{% include 'tail.html' %}
