@@ -41,6 +41,11 @@ class MicropubController
         return new Response("", Response::HTTP_ACCEPTED, ['Location' => $url]);
     }
 
+    public function form(Application $app, Request $request)
+    {
+        return $app['twig']->render('micropub.html');
+    }
+
     private function buildEntryArray($request)
     {
         $entry = [];

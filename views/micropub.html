@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <title>j4y</title>
+    </head>
+    <body>
+    <div class="container">
+
+        <form action="/micropub" method="post" enctype='multipart/form-data'>
+
+            <label for="photo">Photo:</label>
+            <input type="file" name="photo" id="photo" accept="image/*;capture=camera" />
+
+            <label for="published">published:</label>
+            <input type="text" name="published" id="published" value="">
+
+            <label for="content">Content:</label>
+            <textarea id="content" name="content"></textarea>
+
+            <input type="hidden" name="h" id="h" value="entry">
+            <input type="submit" id="save" value="Save" />
+
+        </form>
+
+    </div>
+    </body>
+</html>
+
