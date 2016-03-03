@@ -24,7 +24,9 @@ class MicropubController
 
     public function createPost(Application $app, Request $request)
     {
+        $this->log->info(__METHOD__);
         if (null === $app['session']->get('user')) {
+            $this->log->info("HTTP_UNAUTHORIZED");
             return new Response("", Response::HTTP_UNAUTHORIZED);
         }
 
@@ -38,6 +40,7 @@ class MicropubController
             array('post_id' => $newEntry->getPostId()),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+        $this->log->info("Post Created: ".$url);
         return new Response("", Response::HTTP_ACCEPTED, ['Location' => $url]);
     }
 
