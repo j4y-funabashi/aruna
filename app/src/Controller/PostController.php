@@ -22,9 +22,24 @@ class PostController
 
     public function feed(Request $request, Application $app)
     {
-        $posts = $this->postRepository->listFromId($request->query->get('from_id'), 100);
+        $posts = array_map(
+            function ($post) use ($app) {
+                $published = new \DateTimeImmutable($post['published']);
+                $url = $app['url_generator']->generate(
+                    'post',
+                    array('post_id' => $post['uid']),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                $post['url'] = $url;
+                $post['human_date'] = $published->format("d F Y");
+                return $post;
+            },
+            $this->postRepository->listFromId($request->query->get('from_id'), 10)
+        );
+
         return $app['twig']->render(
-            'feed.twig',
+            'feed.html',
             [
                 'posts' => $posts
             ]
