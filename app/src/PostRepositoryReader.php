@@ -42,7 +42,7 @@ class PostRepositoryReader
 
     private function getJsonFilePaths()
     {
-        return array_values(
+        $files = array_values(
             array_filter(
                 $this->filesystem->listContents('', true),
                 function ($file_path) {
@@ -50,5 +50,11 @@ class PostRepositoryReader
                 }
             )
         );
+        $out = [];
+        foreach ($files as $file) {
+            $out[$file['path']] = $file;
+        }
+        krsort($out);
+        return $out;
     }
 }
