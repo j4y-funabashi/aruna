@@ -4,6 +4,7 @@ namespace Aruna\Controller;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use GuzzleHttp\Client;
 
 /**
@@ -13,13 +14,13 @@ use GuzzleHttp\Client;
 class AuthController
 {
     private $auth_url = "https://indieauth.com/auth";
-    private $client_id = "http://127.0.0.1:4567";
-    private $redirect_uri = "http://127.0.0.1:4567/auth";
 
     public function __construct(
-        $http
+        $http,
+        $log
     ) {
         $this->http = $http;
+        $this->log = $log;
     }
 
     public function login(Application $app, Request $request)
@@ -27,10 +28,28 @@ class AuthController
         return $app['twig']->render(
             'login.html',
             [
-                'client_id' => $this->client_id,
-                'redirect_uri' => $this->redirect_uri,
+                'client_id' => $this->getClientId($app),
+                'redirect_uri' => $this->getRedirectUri($app),
                 'auth_url' => $this->auth_url
             ]
+        );
+    }
+
+    private function getRedirectUri($app)
+    {
+        return $app['url_generator']->generate(
+            'auth',
+            [],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+    }
+
+    private function getClientId($app)
+    {
+        return $app['url_generator']->generate(
+            'root',
+            [],
+            UrlGeneratorInterface::ABSOLUTE_URL
         );
     }
 
@@ -42,14 +61,15 @@ class AuthController
             [
                 'form_params' => [
                     'code' => $request->get('code'),
-                        'redirect_uri' => $this->redirect_uri,
-                        'auth_url' => $this->auth_url
-                    ]
+                    'redirect_uri' => $this->getRedirectUri($app),
+                    'auth_url' => $this->auth_url
                 ]
+            ]
         );
 
         parse_str($response->getBody(), $body);
         $app['session']->set('user', $body['me']);
+        $this->log->info("Authenticated user: ".$body['me']);
         return $app->redirect('/');
     }
 }

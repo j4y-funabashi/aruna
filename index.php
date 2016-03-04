@@ -2,6 +2,7 @@
 
 require_once __DIR__ . "/common.php";
 
+
 $app = new Silex\Application();
 $app['debug'] = true;
 $app['posts_root'] = "/tmp/aruna/posts";
@@ -46,9 +47,12 @@ $app['micropub.controller'] = $app->share(function () use ($app) {
 $app['posts.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\PostController($app['posts_repository_reader']);
 });
+
+
 $app['auth.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\AuthController(
-        new GuzzleHttp\Client()
+        new GuzzleHttp\Client(),
+        $app['monolog']
     );
 });
 
