@@ -2,7 +2,7 @@
 
 // ROUTES
 $app->get("/", 'posts.controller:feed')
-    ->bind('post_feed');
+    ->bind('root');
 $app->get("/p/{post_id}", 'posts.controller:getById')
     ->bind('post');
 
