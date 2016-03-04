@@ -1,0 +1,30 @@
+{% include 'head.html' %}
+
+<div class="container">
+        <article class="h-{{ post.h }}">
+
+            {% if post.files.photo is defined %}
+            <img class="img-rounded img-responsive" src="/{{ post.files.photo }}" />
+            {% endif %}
+
+            {% if post.title is defined %}
+            <h1 class="p-name">{{ post.title }}</h1>
+            {% endif %}
+
+            {% if post.content is defined %}
+            <div class="e-content">
+                <p>{{ post.content }}</p>
+            </div>
+            {% endif %}
+
+            <p>
+            <a href="{{ post.url }}">
+                <time class="dt-published" datetime="{{ post.published }}">{{ post.human_date }}</time>
+            </a>
+            </p>
+
+        </article>
+</div>
+
+{% include 'tail.html' %}
+
