@@ -1,4 +1,4 @@
-DATA_DIR="/tmp/aruna"
+DATA_DIR="/media/aruna"
 
 sudo locale-gen en_GB.UTF-8
 

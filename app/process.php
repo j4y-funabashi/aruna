@@ -37,8 +37,8 @@ use League\Pipeline\Pipeline;
 use Aruna\Action\ImageResizer;
 use Aruna\Action\ResizePhoto;
 
-$posts_root = "/tmp/aruna/posts";
-$thumbnails_root = "/tmp/aruna/thumbnails";
+$posts_root = getenv("ROOT_DIR")."/posts";
+$thumbnails_root = getenv("ROOT_DIR")."/thumbnails";
 
 // BUILD PIPELINE
 $pipeline = (new Pipeline())

@@ -2,10 +2,9 @@
 
 require_once __DIR__ . "/common.php";
 
-
 $app = new Silex\Application();
 $app['debug'] = true;
-$app['posts_root'] = "/tmp/aruna/posts";
+$app['posts_root'] = getenv("ROOT_DIR")."/posts";
 
 // PROVIDERS
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
