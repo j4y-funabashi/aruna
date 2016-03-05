@@ -49,10 +49,12 @@ $app['webmention.controller'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local($app['webmentions_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
     $eventWriter = new Aruna\EventWriter($filesystem);
+    $eventReader = new Aruna\EventReader($filesystem);
     return new Aruna\Controller\WebmentionController(
         $app["monolog"],
         new Aruna\WebMention\WebMentionHandler(
-            $eventWriter
+            $eventWriter,
+            $eventReader
         )
     );
 });

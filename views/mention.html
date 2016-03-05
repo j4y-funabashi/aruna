@@ -1,0 +1,18 @@
+{% include 'head.html' %}
+
+<div class="container">
+        <article class="h-entry">
+
+            <p class="e-content">
+            <a href="{{ mention.source }}">{{ mention.source }}</a>
+            </p>
+
+            Mentions <a href="{{ mention.target }}" class="u-in-reply-to">{{ mention.target }}</a>
+            <time class="dt-published" datetime="{{ mention.published }}">{{ mention.published }}</time>
+
+        </article>
+</div>
+
+{% include 'tail.html' %}
+
+
