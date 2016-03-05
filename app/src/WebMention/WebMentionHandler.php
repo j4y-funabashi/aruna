@@ -3,6 +3,7 @@
 namespace Aruna\WebMention;
 
 use Aruna\EventWriter;
+use Aruna\EventReader;
 use Aruna\Event;
 
 /**
@@ -12,9 +13,11 @@ use Aruna\Event;
 class WebMentionHandler
 {
     public function __construct(
-        EventWriter $eventWriter
+        EventWriter $eventWriter,
+        EventReader $eventReader
     ) {
         $this->eventWriter = $eventWriter;
+        $this->eventReader = $eventReader;
     }
 
     public function recieve(array $mention)
@@ -29,5 +32,11 @@ class WebMentionHandler
         $event = new Event($mention);
         $this->eventWriter->save($event);
         return $event->getUid();
+    }
+
+    public function findById($mention_id)
+    {
+        $event = $this->eventReader->findById($mention_id);
+        return $event[0];
     }
 }
