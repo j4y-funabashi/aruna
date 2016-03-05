@@ -1,11 +1,12 @@
 DATA_DIR="/media/BACKUP/aruna"
+APP_USER="aruna"
 
 sudo locale-gen en_GB.UTF-8
 
+useradd -G www-data $APP_USER
 ## SORT OUT DATA DIR PERMS
 sudo mkdir -p $DATA_DIR
-sudo usermod -aG www-data pi;
-sudo addgroup www-data;
+sudo chown -Rv $APP_USER $DATA_DIR
 sudo chgrp -Rv www-data $DATA_DIR;
 sudo chmod -Rv g+w $DATA_DIR;
 
