@@ -35,13 +35,14 @@ class WebMentionsTest extends SystemTest
     */
     public function it_returns_a_url_containing_status_of_newly_created_mention()
     {
+        $target = 'http://alice.host/post-by-alice';
         $response = $this->http->request(
             'POST',
             'webmention',
             [
             'form_params' => [
                 'source' => 'http://bob.host/post-by-bob',
-                'target' => 'http://alice.host/post-by-alice'
+                'target' => $target
             ]
             ]
         );
@@ -51,8 +52,9 @@ class WebMentionsTest extends SystemTest
             'GET',
             $mention_url
         );
-        $mf = Mf2\fetch(trim($response->getBody()));
+        $mf = Mf2\fetch($mention_url);
 
-        $this->assertEquals("h-entry", $mf['items'][0]['type']);
+        $this->assertEquals("h-entry", $mf['items'][0]['type'][0]);
+        $this->assertEquals($target, $mf['items'][0]['properties']['in-reply-to'][0]);
     }
 }
