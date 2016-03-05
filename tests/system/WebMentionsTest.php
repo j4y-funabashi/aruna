@@ -46,7 +46,7 @@ class WebMentionsTest extends SystemTest
             ]
         );
 
-        $mention_url = $response->getBody();
+        $mention_url = trim($response->getBody());
         $response = $this->http->request(
             'GET',
             $mention_url
