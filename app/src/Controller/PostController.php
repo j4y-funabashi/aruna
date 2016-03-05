@@ -35,9 +35,6 @@ class PostController
                 'posts' => $posts
             ]
         );
-        return new JsonResponse(
-            ['items' => $posts]
-        );
     }
 
     protected function createPostView($post, $app)
