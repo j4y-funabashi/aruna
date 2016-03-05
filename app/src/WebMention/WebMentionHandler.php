@@ -2,12 +2,19 @@
 
 namespace Aruna\WebMention;
 
+use Aruna\EventWriter;
+
 /**
  * Class WebMentionHandler
  * @author yourname
  */
 class WebMentionHandler
 {
+    public function __construct(
+        EventWriter $eventWriter
+    ) {
+        $this->eventWriter = $eventWriter;
+    }
 
     public function recieve(array $mention)
     {
@@ -17,5 +24,7 @@ class WebMentionHandler
         ) {
             throw new \InvalidArgumentException();
         }
+
+        $this->eventWriter->save($mention);
     }
 }
