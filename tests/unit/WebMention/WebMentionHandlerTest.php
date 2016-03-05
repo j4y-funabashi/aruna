@@ -15,7 +15,11 @@ class WebMentionHandlerTest extends UnitTest
     public function setUp()
     {
         $this->eventWriter = $this->prophesize("\Aruna\EventWriter");
-        $this->SUT = new WebMentionHandler($this->eventWriter->reveal());
+        $this->eventReader = $this->prophesize("\Aruna\EventReader");
+        $this->SUT = new WebMentionHandler(
+            $this->eventWriter->reveal(),
+            $this->eventReader->reveal()
+        );
     }
 
     /**

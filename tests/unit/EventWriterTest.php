@@ -22,7 +22,7 @@ class EventWriterTest extends UnitTest
     /**
      * @test
      */
-    public function it_does_something_awesome()
+    public function it_tells_filesystem_to_write_json_version_of_event()
     {
         $event = new Event(["blah" => 1]);
         $this->filesystem->write($event->getUid().".json", json_encode($event))
