@@ -36,8 +36,14 @@ class WebmentionController
         return new Response($url, Response::HTTP_ACCEPTED);
     }
 
-    public function view($mention_id)
+    public function view(Application $app, Request $request, $mention_id)
     {
-        return $mention_id;
+        $mention = $this->mentionsHandler->findById($mention_id);
+        return $app['twig']->render(
+            'mention.html',
+            [
+                'mention' => $mention
+            ]
+        );
     }
 }
