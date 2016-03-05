@@ -9,7 +9,8 @@ namespace Aruna;
 class EventWriter
 {
 
-    public function save($data)
-    {
+    public function save(
+        Event $data
+    ) {
     }
 }

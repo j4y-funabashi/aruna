@@ -3,6 +3,7 @@
 namespace Aruna\WebMention;
 
 use Aruna\EventWriter;
+use Aruna\Event;
 
 /**
  * Class WebMentionHandler
@@ -25,6 +26,6 @@ class WebMentionHandler
             throw new \InvalidArgumentException();
         }
 
-        $this->eventWriter->save($mention);
+        $this->eventWriter->save(new Event($mention));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Test;
 
+use Prophecy\Argument;
 use Aruna\WebMention\WebMentionHandler;
 
 /**
@@ -42,9 +43,8 @@ class WebMentionHandlerTest extends UnitTest
     */
     public function it_passes_mention_to_writer()
     {
-        $mention = ['target' => 'test', 'source' => 'test'];
-        $this->SUT->recieve($mention);
-        $this->eventWriter->save($mention)
+        $this->SUT->recieve(['target' => 'test', 'source' => 'test']);
+        $this->eventWriter->save(Argument::type("Aruna\Event"))
             ->shouldBeCalled();
     }
 }
