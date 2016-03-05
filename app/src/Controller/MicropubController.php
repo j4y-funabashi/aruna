@@ -46,7 +46,12 @@ class MicropubController
 
     public function form(Application $app, Request $request)
     {
-        return $app['twig']->render('micropub.html');
+        return $app['twig']->render(
+            'micropub.html',
+            [
+                'current_date' => date('c')
+            ]
+        );
     }
 
     private function buildEntryArray($request)
