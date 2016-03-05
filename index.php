@@ -43,6 +43,12 @@ $app['micropub.controller'] = $app->share(function () use ($app) {
         $app["create_post.handler"]
     );
 });
+$app['webmention.controller'] = $app->share(function () use ($app) {
+    return new Aruna\Controller\WebmentionController(
+        $app["monolog"],
+        new Aruna\WebMention\WebMentionHandler()
+    );
+});
 $app['posts.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\PostController($app['posts_repository_reader']);
 });
