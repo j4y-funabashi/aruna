@@ -37,6 +37,21 @@ class PostController
         );
     }
 
+    public function getById(Application $app, $post_id)
+    {
+        $post = $this->createPostView(
+            $this->postRepository->findById($post_id)[0],
+            $app
+        );
+
+        return $app['twig']->render(
+            'post.html',
+            [
+                'post' => $post
+            ]
+        );
+    }
+
     protected function createPostView($post, $app)
     {
         $published = new \DateTimeImmutable($post['published']);
@@ -49,19 +64,5 @@ class PostController
         $post['human_date'] = $published->format("Y-m-d");
 
         return $post;
-    }
-
-    public function getById(Application $app, $post_id)
-    {
-        $post = $this->createPostView(
-            $this->postRepository->findById($post_id)[0],
-            $app
-        );
-        return $app['twig']->render(
-            'post.html',
-            [
-                'post' => $post
-            ]
-        );
     }
 }
