@@ -26,7 +26,7 @@ class PostController
             function ($post) use ($app) {
                 return $this->createPostView($post, $app);
             },
-            $this->postRepository->listFromId($request->query->get('from_id'), 10)
+            $this->postRepository->listFromId($request->query->get('from_id'), 100)
         );
 
         return $app['twig']->render(
