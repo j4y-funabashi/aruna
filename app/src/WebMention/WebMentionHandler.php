@@ -26,6 +26,8 @@ class WebMentionHandler
             throw new \InvalidArgumentException();
         }
 
-        $this->eventWriter->save(new Event($mention));
+        $event = new Event($mention);
+        $this->eventWriter->save($event);
+        return $event->getUid();
     }
 }
