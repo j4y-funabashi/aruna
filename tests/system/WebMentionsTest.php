@@ -12,7 +12,7 @@ class WebMentionsTest extends SystemTest
     /**
      * @test
      */
-    public function it_recieves_valid_webmention_post()
+    public function it_returns_202_accepted_for_valid_webmention_post()
     {
         $response = $this->http->request(
             'POST',
@@ -25,7 +25,6 @@ class WebMentionsTest extends SystemTest
             ]
         );
 
-        $this->assertEquals(201, $response->getStatusCode());
-        $mention_url = trim($response->getBody());
+        $this->assertEquals(202, $response->getStatusCode());
     }
 }
