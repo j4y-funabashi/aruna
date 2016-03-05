@@ -14,7 +14,7 @@ class MicropubTest extends SystemTest
     /**
      * @test
      */
-    public function it_returns_202_accepted_for_valid_webmention_post()
+    public function it_returns_202_accepted_for_valid_micropub_post()
     {
         $response = $this->http->request(
             'POST',
@@ -33,7 +33,7 @@ class MicropubTest extends SystemTest
     /**
     * @test
     */
-    public function it_returns_a_url_containing_status_of_newly_created_mention()
+    public function it_returns_a_url_containing_entry_of_newly_created_post()
     {
         $post = [
             'h' => 'entry',
