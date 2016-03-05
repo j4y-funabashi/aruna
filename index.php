@@ -5,6 +5,7 @@ require_once __DIR__ . "/common.php";
 $app = new Silex\Application();
 $app['debug'] = true;
 $app['posts_root'] = getenv("ROOT_DIR")."/posts";
+$app['webmentions_root'] = getenv("ROOT_DIR")."/webmentions";
 
 // PROVIDERS
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
@@ -44,9 +45,15 @@ $app['micropub.controller'] = $app->share(function () use ($app) {
     );
 });
 $app['webmention.controller'] = $app->share(function () use ($app) {
+
+    $adapter = new League\Flysystem\Adapter\Local($app['webmentions_root']);
+    $filesystem = new League\Flysystem\Filesystem($adapter);
+    $eventWriter = new Aruna\EventWriter($filesystem);
     return new Aruna\Controller\WebmentionController(
         $app["monolog"],
-        new Aruna\WebMention\WebMentionHandler()
+        new Aruna\WebMention\WebMentionHandler(
+            $eventWriter
+        )
     );
 });
 $app['posts.controller'] = $app->share(function () use ($app) {
