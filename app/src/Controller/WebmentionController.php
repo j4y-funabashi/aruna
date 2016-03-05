@@ -27,6 +27,7 @@ class WebmentionController
             'source' => $request->get("source"),
             'target' => $request->get("target")
         ]);
-        return "hello!";
+
+        return new Response("", Response::HTTP_ACCEPTED);
     }
 }
