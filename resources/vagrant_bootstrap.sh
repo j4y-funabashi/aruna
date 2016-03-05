@@ -17,7 +17,8 @@ sudo apt-get update \
     nginx \
     php5-fpm \
     php5-cli \
-    php5-imagick
+    php5-imagick \
+    php5-curl
 
 sudo cp /srv/aruna/resources/nginx.conf /etc/nginx/sites-enabled/default \
     && sudo cp /srv/aruna/resources/php5-fpm.conf /etc/php5/fpm/pool.d/aruna.conf
