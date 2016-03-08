@@ -13,7 +13,6 @@ use Silex\Application;
  */
 class MicropubController
 {
-
     public function __construct(
         $logger,
         $handler
