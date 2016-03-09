@@ -23,20 +23,23 @@ class ProcessCacheHandler
         $initial_id = 0;
         $rpp = 100;
 
-        $events = $this->reader->listFromId($initial_id, $rpp);
-
-        foreach ($events as $event) {
-            $this->log->debug("Processing ".$event['uid']);
-            try {
-                $event = $this->pipeline->process($event);
-            } catch (\Exception $e) {
-                $m = sprintf(
-                    "Could not process %s [%s]",
-                    $event['uid'],
-                    $e->getMessage()
-                );
-                $this->log->critical($m);
+        while (true) {
+            $events = $this->reader->listFromId($initial_id, $rpp);
+            foreach ($events as $event) {
+                $this->log->debug("Processing ".$event['uid']);
+                try {
+                    $event = $this->pipeline->process($event);
+                } catch (\Exception $e) {
+                    $m = sprintf(
+                        "Could not process %s [%s]",
+                        $event['uid'],
+                        $e->getMessage()
+                    );
+                    $this->log->critical($m);
+                }
             }
+
+            sleep(60);
         }
     }
 }
