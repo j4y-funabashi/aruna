@@ -3,6 +3,7 @@
 require_once __DIR__ . "/common.php";
 
 $app = new Silex\Application();
+
 $app['debug'] = true;
 $app['posts_root'] = getenv("ROOT_DIR")."/posts";
 $app['webmentions_root'] = getenv("ROOT_DIR")."/webmentions";
@@ -45,7 +46,6 @@ $app['micropub.controller'] = $app->share(function () use ($app) {
     );
 });
 $app['webmention.controller'] = $app->share(function () use ($app) {
-
     $adapter = new League\Flysystem\Adapter\Local($app['webmentions_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
     $eventWriter = new Aruna\EventWriter($filesystem);
@@ -61,8 +61,6 @@ $app['webmention.controller'] = $app->share(function () use ($app) {
 $app['posts.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\PostController($app['posts_repository_reader']);
 });
-
-
 $app['auth.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\AuthController(
         new GuzzleHttp\Client(),

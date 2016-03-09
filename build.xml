@@ -1,0 +1,11 @@
+<project name="aruna" default="build">
+
+    <target name="build">
+        <!--install modules defined in composer.json-->
+        <exec executable="bash" failonerror="true">
+            <arg value="-c" />
+            <arg value="composer install" />
+        </exec>
+    </target>
+
+</project>

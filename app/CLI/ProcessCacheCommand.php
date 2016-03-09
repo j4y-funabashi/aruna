@@ -20,5 +20,8 @@ class ProcessCacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $handler = $this->getApplication()
+            ->getService("process_cache_handler");
+        $handler->handle();
     }
 }
