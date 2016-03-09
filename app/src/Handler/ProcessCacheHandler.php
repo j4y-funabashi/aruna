@@ -21,7 +21,7 @@ class ProcessCacheHandler
     public function handle()
     {
         $initial_id = 0;
-        $rpp = 10;
+        $rpp = 100;
 
         $events = $this->reader->listFromId($initial_id, $rpp);
 

@@ -18,10 +18,12 @@ sudo apt-get update \
     ant \
     git \
     supervisor \
+    sqlite3 \
     php5-fpm \
     php5-cli \
     php5-imagick \
-    php5-curl
+    php5-curl \
+    php5-sqlite
 
 ## composer
 curl -sS https://getcomposer.org/installer | php
