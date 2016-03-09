@@ -29,6 +29,11 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
                     $app['thumbnails_root']
                 )
             )
+        )->pipe(
+            new Aruna\Action\ConvertMarkdown(
+                $app['monolog'],
+                new \cebe\markdown\GithubMarkdown()
+            )
         );
 
     $adapter = new League\Flysystem\Adapter\Local($app['posts_root']);

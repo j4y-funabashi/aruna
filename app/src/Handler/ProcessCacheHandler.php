@@ -28,7 +28,7 @@ class ProcessCacheHandler
         foreach ($events as $event) {
             $this->log->debug("Processing ".$event['uid']);
             try {
-                $this->pipeline->process($event);
+                $event = $this->pipeline->process($event);
             } catch (\Exception $e) {
                 $m = sprintf(
                     "Could not process %s [%s]",
