@@ -9,13 +9,34 @@ namespace Aruna\Handler;
 class ProcessCacheHandler
 {
     public function __construct(
-        $log
+        $log,
+        $reader,
+        $pipeline
     ) {
         $this->log = $log;
+        $this->reader = $reader;
+        $this->pipeline = $pipeline;
     }
 
     public function handle()
     {
-        $this->log->info("hello");
+        $initial_id = 0;
+        $rpp = 10;
+
+        $events = $this->reader->listFromId($initial_id, $rpp);
+
+        foreach ($events as $event) {
+            $this->log->debug("Processing ".$event['uid']);
+            try {
+                $this->pipeline->process($event);
+            } catch (\Exception $e) {
+                $m = sprintf(
+                    "Could not process %s [%s]",
+                    $event['uid'],
+                    $e->getMessage()
+                );
+                $this->log->critical($m);
+            }
+        }
     }
 }

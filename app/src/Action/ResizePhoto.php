@@ -9,17 +9,24 @@ namespace Aruna\Action;
 class ResizePhoto
 {
     public function __construct(
+        $log,
         $resizer
     ) {
+        $this->log = $log;
         $this->resizer = $resizer;
     }
 
-    public function __invoke($post)
+    public function __invoke($event)
     {
-        if (isset($post['files']['photo'])) {
-            $this->resizer->resize($post['files']['photo']);
+        if (isset($event['files']['photo'])) {
+            $m = sprintf(
+                "Resizing photo [%s]",
+                $event['files']['photo']
+            );
+            $this->log->debug($m);
+            $this->resizer->resize($event['files']['photo']);
         }
 
-        return $post;
+        return $event;
     }
 }

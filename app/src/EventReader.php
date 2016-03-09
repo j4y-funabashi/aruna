@@ -13,7 +13,7 @@ class EventReader
         $this->filesystem = $filesystem;
     }
 
-    public function findById($post_id)
+    public function readById($post_id)
     {
         $post_filepath = array_shift(
             array_filter(
@@ -23,14 +23,14 @@ class EventReader
                 }
             )
         );
-        return [json_decode($this->filesystem->read($post_filepath['path']), true)];
+        return json_decode($this->filesystem->read($post_filepath['path']), true);
     }
 
     public function listFromId($from_id, $rpp)
     {
         $all_paths = $this->getJsonFilePaths();
         $key = array_search($from_id, array_column($all_paths, 'filename'));
-        return array_values(
+        return array_filter(
             array_map(
                 function ($post_filepath) {
                     return json_decode($this->filesystem->read($post_filepath['path']), true);
@@ -54,7 +54,7 @@ class EventReader
         foreach ($files as $file) {
             $out[$file['path']] = $file;
         }
-        krsort($out);
+        ksort($out);
         return $out;
     }
 }

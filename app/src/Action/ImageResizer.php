@@ -11,8 +11,12 @@ use Intervention\Image\ImageManagerStatic as Image;
 class ImageResizer
 {
 
-    public function __construct($root_dir, $thumbnails_dir)
-    {
+    public function __construct(
+        $log,
+        $root_dir,
+        $thumbnails_dir
+    ) {
+        $this->log = $log;
         $this->root_dir = $root_dir;
         $this->thumbnails_dir = $thumbnails_dir;
         Image::configure(array('driver' => 'imagick'));
@@ -23,6 +27,11 @@ class ImageResizer
         $in_path = $this->root_dir."/".$photo_path;
         $out_path = $this->thumbnails_dir."/".$photo_path;
         if (file_exists($out_path)) {
+            $m = sprintf(
+                "Photo already exists [%s]",
+                $out_path
+            );
+            $this->log->debug($m);
             return;
         }
 
