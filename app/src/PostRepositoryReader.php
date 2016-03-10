@@ -8,53 +8,48 @@ namespace Aruna;
  */
 class PostRepositoryReader
 {
-    public function __construct($filesystem)
+    public function __construct($db)
     {
-        $this->filesystem = $filesystem;
+        $this->db = $db;
     }
 
     public function findById($post_id)
     {
-        $post_filepath = array_shift(
-            array_filter(
-                $this->getJsonFilePaths(),
-                function ($file_path) use ($post_id) {
-                    return $file_path['filename'] == $post_id;
-                }
-            )
-        );
-        return [json_decode($this->filesystem->read($post_filepath['path']), true)];
+        $q = "SELECT
+            id,
+            published,
+            post
+            FROM posts
+            WHERE id = :id";
+        $r = $this->db->prepare($q);
+        $r->execute([":id" => $post_id]);
+        $post = $r->fetch();
+        $post = json_decode($post['post'], true);
+        return $post;
     }
 
     public function listFromId($from_id, $rpp)
     {
-        $all_paths = $this->getJsonFilePaths();
-        $key = array_search($from_id, array_column($all_paths, 'filename'));
-        return array_values(
-            array_map(
-                function ($post_filepath) {
-                    return json_decode($this->filesystem->read($post_filepath['path']), true);
-                },
-                array_slice($all_paths, $key, $rpp)
-            )
+        $q = "SELECT
+            id,
+            published,
+            post
+            FROM posts
+            WHERE id > :id
+            ORDER BY id DESC
+            LIMIT :rpp";
+        $r = $this->db->prepare($q);
+        $r->execute(
+            [
+                ":id" => $from_id,
+                ":rpp" => $rpp
+            ]
         );
-    }
 
-    private function getJsonFilePaths()
-    {
-        $files = array_values(
-            array_filter(
-                $this->filesystem->listContents('', true),
-                function ($file_path) {
-                    return substr($file_path['path'], -4) == "json";
-                }
-            )
-        );
         $out = [];
-        foreach ($files as $file) {
-            $out[$file['path']] = $file;
+        while ($post = $r->fetch()) {
+            $out[] = json_decode($post['post'], true);
         }
-        krsort($out);
         return $out;
     }
 }
