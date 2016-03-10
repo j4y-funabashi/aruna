@@ -46,7 +46,8 @@ $app['create_post.handler'] = $app->share(function () use ($app) {
 $app['micropub.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\MicropubController(
         $app["monolog"],
-        $app["create_post.handler"]
+        $app["create_post.handler"],
+        new GuzzleHttp\Client()
     );
 });
 $app['webmention.controller'] = $app->share(function () use ($app) {

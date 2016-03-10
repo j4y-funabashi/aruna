@@ -13,17 +13,37 @@ use Silex\Application;
  */
 class MicropubController
 {
+    private $token_url = "https://tokens.indieauth.com/token";
+
     public function __construct(
         $logger,
-        $handler
+        $handler,
+        $http
     ) {
         $this->log = $logger;
         $this->handler = $handler;
+        $this->http = $http;
     }
 
     public function createPost(Application $app, Request $request)
     {
         $this->log->info(__METHOD__);
+
+        // VERIFY ACCESS TOKEN
+        $response = $this->http->request(
+            'GET',
+            $this->token_url,
+            [
+                'headers' => [
+                    'Authorization' => $request->headers->get('Authorization'),
+                    'Content-type' =>  'application/x-www-form-urlencoded'
+                ]
+            ]
+        );
+        parse_str($response->getBody(), $body);
+        if ($body['me'] !== "http://j4y.co/" || $body['scope'] !== "post") {
+            return new Response("", 403);
+        }
 
         $entry = $this->buildEntryArray($request);
         $files = $this->buildFilesArray($request);
