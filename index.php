@@ -7,6 +7,8 @@ $app = new Silex\Application();
 $app['debug'] = true;
 $app['posts_root'] = getenv("ROOT_DIR")."/posts";
 $app['webmentions_root'] = getenv("ROOT_DIR")."/webmentions";
+$app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
+$app['rpp'] = 100;
 
 // PROVIDERS
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
@@ -24,10 +26,14 @@ $app->register(new Silex\Provider\TranslationServiceProvider());
 $app->register(new Silex\Provider\SessionServiceProvider());
 
 // SERVICES
+$app['db_cache'] = $app->share(function () use ($app) {
+    $db = new \PDO("sqlite:".$app['db_file']);
+    $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+    $db->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+    return $db;
+});
 $app['posts_repository_reader'] = $app->share(function () use ($app) {
-    $adapter = new League\Flysystem\Adapter\Local($app['posts_root']);
-    $filesystem = new League\Flysystem\Filesystem($adapter);
-    return new Aruna\PostRepositoryReader($filesystem);
+    return new Aruna\PostRepositoryReader($app['db_cache']);
 });
 $app['posts_repository_writer'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local($app['posts_root']);
