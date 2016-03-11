@@ -30,6 +30,9 @@ class MicropubController
         $this->log->info(__METHOD__);
 
         // VERIFY ACCESS TOKEN
+        if (null === $request->headers->get('Authorization')) {
+            return new Response("Missing Authorization Header", Response::HTTP_UNAUTHORIZED);
+        }
         $response = $this->http->request(
             'GET',
             $this->token_url,
@@ -41,8 +44,9 @@ class MicropubController
             ]
         );
         parse_str($response->getBody(), $body);
+
         if ($body['me'] !== "http://j4y.co/" || $body['scope'] !== "post") {
-            return new Response("", 403);
+            return new Response("", Response::HTTP_UNAUTHORIZED);
         }
 
         $entry = $this->buildEntryArray($request);
