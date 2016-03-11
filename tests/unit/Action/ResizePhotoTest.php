@@ -14,10 +14,7 @@ class ResizePhotoTest extends UnitTest
     {
         $this->resizer = $this->prophesize("\Aruna\Action\ImageResizer");
         $this->log = $this->prophesize("\Monolog\Logger");
-    }
-    private function getSUT()
-    {
-        return new ResizePhoto(
+        $this->SUT = new ResizePhoto(
             $this->log->reveal(),
             $this->resizer->reveal()
         );
@@ -29,8 +26,7 @@ class ResizePhotoTest extends UnitTest
     public function it_does_nothing_if_post_has_no_photo()
     {
         $post = ["h" => "entry"];
-        $SUT = $this->getSUT();
-        $result = $SUT($post);
+        $result = call_user_func($this->SUT, $post);
         $this->assertEquals($post, $result);
     }
 
@@ -47,8 +43,7 @@ class ResizePhotoTest extends UnitTest
         ];
         $this->resizer->resize($post['files']['photo'])
             ->shouldBeCalled();
-        $SUT = $this->getSUT();
-        $result = $SUT($post);
+        $result = call_user_func($this->SUT, $post);
         $this->assertEquals($post, $result);
     }
 }
