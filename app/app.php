@@ -7,6 +7,8 @@ $app['posts_root'] = getenv("ROOT_DIR")."/posts";
 $app['webmentions_root'] = getenv("ROOT_DIR")."/webmentions";
 $app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
 $app['rpp'] = 100;
+$app['token_endpoint'] = "https://tokens.indieauth.com/token";
+$app['me_endpoint'] = "http://j4y.co";
 
 // PROVIDERS
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
@@ -47,7 +49,11 @@ $app['micropub.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\MicropubController(
         $app["monolog"],
         $app["create_post.handler"],
-        new GuzzleHttp\Client()
+        new Aruna\AccessToken(
+            new GuzzleHttp\Client(),
+            $app['token_endpoint'],
+            $app['me_endpoint']
+        )
     );
 });
 $app['webmention.controller'] = $app->share(function () use ($app) {

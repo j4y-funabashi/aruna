@@ -18,34 +18,22 @@ class MicropubController
     public function __construct(
         $logger,
         $handler,
-        $http
+        $accessToken
     ) {
         $this->log = $logger;
         $this->handler = $handler;
-        $this->http = $http;
+        $this->accessToken = $accessToken;
     }
 
     public function createPost(Application $app, Request $request)
     {
         $this->log->info(__METHOD__);
 
-        // VERIFY ACCESS TOKEN
-        if (null === $request->headers->get('Authorization')) {
-            return new Response("Missing Authorization Header", Response::HTTP_UNAUTHORIZED);
-        }
-        $response = $this->http->request(
-            'GET',
-            $this->token_url,
-            [
-                'headers' => [
-                    'Authorization' => $request->headers->get('Authorization'),
-                    'Content-type' =>  'application/x-www-form-urlencoded'
-                ]
-            ]
-        );
-        parse_str($response->getBody(), $body);
-
-        if ($body['me'] !== "http://j4y.co/" || $body['scope'] !== "post") {
+        try {
+            $token = $this->accessToken->getTokenFromAuthCode(
+                $request->headers->get('Authorization')
+            );
+        } catch (\Exception $e) {
             return new Response("", Response::HTTP_UNAUTHORIZED);
         }
 
