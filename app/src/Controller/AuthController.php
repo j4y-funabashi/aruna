@@ -55,20 +55,37 @@ class AuthController
 
     public function auth(Application $app, Request $request)
     {
+        $auth_code = $request->get('code');
+
         $response = $this->http->request(
             'POST',
             $this->auth_url,
             [
                 'form_params' => [
-                    'code' => $request->get('code'),
+                    'code' => $auth_code,
                     'redirect_uri' => $this->getRedirectUri($app),
                     'auth_url' => $this->auth_url
                 ]
             ]
         );
-
         parse_str($response->getBody(), $body);
-        $app['session']->set('user', $body['me']);
+
+        $response = $this->http->post(
+            $app['token_endpoint'],
+            [
+                'form_params' => [
+                    'me' => $body['me'],
+                    'code' => $auth_code,
+                    'redirect_uri' => $this->getRedirectUri($app),
+                    'client_id' => $this->getClientId($app),
+                    'scope' => 'post'
+                ]
+            ]
+        );
+        parse_str($response->getBody(), $body);
+
+        $app['session']->set('me', $body['me']);
+        $app['session']->set('access_token', $body['access_token']);
         $this->log->info("Authenticated user: ".$body['me']);
         return $app->redirect('/');
     }
