@@ -10,11 +10,11 @@ class ProcessCacheHandler
 {
     public function __construct(
         $log,
-        $reader,
+        $eventReader,
         $pipeline
     ) {
         $this->log = $log;
-        $this->reader = $reader;
+        $this->eventReader = $eventReader;
         $this->pipeline = $pipeline;
     }
 
@@ -24,7 +24,7 @@ class ProcessCacheHandler
         $rpp = 100;
 
         while (true) {
-            $events = $this->reader->listFromId($initial_id, $rpp);
+            $events = $this->eventReader->listFromId($initial_id, $rpp);
             foreach ($events as $event) {
                 $this->log->debug("Processing ".$event['uid']);
                 try {
