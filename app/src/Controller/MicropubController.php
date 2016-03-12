@@ -29,12 +29,18 @@ class MicropubController
     {
         $this->log->info(__METHOD__);
 
+        $access_token = (null == $request->headers->get('Authorization'))
+            ? $request->request->get('access_token')
+            : $request->headers->get('Authorization');
+
+        $this->log->info($access_token);
+
         try {
             $token = $this->accessToken->getTokenFromAuthCode(
-                $request->headers->get('Authorization')
+                $access_token
             );
         } catch (\Exception $e) {
-            return new Response("", Response::HTTP_UNAUTHORIZED);
+            return new Response($e->getMessage(), Response::HTTP_UNAUTHORIZED);
         }
 
         $entry = $this->buildEntryArray($request);
@@ -56,7 +62,8 @@ class MicropubController
         return $app['twig']->render(
             'micropub.html',
             [
-                'current_date' => date('c')
+                'current_date' => date('c'),
+                'access_token' => $app['session']->get('access_token')
             ]
         );
     }
