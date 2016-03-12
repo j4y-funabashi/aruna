@@ -40,12 +40,14 @@ class AccessToken
 
         parse_str($response->getBody(), $body);
 
-        if (
-            $response->getStatusCode() !== 200
-            || $body['me'] !== $this->me
-            || $body['scope'] !== "post"
-        ) {
-            throw new \Exception();
+        if ($response->getStatusCode() !== 200) {
+            throw new \Exception("Token endpoint returned with status ".$response->getStatusCode());
+        }
+        if ($body['me'] !== $this->me) {
+            throw new \Exception($body['me'] ." does not match ". $this->me);
+        }
+        if ($body['scope'] !== "post") {
+            throw new \Exception("scope is not post");
         }
 
         return $body;
