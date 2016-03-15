@@ -12,12 +12,16 @@ class ProcessCacheHandler
         $log,
         $eventReader,
         $mentionsReader,
-        $pipeline
+        $mentionsWriter,
+        $pipeline,
+        $processed_mentions_root
     ) {
         $this->log = $log;
         $this->eventReader = $eventReader;
         $this->mentionsReader = $mentionsReader;
+        $this->mentionsWriter = $mentionsWriter;
         $this->pipeline = $pipeline;
+        $this->processed_mentions_root = $processed_mentions_root;
     }
 
     public function handle()
@@ -36,22 +40,31 @@ class ProcessCacheHandler
         $rpp = 100;
 
         $mentions = $this->mentionsReader->listFromId($initial_id, $rpp);
-
         foreach ($mentions as $mention) {
+            if (file_exists($this->processed_mentions_root."/".$mention['uid'].".json")) {
+                continue;
+            }
 
-            if (false !== stripos($mention['target'], "http://j4y.co/")) {
-
+            if (
+                false !== stripos($mention['target'], "http://j4y.co")
+            ) {
+                $mention['target_uid'] = $this->getTargetUid($mention['target']);
                 $http = new \GuzzleHttp\Client();
                 $result = $http->get(
                     $mention['source']
                 );
                 $source_body = trim($result->getBody());
                 if (false !== stripos($source_body, $mention['target'])) {
-                    //$mf = \Mf2\fetch($mention['source']);
-                    var_dump($source_body);
+                    $mention['source_mf2_json'] = \Mf2\parse($source_body);
+                    $this->mentionsWriter->save($mention);
                 }
             }
         }
+    }
+
+    private function getTargetUid($target_url)
+    {
+        return basename(parse_url($target_url, PHP_URL_PATH));
     }
 
     private function processEvents()
