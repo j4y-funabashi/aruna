@@ -24,12 +24,14 @@ class CacheToSql
             (:id, :published, :post)";
         $r = $this->db->prepare($q);
 
+        $data = [
+            ":id" => $event['uid'],
+            ":published" => $event['published'],
+            ":post" => json_encode($event)
+        ];
+
         $r->execute(
-            [
-                ":id" => $event['uid'],
-                ":published" => $event['published'],
-                ":post" => json_encode($event)
-            ]
+            $data
         );
     }
 }

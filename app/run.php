@@ -24,6 +24,9 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
     $db = new \PDO("sqlite:".$app['db_file']);
     $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
+    $linkPreview = new LinkPreview\LinkPreview();
+    $linkPreview->addParser(new LinkPreview\Parser\GeneralParser());
+
     $pipeline = (new League\Pipeline\Pipeline())
         ->pipe(
             new Aruna\Action\ResizePhoto(
@@ -34,12 +37,20 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
                     $app['thumbnails_root']
                 )
             )
-        )->pipe(
+        )
+        ->pipe(
             new Aruna\Action\ConvertMarkdown(
                 $app['monolog'],
                 new \cebe\markdown\GithubMarkdown()
             )
-        )->pipe(
+        )
+        ->pipe(
+            new Aruna\Action\FetchLinkPreview(
+                $app['monolog'],
+                $linkPreview
+            )
+        )
+        ->pipe(
             new Aruna\Action\CacheToSql(
                 $app['monolog'],
                 $db

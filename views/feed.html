@@ -7,6 +7,12 @@
 
         <article class="h-{{ post.h }}">
 
+            {% if post.link_preview is defined %}
+            <div>
+                <a href="{{ post.link_preview.url }}">{{ post.link_preview.title }}</a>
+            </div>
+            {% endif %}
+
             {% if post.photo is defined %}
             <img class="u-photo img-rounded img-responsive" src="/{{ post.photo }}" />
             {% endif %}
