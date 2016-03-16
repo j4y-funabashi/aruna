@@ -3,7 +3,6 @@
 namespace Aruna\Controller;
 
 use Silex\Application;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Aruna\PostRepositoryReader;
@@ -55,17 +54,11 @@ class PostController
         );
     }
 
-    protected function createPostView($post, $app)
+    protected function createPostView($post_data, $app)
     {
-        $published = new \DateTimeImmutable($post['published']);
-        $url = $app['url_generator']->generate(
-            'post',
-            array('post_id' => $post['uid']),
-            UrlGeneratorInterface::ABSOLUTE_URL
+        return new \Aruna\PostViewModel(
+            $post_data,
+            $app['url_generator']
         );
-        $post['url'] = $url;
-        $post['human_date'] = $published->format("Y-m-d");
-
-        return $post;
     }
 }
