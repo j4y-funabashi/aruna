@@ -65,10 +65,19 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
         )
         ;
 
+    $processMentionsPipeline = (new League\Pipeline\Pipeline())
+        ->pipe(
+            new Aruna\Action\ParseWebMention(
+                $app['event_store']
+            )
+        )
+        ;
+
     return new Aruna\Handler\ProcessCacheHandler(
         $app['monolog'],
         $app['event_store'],
-        $processPostsPipeline
+        $processPostsPipeline,
+        $processMentionsPipeline
     );
 });
 

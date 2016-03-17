@@ -11,11 +11,13 @@ class ProcessCacheHandler
     public function __construct(
         $log,
         $eventStore,
-        $processPostsPipeline
+        $processPostsPipeline,
+        $processMentionsPipeline
     ) {
         $this->log = $log;
         $this->eventStore = $eventStore;
         $this->processPostsPipeline = $processPostsPipeline;
+        $this->processMentionsPipeline = $processMentionsPipeline;
     }
 
     public function handle()
@@ -38,32 +40,8 @@ class ProcessCacheHandler
             $rpp
         );
         foreach ($mentions as $mention) {
-            $out_file = "processed_webmentions/".$mention['uid'].".json";
-            if ($this->eventStore->exists($out_file)) {
-                continue;
-            }
-
-            if (false !== stripos($mention['target'], "http://j4y.co")) {
-                $mention['target_uid'] = $this->getTargetUid($mention['target']);
-                $http = new \GuzzleHttp\Client();
-                $result = $http->get(
-                    $mention['source']
-                );
-                $source_body = trim($result->getBody());
-                if (false !== stripos($source_body, $mention['target'])) {
-                    $mention['source_mf2_json'] = \Mf2\parse($source_body);
-                    $this->eventStore->save(
-                        $out_file,
-                        json_encode($mention)
-                    );
-                }
-            }
+            $mention = $this->processMentionsPipeline->process($mention);
         }
-    }
-
-    private function getTargetUid($target_url)
-    {
-        return basename(parse_url($target_url, PHP_URL_PATH));
     }
 
     private function processPosts()
