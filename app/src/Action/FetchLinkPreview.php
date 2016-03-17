@@ -12,11 +12,11 @@ class FetchLinkPreview
     public function __construct(
         $log,
         $linkPreview,
-        $eventStoreWriter
+        $eventStore
     ) {
         $this->log = $log;
         $this->linkPreview = $linkPreview;
-        $this->eventStoreWriter = $eventStoreWriter;
+        $this->eventStore = $eventStore;
     }
 
     public function __invoke($event)
@@ -40,8 +40,8 @@ class FetchLinkPreview
         }
 
         $out_file = "link_preview/".sha1($event[$key]).".json";
-        if ($this->eventStoreWriter->exists($out_file)) {
-            $link_preview = $this->eventStoreWriter->readContents($out_file);
+        if ($this->eventStore->exists($out_file)) {
+            $link_preview = $this->eventStore->readContents($out_file);
             $event['link_preview'] = $link_preview;
             return $event;
         }
@@ -49,7 +49,7 @@ class FetchLinkPreview
         $link_preview = $this->fetchLinkPreview($event[$key]);
         $event['link_preview'] = $link_preview;
 
-        $this->eventStoreWriter->save(
+        $this->eventStore->save(
             $out_file,
             json_encode($link_preview)
         );

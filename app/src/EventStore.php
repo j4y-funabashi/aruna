@@ -3,10 +3,10 @@
 namespace Aruna;
 
 /**
- * Class EventStoreWriter
+ * Class EventStore
  * @author yourname
  */
-class EventStoreWriter
+class EventStore
 {
     public function __construct(
         $filesystem

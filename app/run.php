@@ -19,11 +19,11 @@ $app['monolog'] = $app->share(function () use ($app) {
     return $log;
 });
 
-$app['event_store_writer'] = $app->share(function () use ($app) {
+$app['event_store'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
     $filesystem = new League\Flysystem\Filesystem($adapter);
 
-    return new Aruna\EventStoreWriter($filesystem);
+    return new Aruna\EventStore($filesystem);
 });
 
 $app['process_cache_handler'] = $app->share(function () use ($app) {
@@ -55,7 +55,7 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
             new Aruna\Action\FetchLinkPreview(
                 $app['monolog'],
                 $linkPreview,
-                $app['event_store_writer']
+                $app['event_store']
             )
         )
         ->pipe(
