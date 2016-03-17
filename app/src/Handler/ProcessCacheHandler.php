@@ -73,7 +73,6 @@ class ProcessCacheHandler
 
         $events = $this->eventReader->listFromId($initial_id, $rpp);
         foreach ($events as $event) {
-            $this->log->debug("Processing ".$event['uid']);
             try {
                 $event = $this->pipeline->process($event);
             } catch (\Exception $e) {

@@ -23,7 +23,6 @@ class ResizePhoto
                 "Resizing photo [%s]",
                 $event['files']['photo']
             );
-            $this->log->debug($m);
             $this->resizer->resize($event['files']['photo']);
         }
 
