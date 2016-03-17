@@ -19,6 +19,13 @@ $app['monolog'] = $app->share(function () use ($app) {
     return $log;
 });
 
+$app['event_store_writer'] = $app->share(function () use ($app) {
+    $adapter = new League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
+    $filesystem = new League\Flysystem\Filesystem($adapter);
+
+    return new Aruna\EventStoreWriter($filesystem);
+});
+
 $app['process_cache_handler'] = $app->share(function () use ($app) {
 
     $db = new \PDO("sqlite:".$app['db_file']);
@@ -47,7 +54,8 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
         ->pipe(
             new Aruna\Action\FetchLinkPreview(
                 $app['monolog'],
-                $linkPreview
+                $linkPreview,
+                $app['event_store_writer']
             )
         )
         ->pipe(
