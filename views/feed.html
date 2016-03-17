@@ -8,8 +8,11 @@
         <article class="h-{{ post.h }}">
 
             {% if post.link_preview is defined %}
-            <div>
-                <a href="{{ post.link_preview.url }}">{{ post.link_preview.title }}</a>
+            <div class="container">
+                <div class="row">
+                    <a href="{{ post.link_preview.url }}">{{ post.link_preview.title|raw }}</a>
+                    <p>{{ post.link_preview.description|raw }}</p>
+                </div>
             </div>
             {% endif %}
 
