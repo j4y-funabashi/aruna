@@ -13,24 +13,24 @@ class ProcessCacheHandler
         $eventReader,
         $mentionsReader,
         $eventStore,
-        $pipeline,
+        $processPostsPipeline,
         $processed_mentions_root
     ) {
         $this->log = $log;
         $this->eventReader = $eventReader;
         $this->mentionsReader = $mentionsReader;
         $this->eventStore = $eventStore;
-        $this->pipeline = $pipeline;
+        $this->processPostsPipeline = $processPostsPipeline;
         $this->processed_mentions_root = $processed_mentions_root;
     }
 
     public function handle()
     {
-        while (true) {
-            $this->processEvents();
+        //while (true) {
+            $this->processPosts();
             $this->processMentions();
-            sleep(60);
-        }
+            //sleep(60);
+        //}
     }
 
     private function processMentions()
@@ -68,7 +68,7 @@ class ProcessCacheHandler
         return basename(parse_url($target_url, PHP_URL_PATH));
     }
 
-    private function processEvents()
+    private function processPosts()
     {
         $initial_id = 0;
         $rpp = 100;
@@ -76,7 +76,7 @@ class ProcessCacheHandler
         $events = $this->eventReader->listFromId($initial_id, $rpp);
         foreach ($events as $event) {
             try {
-                $event = $this->pipeline->process($event);
+                $event = $this->processPostsPipeline->process($event);
             } catch (\Exception $e) {
                 $m = sprintf(
                     "Could not process %s [%s]",
