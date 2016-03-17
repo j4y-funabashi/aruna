@@ -71,6 +71,11 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
                 $app['event_store']
             )
         )
+        ->pipe(
+            new Aruna\Action\CacheMentionToSql(
+                $db
+            )
+        )
         ;
 
     return new Aruna\Handler\ProcessCacheHandler(
