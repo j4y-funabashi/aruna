@@ -26,11 +26,11 @@ class ProcessCacheHandler
 
     public function handle()
     {
-        //while (true) {
+        while (true) {
             $this->processPosts();
             $this->processMentions();
-            //sleep(60);
-        //}
+            sleep(60);
+        }
     }
 
     private function processMentions()
