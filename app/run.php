@@ -74,15 +74,11 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
     $filesystem = new League\Flysystem\Filesystem($adapter);
     $mentionsReader = new Aruna\EventReader($filesystem);
 
-    $adapter = new League\Flysystem\Adapter\Local($app['processed_mentions_root']);
-    $filesystem = new League\Flysystem\Filesystem($adapter);
-    $mentionsWriter = new Aruna\MentionWriter($filesystem);
-
     return new Aruna\Handler\ProcessCacheHandler(
         $app['monolog'],
         $eventReader,
         $mentionsReader,
-        $mentionsWriter,
+        $app['event_store'],
         $pipeline,
         $app['processed_mentions_root']
     );
