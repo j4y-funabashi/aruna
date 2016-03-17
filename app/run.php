@@ -6,7 +6,6 @@ $app = new Cilex\Application("aruna");
 
 $app['posts_root'] = getenv("ROOT_DIR")."/posts";
 $app['mentions_root'] = getenv("ROOT_DIR")."/webmentions";
-$app['processed_mentions_root'] = getenv("ROOT_DIR")."/processed_webmentions";
 $app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
 $app['thumbnails_root'] = getenv("ROOT_DIR")."/thumbnails";
 
@@ -34,7 +33,7 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
     $linkPreview = new LinkPreview\LinkPreview();
     $linkPreview->addParser(new LinkPreview\Parser\GeneralParser());
 
-    $pipeline = (new League\Pipeline\Pipeline())
+    $processPostsPipeline = (new League\Pipeline\Pipeline())
         ->pipe(
             new Aruna\Action\ResizePhoto(
                 $app['monolog'],
@@ -66,21 +65,10 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
         )
         ;
 
-    $adapter = new League\Flysystem\Adapter\Local($app['posts_root']);
-    $filesystem = new League\Flysystem\Filesystem($adapter);
-    $eventReader = new Aruna\EventReader($filesystem);
-
-    $adapter = new League\Flysystem\Adapter\Local($app['mentions_root']);
-    $filesystem = new League\Flysystem\Filesystem($adapter);
-    $mentionsReader = new Aruna\EventReader($filesystem);
-
     return new Aruna\Handler\ProcessCacheHandler(
         $app['monolog'],
-        $eventReader,
-        $mentionsReader,
         $app['event_store'],
-        $pipeline,
-        $app['processed_mentions_root']
+        $processPostsPipeline
     );
 });
 

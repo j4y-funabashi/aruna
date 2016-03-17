@@ -10,18 +10,12 @@ class ProcessCacheHandler
 {
     public function __construct(
         $log,
-        $eventReader,
-        $mentionsReader,
         $eventStore,
-        $processPostsPipeline,
-        $processed_mentions_root
+        $processPostsPipeline
     ) {
         $this->log = $log;
-        $this->eventReader = $eventReader;
-        $this->mentionsReader = $mentionsReader;
         $this->eventStore = $eventStore;
         $this->processPostsPipeline = $processPostsPipeline;
-        $this->processed_mentions_root = $processed_mentions_root;
     }
 
     public function handle()
@@ -38,7 +32,11 @@ class ProcessCacheHandler
         $initial_id = 0;
         $rpp = 100;
 
-        $mentions = $this->mentionsReader->listFromId($initial_id, $rpp);
+        $mentions = $this->eventStore->listFromId(
+            "webmentions",
+            $initial_id,
+            $rpp
+        );
         foreach ($mentions as $mention) {
             $out_file = "processed_webmentions/".$mention['uid'].".json";
             if ($this->eventStore->exists($out_file)) {
@@ -73,7 +71,11 @@ class ProcessCacheHandler
         $initial_id = 0;
         $rpp = 100;
 
-        $events = $this->eventReader->listFromId($initial_id, $rpp);
+        $events = $this->eventStore->listFromId(
+            "posts",
+            $initial_id,
+            $rpp
+        );
         foreach ($events as $event) {
             try {
                 $event = $this->processPostsPipeline->process($event);
