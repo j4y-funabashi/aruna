@@ -12,14 +12,14 @@ class ProcessCacheHandler
         $log,
         $eventReader,
         $mentionsReader,
-        $mentionsWriter,
+        $eventStore,
         $pipeline,
         $processed_mentions_root
     ) {
         $this->log = $log;
         $this->eventReader = $eventReader;
         $this->mentionsReader = $mentionsReader;
-        $this->mentionsWriter = $mentionsWriter;
+        $this->eventStore = $eventStore;
         $this->pipeline = $pipeline;
         $this->processed_mentions_root = $processed_mentions_root;
     }
@@ -40,13 +40,12 @@ class ProcessCacheHandler
 
         $mentions = $this->mentionsReader->listFromId($initial_id, $rpp);
         foreach ($mentions as $mention) {
-            if (file_exists($this->processed_mentions_root."/".$mention['uid'].".json")) {
+            $out_file = "processed_webmentions/".$mention['uid'].".json";
+            if ($this->eventStore->exists($out_file)) {
                 continue;
             }
 
-            if (
-                false !== stripos($mention['target'], "http://j4y.co")
-            ) {
+            if (false !== stripos($mention['target'], "http://j4y.co")) {
                 $mention['target_uid'] = $this->getTargetUid($mention['target']);
                 $http = new \GuzzleHttp\Client();
                 $result = $http->get(
@@ -55,7 +54,10 @@ class ProcessCacheHandler
                 $source_body = trim($result->getBody());
                 if (false !== stripos($source_body, $mention['target'])) {
                     $mention['source_mf2_json'] = \Mf2\parse($source_body);
-                    $this->mentionsWriter->save($mention);
+                    $this->eventStore->save(
+                        $out_file,
+                        json_encode($mention)
+                    );
                 }
             }
         }
