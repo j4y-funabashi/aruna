@@ -17,6 +17,7 @@ class ParseWebMention
     public function __invoke($mention)
     {
         $out_file = "processed_webmentions/".$mention['uid'].".json";
+
         if ($this->eventStore->exists($out_file)) {
             $mention = $this->eventStore->readContents($out_file);
             return $mention;
@@ -37,6 +38,8 @@ class ParseWebMention
                 );
             }
         }
+
+        return $mention;
     }
 
     private function getTargetUid($target_url)
