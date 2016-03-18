@@ -1,47 +1,51 @@
 {% include 'head.html' %}
 
 <div class="container">
-        <article class="h-{{ post.h }}">
 
-            {% if post.link_preview is defined %}
-            <div class="container">
-                <div class="row">
-                    <a href="{{ post.link_preview.url }}">{{ post.link_preview.title|raw }}</a>
-                    <p>{{ post.link_preview.description|raw }}</p>
-                </div>
+    <article class="h-{{ post.h }}">
+
+        {% if post.link_preview is defined %}
+        <div class="container">
+            <div class="row">
+                <a href="{{ post.link_preview.url }}">{{ post.link_preview.title|raw }}</a>
+                <p>{{ post.link_preview.description|raw }}</p>
             </div>
-            {% endif %}
+        </div>
+        {% endif %}
 
-            {% if post.photo is defined %}
-            <img class="u-photo img-rounded img-responsive" src="/{{ post.photo }}" />
-            {% endif %}
+        {% if post.photo is defined %}
+        <img class="u-photo img-rounded img-responsive" src="/{{ post.photo }}" />
+        {% endif %}
 
-            {% if post.title is defined %}
-            <h1 class="p-name">{{ post.title }}</h1>
-            {% endif %}
+        {% if post.title is defined %}
+        <h1 class="p-name">{{ post.title }}</h1>
+        {% endif %}
 
-            {% if post.content is defined %}
-            <div class="e-content">
-                <p>{{ post.content|raw }}</p>
-            </div>
-            {% endif %}
+        {% if post.content is defined %}
+        <div class="e-content">
+            <p>{{ post.content|raw }}</p>
+        </div>
+        {% endif %}
 
-            <p>
+        <div class="meta">
             <a class="u-url p-name" href="{{ post.url }}">
                 <time class="dt-published" datetime="{{ post.published }}">{{ post.human_date }}</time>
             </a>
-            </p>
+        </div>
 
-                {% for mention in mentions %}
-                <div>
+
+        <div class="webmentions">
+            {% for mention in mentions %}
+            <div>
                 <img width="50px" class="img-rounded" src="{{ mention.author_photo }}" />
                 {{ mention.author_name }}
                 {% if mention.is_like == 1 %}liked this post{% endif %}
                 {% if mention.is_comment == 1 %}replied to this post: <p>{{ mention.content }}</p>{% endif %}
-                </div>
-                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
 
-        </article>
+    </article>
 </div>
 
 {% include 'tail.html' %}

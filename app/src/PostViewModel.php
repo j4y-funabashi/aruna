@@ -35,6 +35,9 @@ class PostViewModel
         if (isset($post_data['files']['photo'])) {
             $this->photo = $post_data['files']['photo'];
         }
+        if (isset($post_data['content'])) {
+            $this->content = $post_data['content'];
+        }
         if (isset($post_data['link_preview'])) {
             $this->link_preview = $post_data['link_preview'];
         }

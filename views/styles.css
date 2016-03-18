@@ -1,5 +1,14 @@
+body {
+    font-size: 18px;
+}
+
 article {
     max-width: 640px;
-    padding: 0.8em 0 0.1em 0;
-    border-bottom: thin solid #e0e0e0;
+    padding: 10px 0 10px 0;
+    margin-bottom: 10px;
+}
+
+.meta, .meta a {
+    color: #999;
+    font-size: 12px;
 }
