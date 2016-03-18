@@ -9,8 +9,10 @@ namespace Aruna\Action;
 class ParseWebMention
 {
     public function __construct(
+        $log,
         $eventStore
     ) {
+        $this->log = $log;
         $this->eventStore = $eventStore;
     }
 
@@ -22,6 +24,12 @@ class ParseWebMention
             $mention = $this->eventStore->readContents($out_file);
             return $mention;
         }
+
+        $m = sprintf(
+            "Parsing mention [%s]",
+            json_encode($mention)
+        );
+        $this->log->debug($m);
 
         if (false !== stripos($mention['target'], "http://j4y.co")) {
             $mention['target_uid'] = $this->getTargetUid($mention['target']);

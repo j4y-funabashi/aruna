@@ -68,6 +68,7 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
     $processMentionsPipeline = (new League\Pipeline\Pipeline())
         ->pipe(
             new Aruna\Action\ParseWebMention(
+                $app['monolog'],
                 $app['event_store']
             )
         )

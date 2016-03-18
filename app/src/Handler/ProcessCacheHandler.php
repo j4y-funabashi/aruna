@@ -40,7 +40,16 @@ class ProcessCacheHandler
             $rpp
         );
         foreach ($mentions as $mention) {
-            $mention = $this->processMentionsPipeline->process($mention);
+            try {
+                $mention = $this->processMentionsPipeline->process($mention);
+            } catch (\Exception $e) {
+                $m = sprintf(
+                    "Could not process mention %s [%s]",
+                    $mention['uid'],
+                    $e->getMessage()
+                );
+                $this->log->critical($m);
+            }
         }
     }
 
@@ -59,7 +68,7 @@ class ProcessCacheHandler
                 $event = $this->processPostsPipeline->process($event);
             } catch (\Exception $e) {
                 $m = sprintf(
-                    "Could not process %s [%s]",
+                    "Could not process post %s [%s]",
                     $event['uid'],
                     $e->getMessage()
                 );
