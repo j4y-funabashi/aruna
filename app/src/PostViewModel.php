@@ -38,6 +38,9 @@ class PostViewModel
         if (isset($post_data['content'])) {
             $this->content = $post_data['content'];
         }
+        if (isset($post_data['category'])) {
+            $this->tags = $post_data['category'];
+        }
         if (isset($post_data['link_preview'])) {
             $this->link_preview = $post_data['link_preview'];
         }

@@ -18,7 +18,8 @@ class CacheToSql
 
     public function __invoke($event)
     {
-        // CREATE TABLE IF NOT EXISTS posts (id, published, post, PRIMARY KEY (id));
+        $event = $this->cacheTags($event);
+
         $q = "REPLACE INTO posts (id, published, post)
             VALUES
             (:id, :published, :post)";
@@ -33,5 +34,20 @@ class CacheToSql
         $r->execute(
             $data
         );
+    }
+
+    private function cacheTags($event)
+    {
+        if (false === isset($event['category'])) {
+            return $event;
+        }
+        $event['category'] = (array) $event['category'];
+        $event['category'] = array_filter($event['category'], 'strlen');
+        if (empty($event['category'])) {
+            return $event;
+        }
+        $event['category'] = array_map('strtolower', $event['category']);
+
+        return $event;
     }
 }
