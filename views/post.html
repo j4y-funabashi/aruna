@@ -32,6 +32,15 @@
             </a>
             </p>
 
+                {% for mention in mentions %}
+                <div>
+                <img width="50px" class="img-rounded" src="{{ mention.author_photo }}" />
+                {{ mention.author_name }}
+                {% if mention.is_like == 1 %}liked this post{% endif %}
+                {% if mention.is_comment == 1 %}replied to this post: <p>{{ mention.content }}</p>{% endif %}
+                </div>
+                {% endfor %}
+
         </article>
 </div>
 
