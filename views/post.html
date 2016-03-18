@@ -35,14 +35,24 @@
 
 
         <div class="webmentions">
-            {% for mention in mentions %}
-            <div>
-                <img width="50px" class="img-rounded" src="{{ mention.author_photo }}" />
-                {{ mention.author_name }}
-                {% if mention.is_like == 1 %}liked this post{% endif %}
-                {% if mention.is_comment == 1 %}replied to this post: <p>{{ mention.content }}</p>{% endif %}
+            <div class="container-fluid">
+
+                {% for mention in mentions %}
+                <div class="row">
+                    <div class="row-padding">
+                        <div class="col-xs-2">
+                            <img class="img-circle img-responsive" src="{{ mention.author_photo }}" />
+                        </div>
+                        <div class="col-xs-10">
+                            <a href="{{ mention.author_url }}">{{ mention.author_name }}</a>
+                            {% if mention.is_like == 1 %}liked this post{% endif %}
+                            {% if mention.is_comment == 1 %}<p>{{ mention.content }}</p>{% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
             </div>
-            {% endfor %}
         </div>
 
     </article>
