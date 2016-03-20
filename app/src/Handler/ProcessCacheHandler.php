@@ -12,12 +12,16 @@ class ProcessCacheHandler
         $log,
         $eventStore,
         $processPostsPipeline,
-        $processMentionsPipeline
+        $processMentionsPipeline,
+        $postsRepositoryReader,
+        $mentionsRepositoryReader
     ) {
         $this->log = $log;
         $this->eventStore = $eventStore;
         $this->processPostsPipeline = $processPostsPipeline;
         $this->processMentionsPipeline = $processMentionsPipeline;
+        $this->postsRepositoryReader = $postsRepositoryReader;
+        $this->mentionsRepositoryReader = $mentionsRepositoryReader;
     }
 
     public function handle()
@@ -31,15 +35,32 @@ class ProcessCacheHandler
 
     private function processMentions()
     {
-        $initial_id = 0;
+        $latest = $this->mentionsRepositoryReader->findLatest();
+        $initial_id = $latest['uid'];
         $rpp = 100;
+
+        $m = sprintf(
+            "BEGIN Processing webmentions, initial_id: [%s]",
+            $initial_id
+        );
+        $this->log->debug($m);
 
         $mentions = $this->eventStore->listFromId(
             "webmentions",
             $initial_id,
             $rpp
         );
+
+        if (empty($mentions)) {
+            $m = sprintf(
+                "No new webmentions to process",
+                $initial_id
+            );
+            $this->log->debug($m);
+        }
+
         foreach ($mentions as $mention) {
+
             try {
                 $mention = $this->processMentionsPipeline->process($mention);
             } catch (\Exception $e) {
@@ -55,15 +76,38 @@ class ProcessCacheHandler
 
     private function processPosts()
     {
-        $initial_id = 0;
+        $latest = $this->postsRepositoryReader->findLatest();
+        $initial_id = $latest['uid'];
         $rpp = 100;
+
+        $m = sprintf(
+            "BEGIN Processing Posts, initial_id: [%s]",
+            $initial_id
+        );
+        $this->log->debug($m);
 
         $events = $this->eventStore->listFromId(
             "posts",
             $initial_id,
             $rpp
         );
+
+        if (empty($events)) {
+            $m = sprintf(
+                "No new Posts to process",
+                $initial_id
+            );
+            $this->log->debug($m);
+        }
+
         foreach ($events as $event) {
+
+            $m = sprintf(
+                "Processing Post [%s]",
+                $event['uid']
+            );
+            $this->log->debug($m);
+
             try {
                 $event = $this->processPostsPipeline->process($event);
             } catch (\Exception $e) {

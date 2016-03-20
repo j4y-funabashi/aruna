@@ -24,11 +24,20 @@ $app['event_store'] = $app->share(function () use ($app) {
 
     return new Aruna\EventStore($filesystem);
 });
-
-$app['process_cache_handler'] = $app->share(function () use ($app) {
-
+$app['db_cache'] = $app->share(function () use ($app) {
     $db = new \PDO("sqlite:".$app['db_file']);
     $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+    $db->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+    return $db;
+});
+$app['posts_repository_reader'] = $app->share(function () use ($app) {
+    return new Aruna\PostRepositoryReader($app['db_cache']);
+});
+$app['mentions_repository_reader'] = $app->share(function () use ($app) {
+    return new Aruna\MentionsRepositoryReader($app['db_cache']);
+});
+
+$app['process_cache_handler'] = $app->share(function () use ($app) {
 
     $linkPreview = new LinkPreview\LinkPreview();
     $linkPreview->addParser(new LinkPreview\Parser\GeneralParser());
@@ -60,7 +69,7 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
         ->pipe(
             new Aruna\Action\CacheToSql(
                 $app['monolog'],
-                $db
+                $app['db_cache']
             )
         )
         ;
@@ -74,7 +83,7 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
         )
         ->pipe(
             new Aruna\Action\CacheMentionToSql(
-                $db
+                $app['db_cache']
             )
         )
         ;
@@ -83,7 +92,9 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
         $app['monolog'],
         $app['event_store'],
         $processPostsPipeline,
-        $processMentionsPipeline
+        $processMentionsPipeline,
+        $app['posts_repository_reader'],
+        $app['mentions_repository_reader']
     );
 });
 
