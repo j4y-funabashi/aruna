@@ -58,7 +58,14 @@ class EventStore
         $rpp
     ) {
         $all_paths = $this->getJsonFilePaths($root_dir);
+
         $key = array_search($from_id, array_column($all_paths, 'filename'));
+        if (false === $key) {
+            $key = 0;
+        } else {
+            $key += 1;
+        }
+
         return array_filter(
             array_map(
                 function ($post_filepath) {
