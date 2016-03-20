@@ -44,7 +44,20 @@ class ParseWebMention
                     $out_file,
                     json_encode($mention)
                 );
+            } else {
+                $m = sprintf(
+                    "%s does not contain target_url '%s'",
+                    $mention['source'],
+                    $mention['target']
+                );
+                throw new \Exception($m);
             }
+        } else {
+            $m = sprintf(
+                "'%s' does not contain 'http://j4y.co'",
+                $mention['target']
+            );
+            throw new \Exception($m);
         }
 
         return $mention;
