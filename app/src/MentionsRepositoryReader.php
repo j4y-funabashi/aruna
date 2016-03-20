@@ -37,4 +37,17 @@ class MentionsRepositoryReader
 
         return $out;
     }
+
+    public function findLatest()
+    {
+        $q = "SELECT
+            uid
+            FROM mentions
+            ORDER BY uid DESC
+            LIMIT 1;";
+        $r = $this->db->prepare($q);
+        $r->execute();
+        $post = $r->fetch();
+        return $post;
+    }
 }

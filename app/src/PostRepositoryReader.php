@@ -28,6 +28,22 @@ class PostRepositoryReader
         return $post;
     }
 
+    public function findLatest()
+    {
+        $q = "SELECT
+            id,
+            published,
+            post
+            FROM posts
+            ORDER BY id DESC
+            LIMIT 1;";
+        $r = $this->db->prepare($q);
+        $r->execute();
+        $post = $r->fetch();
+        $post = json_decode($post['post'], true);
+        return $post;
+    }
+
     public function listFromId($from_id, $rpp)
     {
         $q = "SELECT
