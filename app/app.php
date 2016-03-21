@@ -13,19 +13,17 @@ $app['me_endpoint'] = "http://j4y.co/";
 // PROVIDERS
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
-$app->register(new Silex\Provider\MonologServiceProvider(), array(
-    'monolog.logfile' => 'php://stdout',
-    'monolog.name' => 'aruna',
-    'monolog.handler' => new Monolog\Handler\SyslogHandler('aruna')
-));
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__ . '/../views',
 ));
-$app->register(new Silex\Provider\FormServiceProvider());
-$app->register(new Silex\Provider\TranslationServiceProvider());
 $app->register(new Silex\Provider\SessionServiceProvider());
 
 // SERVICES
+$app['monolog'] = $app->share(function () use ($app) {
+    $log = new Monolog\Logger("aruna");
+    $log->pushHandler(new Monolog\Handler\SyslogHandler('aruna'));
+    return $log;
+});
 $app['db_cache'] = $app->share(function () use ($app) {
     $db = new \PDO("sqlite:".$app['db_file']);
     $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -53,7 +51,7 @@ $app['micropub.controller'] = $app->share(function () use ($app) {
         $app["monolog"],
         $app["create_post.handler"],
         new Aruna\AccessToken(
-            new GuzzleHttp\Client(),
+            $app['http_client'],
             $app['token_endpoint'],
             $app['me_endpoint']
         )
@@ -80,9 +78,12 @@ $app['posts.controller'] = $app->share(function () use ($app) {
 });
 $app['auth.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\AuthController(
-        new GuzzleHttp\Client(),
+        $app['http_client'],
         $app['monolog']
     );
+});
+$app['http_client'] = $app->share(function () {
+    return new GuzzleHttp\Client();
 });
 
 require_once __DIR__ . "/routes.php";
