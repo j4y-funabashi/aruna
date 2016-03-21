@@ -5,7 +5,6 @@ require_once __DIR__ . "/../common.php";
 $app = new Cilex\Application("aruna");
 
 $app['posts_root'] = getenv("ROOT_DIR")."/posts";
-$app['mentions_root'] = getenv("ROOT_DIR")."/webmentions";
 $app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
 $app['thumbnails_root'] = getenv("ROOT_DIR")."/thumbnails";
 
@@ -21,7 +20,6 @@ $app['monolog'] = $app->share(function () use ($app) {
 $app['event_store'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
     $filesystem = new League\Flysystem\Filesystem($adapter);
-
     return new Aruna\EventStore($filesystem);
 });
 $app['db_cache'] = $app->share(function () use ($app) {

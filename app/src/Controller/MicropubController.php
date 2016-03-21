@@ -54,6 +54,7 @@ class MicropubController
             UrlGeneratorInterface::ABSOLUTE_URL
         );
         $this->log->info("Post Created: ".$url);
+
         return new Response("", Response::HTTP_ACCEPTED, ['Location' => $url]);
     }
 
