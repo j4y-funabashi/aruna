@@ -52,7 +52,7 @@ class PostRepositoryReader
             post
             FROM posts
             WHERE id > :id
-            ORDER BY id DESC
+            ORDER BY published DESC
             LIMIT :rpp";
         $r = $this->db->prepare($q);
         $r->execute(

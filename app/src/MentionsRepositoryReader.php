@@ -43,7 +43,7 @@ class MentionsRepositoryReader
         $q = "SELECT
             uid
             FROM mentions
-            ORDER BY uid DESC
+            ORDER BY published DESC
             LIMIT 1;";
         $r = $this->db->prepare($q);
         $r->execute();
