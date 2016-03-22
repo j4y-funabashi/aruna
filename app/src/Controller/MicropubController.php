@@ -18,14 +18,16 @@ class MicropubController
     public function __construct(
         $logger,
         $handler,
-        $accessToken
+        $accessToken,
+        $urlGenerator
     ) {
         $this->log = $logger;
         $this->handler = $handler;
         $this->accessToken = $accessToken;
+        $this->urlGenerator = $urlGenerator;
     }
 
-    public function createPost(Application $app, Request $request)
+    public function createPost(Request $request)
     {
         $this->log->info(__METHOD__);
 
@@ -36,9 +38,7 @@ class MicropubController
         $this->log->info($access_token);
 
         try {
-            $token = $this->accessToken->getTokenFromAuthCode(
-                $access_token
-            );
+            $token = $this->accessToken->getTokenFromAuthCode($access_token);
         } catch (\Exception $e) {
             return new Response($e->getMessage(), Response::HTTP_UNAUTHORIZED);
         }
@@ -48,7 +48,7 @@ class MicropubController
         $command = new \Aruna\CreateEntryCommand($entry, $files);
         $newEntry = $this->handler->handle($command);
 
-        $url = $app['url_generator']->generate(
+        $url = $this->urlGenerator->generate(
             'post',
             array('post_id' => $newEntry->getPostId()),
             UrlGeneratorInterface::ABSOLUTE_URL
