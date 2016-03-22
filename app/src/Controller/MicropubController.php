@@ -13,7 +13,6 @@ use Silex\Application;
  */
 class MicropubController
 {
-    private $token_url = "https://tokens.indieauth.com/token";
 
     public function __construct(
         $logger,
