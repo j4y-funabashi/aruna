@@ -36,6 +36,7 @@ class MicropubController
 
         $this->log->info($access_token);
 
+        // move to domain?
         try {
             $token = $this->accessToken->getTokenFromAuthCode($access_token);
         } catch (\Exception $e) {
@@ -44,16 +45,17 @@ class MicropubController
 
         $entry = $this->buildEntryArray($request);
         $files = $this->buildFilesArray($request);
+
         $command = new \Aruna\CreateEntryCommand($entry, $files);
         $newEntry = $this->handler->handle($command);
 
+        // move to responder?
         $url = $this->urlGenerator->generate(
             'post',
             array('post_id' => $newEntry->getPostId()),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
         $this->log->info("Post Created: ".$url);
-
         return new Response("", Response::HTTP_ACCEPTED, ['Location' => $url]);
     }
 
