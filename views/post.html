@@ -4,10 +4,10 @@
 
     <nav>
         {% if previous.url is defined %}
-        <a rel="prev" href="{{ previous.url }}">Older</a>
+        <a rel="prev" href="{{ previous.url }}">&larr;</a>
         {% endif %}
         {% if next.url is defined %}
-        <a rel="next" href="{{ next.url }}">Newer</a>
+        <a rel="next" href="{{ next.url }}">&rarr;</a>
         {% endif %}
     </nav>
 
