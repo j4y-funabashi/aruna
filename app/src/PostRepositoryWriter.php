@@ -20,17 +20,13 @@ class PostRepositoryWriter
     {
         foreach ($files as $uploadedFile) {
             try {
-                if ($uploadedFile->isReadable() === false) {
-                    $m = "Could not read file ".$uploadedFile->getRealPath();
-                    throw new \RuntimeException($m);
-                }
-                $stream = fopen($uploadedFile->getRealPath(), 'rb');
+                $stream = fopen($uploadedFile['real_path'], 'rb');
                 if (!$stream) {
-                    $m = "Could not open file ".$uploadedFile->getRealPath();
+                    $m = "Could not open file ".$uploadedFile['real_path'];
                     throw new \RuntimeException($m);
                 }
                 $this->filesystem->writeStream(
-                    $entry->getFilePath().".".$uploadedFile->getClientOriginalExtension(),
+                    $entry->getFilePath().".".$uploadedFile['original_ext'],
                     $stream
                 );
             } catch (FileExistsException $e) {

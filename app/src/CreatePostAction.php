@@ -59,8 +59,16 @@ class CreatePostAction
             if (false === $uploadedFile->isValid()) {
                 throw new \RuntimeException("Upload Error: (".$uploadedFile->getError().")");
             }
-            $files[$file_key] = $uploadedFile;
+            if ($uploadedFile->isReadable() === false) {
+                $m = "Could not read file ".$uploadedFile->getRealPath();
+                throw new \RuntimeException($m);
+            }
+            $files[$file_key] = [
+                'real_path' => $uploadedFile->getRealPath(),
+                'original_ext' => $uploadedFile->getClientOriginalExtension()
+                ];
         }
+
         return $files;
     }
 }

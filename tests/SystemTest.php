@@ -12,11 +12,6 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->http = new Client(
-            array(
-                'base_uri' => 'http://127.0.0.1',
-                'timeout'  => 2.0
-            )
-        );
+        $this->app = require_once __DIR__ . "/../app/app.php";
     }
 }

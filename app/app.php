@@ -51,15 +51,19 @@ $app['micropub.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\MicropubController();
 });
 
+$app['access_token'] = $app->share(function () use ($app) {
+    return new Aruna\AccessToken(
+        $app['http_client'],
+        $app['token_endpoint'],
+        $app['me_endpoint']
+    );
+});
+
 $app['action.create_post'] = $app->share(function () use ($app) {
     return new Aruna\CreatePostAction(
         $app["monolog"],
         $app["create_post.handler"],
-        new Aruna\AccessToken(
-            $app['http_client'],
-            $app['token_endpoint'],
-            $app['me_endpoint']
-        ),
+        $app['access_token'],
         new Aruna\CreatePostResponder($app['url_generator'])
     );
 });
@@ -94,3 +98,5 @@ $app['http_client'] = $app->share(function () {
 });
 
 require_once __DIR__ . "/routes.php";
+
+return $app;
