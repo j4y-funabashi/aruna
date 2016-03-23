@@ -9,6 +9,7 @@ article {
     padding: 10px;
     margin-bottom: 10px;
     background-color: #fff;
+    word-wrap: break-word;
 }
 
 footer {
