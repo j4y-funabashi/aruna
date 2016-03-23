@@ -2,15 +2,15 @@
 
 namespace Test;
 
-use Aruna\Controller\MicropubController;
+use Aruna\CreatePostAction;
 use Symfony\Component\HttpFoundation\Request;
 use Prophecy\Argument;
 
 /**
- * Class MicropubControllerTest
+ * Class CreatePostActionTest
  * @author yourname
  */
-class MicropubControllerTest extends UnitTest
+class CreatePostActionTest extends UnitTest
 {
     public function setUp()
     {
@@ -18,29 +18,29 @@ class MicropubControllerTest extends UnitTest
         $this->log->pushHandler(new \Monolog\Handler\TestHandler());
         $this->handler = $this->prophesize("\Aruna\CreateEntryHandler");
         $this->token = $this->prophesize("\Aruna\AccessToken");
-        $this->urlGenerator = $this->prophesize("\Symfony\Component\Routing\Generator\UrlGenerator");
+        $this->responder = $this->prophesize("\Aruna\CreatePostResponder");
 
-        $this->SUT = new MicropubController(
+        $this->SUT = new CreatePostAction(
             $this->log,
             $this->handler->reveal(),
             $this->token->reveal(),
-            $this->urlGenerator->reveal()
+            $this->responder->reveal()
         );
     }
 
     /**
      * @test
      */
-    public function it_returns_unauthorized_response_if_token_throws_exception()
+    public function it_calls_unauthorized_method_on_responder_when_token_is_invalid()
     {
         $error_message = "test";
         $this->token->getTokenFromAuthCode(Argument::cetera())
             ->willThrow(new \Exception($error_message));
 
         $request = new Request();
-        $response = $this->SUT->createPost($request);
+        $response = $this->SUT->__invoke($request);
 
-        $this->assertEquals($error_message, $response->getContent());
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->responder->unauthorized($error_message)
+            ->shouldBeCalled();
     }
 }
