@@ -35,7 +35,8 @@ class PostRepositoryReader
             post
             FROM posts
             WHERE published <= :published
-            AND id != :id";
+            AND id != :id
+            ORDER BY published DESC";
         $r = $this->db->prepare($q);
         $r->execute(
             [
@@ -53,7 +54,8 @@ class PostRepositoryReader
             post
             FROM posts
             WHERE published >= :published
-            AND id != :id";
+            AND id != :id
+            ORDER BY published ASC";
         $r = $this->db->prepare($q);
         $r->execute(
             [
