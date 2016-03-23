@@ -14,7 +14,7 @@ class CreateEntryHandler
         $this->postRepository = $postRepository;
     }
 
-    public function handle(CreateEntryCommand $command)
+    public function handle(CreatePostCommand $command)
     {
         $post = new Post($command->getEntry(), $command->getFiles());
         $this->postRepository->save($post, $command->getFiles());

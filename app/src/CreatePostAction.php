@@ -30,7 +30,7 @@ class CreatePostAction
             : $request->headers->get('Authorization');
         $entry = $this->buildEntryArray($request);
         $files = $this->buildFilesArray($request);
-        $command = new \Aruna\CreateEntryCommand($entry, $files);
+        $command = new \Aruna\CreatePostCommand($entry, $files);
 
         try {
             $this->accessToken->getTokenFromAuthCode($access_token);
