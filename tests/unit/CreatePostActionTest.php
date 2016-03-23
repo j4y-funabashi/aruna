@@ -16,7 +16,7 @@ class CreatePostActionTest extends UnitTest
     {
         $this->log = new \Monolog\Logger("test");
         $this->log->pushHandler(new \Monolog\Handler\TestHandler());
-        $this->handler = $this->prophesize("\Aruna\CreateEntryHandler");
+        $this->handler = $this->prophesize("\Aruna\CreatePostHandler");
         $this->token = $this->prophesize("\Aruna\AccessToken");
         $this->responder = $this->prophesize("\Aruna\CreatePostResponder");
 

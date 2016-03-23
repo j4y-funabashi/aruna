@@ -42,7 +42,7 @@ $app['posts_repository_writer'] = $app->share(function () use ($app) {
     return new Aruna\PostRepositoryWriter($filesystem);
 });
 $app['create_post.handler'] = $app->share(function () use ($app) {
-    return new Aruna\CreateEntryHandler(
+    return new Aruna\CreatePostHandler(
         $app['posts_repository_writer']
     );
 });

@@ -3,10 +3,10 @@
 namespace Aruna;
 
 /**
- * Class CreateEntryHandler
+ * Class CreatePostHandler
  * @author yourname
  */
-class CreateEntryHandler
+class CreatePostHandler
 {
     public function __construct(
         PostRepositoryWriter $postRepository
