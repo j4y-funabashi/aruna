@@ -20,7 +20,7 @@ class Post implements \JsonSerializable
         $this->properties['uid'] = (new DateTimeImmutable())->format("YmdHis")."_".uniqid();
 
         foreach ($files as $file_key => $uploadedFile) {
-            $this->properties['files'][$file_key] = $this->getFilePath().".".$uploadedFile->getClientOriginalExtension();
+            $this->properties['files'][$file_key] = $this->getFilePath().".".$uploadedFile['original_ext'];
         }
     }
 

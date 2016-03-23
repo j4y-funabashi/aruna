@@ -3,10 +3,10 @@
 namespace Aruna;
 
 /**
- * Class CreateEntryCommand
+ * Class CreatePostCommand
  * @author yourname
  */
-class CreateEntryCommand
+class CreatePostCommand
 {
 
     public function __construct(

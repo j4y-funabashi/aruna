@@ -6,7 +6,7 @@ $app['debug'] = true;
 $app['posts_root'] = getenv("ROOT_DIR")."/posts";
 $app['webmentions_root'] = getenv("ROOT_DIR")."/webmentions";
 $app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
-$app['rpp'] = 100;
+$app['rpp'] = 50;
 $app['token_endpoint'] = "https://tokens.indieauth.com/token";
 $app['me_endpoint'] = "http://j4y.co/";
 
@@ -42,21 +42,32 @@ $app['posts_repository_writer'] = $app->share(function () use ($app) {
     return new Aruna\PostRepositoryWriter($filesystem);
 });
 $app['create_post.handler'] = $app->share(function () use ($app) {
-    return new Aruna\CreateEntryHandler(
+    return new Aruna\CreatePostHandler(
         $app['posts_repository_writer']
     );
 });
+
 $app['micropub.controller'] = $app->share(function () use ($app) {
-    return new Aruna\Controller\MicropubController(
-        $app["monolog"],
-        $app["create_post.handler"],
-        new Aruna\AccessToken(
-            $app['http_client'],
-            $app['token_endpoint'],
-            $app['me_endpoint']
-        )
+    return new Aruna\Controller\MicropubController();
+});
+
+$app['access_token'] = $app->share(function () use ($app) {
+    return new Aruna\AccessToken(
+        $app['http_client'],
+        $app['token_endpoint'],
+        $app['me_endpoint']
     );
 });
+
+$app['action.create_post'] = $app->share(function () use ($app) {
+    return new Aruna\CreatePostAction(
+        $app["monolog"],
+        $app["create_post.handler"],
+        $app['access_token'],
+        new Aruna\CreatePostResponder($app['url_generator'])
+    );
+});
+
 $app['webmention.controller'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local($app['webmentions_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
@@ -87,3 +98,5 @@ $app['http_client'] = $app->share(function () {
 });
 
 require_once __DIR__ . "/routes.php";
+
+return $app;
