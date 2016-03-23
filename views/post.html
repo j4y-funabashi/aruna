@@ -2,6 +2,15 @@
 
 <div class="container">
 
+    <nav>
+        {% if previous.url is defined %}
+        <a rel="prev" href="{{ previous.url }}">Older</a>
+        {% endif %}
+        {% if next.url is defined %}
+        <a rel="next" href="{{ next.url }}">Newer</a>
+        {% endif %}
+    </nav>
+
     <article class="h-{{ post.h }}">
 
         {% if post.link_preview is defined %}

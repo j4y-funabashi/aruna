@@ -22,6 +22,7 @@ class PostViewModel
     ) {
         $this->h = $post_data['h'];
         $this->uid = $post_data['uid'];
+
         $this->url = $url_generator->generate(
             'post',
             array('post_id' => $post_data['uid']),
