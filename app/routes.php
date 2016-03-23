@@ -13,7 +13,8 @@ $app->get("/login", 'auth.controller:login')
 $app->get("/auth", 'auth.controller:auth')
     ->bind('auth');
 
-$app->post('/micropub', 'micropub.controller:createPost');
+$app->post('/micropub', 'action.create_post:__invoke');
+
 $app->get('/micropub', 'micropub.controller:form');
 
 $app->post('/webmention', 'webmention.controller:createMention');
