@@ -3,12 +3,20 @@
 <div class="container">
     <div class="h-feed">
 
+        <h2 class="p-name">Latest</h2>
+
         {% for post in posts %}
 
         <article class="h-{{ post.h }}">
 
-            {% if post.files.photo is defined %}
-            <img class="u-photo img-rounded img-responsive" src="{{ post.files.photo }}" />
+            {% if post.link_preview is defined %}
+            <blockquote>
+                <a class="u-like-of" href="{{ post.link_preview.url }}">{{ post.link_preview.url }}</a>
+            </blockquote>
+            {% endif %}
+
+            {% if post.photo is defined %}
+            <img class="u-photo img-rounded img-responsive" src="/{{ post.photo }}" />
             {% endif %}
 
             {% if post.title is defined %}
@@ -21,11 +29,18 @@
             </div>
             {% endif %}
 
-            <p>
-            <a class="u-url" href="{{ post.url }}">
-                <time class="dt-published" datetime="{{ post.published }}">{{ post.human_date }}</time>
-            </a>
-            </p>
+            <div class="meta">
+                <a class="u-url p-name" href="{{ post.url }}">
+                    <time class="dt-published" datetime="{{ post.published }}">{{ post.human_date }}</time>
+                </a>
+                {% if post.tags is defined %}
+                {% for tag in post.tags %}
+                <span class="p-category">
+                    <p>{{ tag }}</p>
+                </span>
+                {% endfor %}
+                {% endif %}
+            </div>
 
         </article>
 

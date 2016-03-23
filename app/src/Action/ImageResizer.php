@@ -31,7 +31,6 @@ class ImageResizer
                 "Photo already exists [%s]",
                 $out_path
             );
-            $this->log->debug($m);
             return;
         }
 

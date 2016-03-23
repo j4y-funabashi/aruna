@@ -1,29 +1,68 @@
 {% include 'head.html' %}
 
 <div class="container">
-        <article class="h-{{ post.h }}">
 
-            {% if post.files.photo is defined %}
-            <img class="u-photo img-rounded img-responsive" src="/{{ post.files.photo }}" />
-            {% endif %}
+    <article class="h-{{ post.h }}">
 
-            {% if post.title is defined %}
-            <h1 class="p-name">{{ post.title }}</h1>
-            {% endif %}
-
-            {% if post.content is defined %}
-            <div class="e-content">
-                <p>{{ post.content|raw }}</p>
+        {% if post.link_preview is defined %}
+        <div class="container">
+            <div class="row">
+                <a href="{{ post.link_preview.url }}">{{ post.link_preview.title|raw }}</a>
+                <p>{{ post.link_preview.description|raw }}</p>
             </div>
-            {% endif %}
+        </div>
+        {% endif %}
 
-            <p>
-            <a class="u-url" href="{{ post.url }}">
+        {% if post.photo is defined %}
+        <img class="u-photo img-rounded img-responsive" src="/{{ post.photo }}" />
+        {% endif %}
+
+        {% if post.title is defined %}
+        <h1 class="p-name">{{ post.title }}</h1>
+        {% endif %}
+
+        {% if post.content is defined %}
+        <div class="e-content">
+            <p>{{ post.content|raw }}</p>
+        </div>
+        {% endif %}
+
+        <div class="meta">
+            <a class="u-url p-name" href="{{ post.url }}">
                 <time class="dt-published" datetime="{{ post.published }}">{{ post.human_date }}</time>
             </a>
-            </p>
+            {% if post.tags is defined %}
+            {% for tag in post.tags %}
+            <span class="p-category">
+                <p>{{ tag }}</p>
+            </span>
+            {% endfor %}
+            {% endif %}
+        </div>
 
-        </article>
+
+        <div class="webmentions">
+            <div class="container-fluid">
+
+                {% for mention in mentions %}
+                <div class="row">
+                    <div class="row-padding">
+                        <div class="col-xs-2">
+                            <img class="img-circle img-responsive" src="{{ mention.author_photo }}" />
+                        </div>
+                        <div class="col-xs-10">
+                            <a href="{{ mention.author_url }}">{{ mention.author_name }}</a>
+                            {% if mention.is_like == 1 %}liked this post{% endif %}
+                            {% if mention.is_comment == 1 %}<p>{{ mention.content }}</p>{% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </article>
 </div>
 
 {% include 'tail.html' %}

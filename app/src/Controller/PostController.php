@@ -3,10 +3,10 @@
 namespace Aruna\Controller;
 
 use Silex\Application;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Aruna\PostRepositoryReader;
+use Aruna\MentionsRepositoryReader;
 
 /**
  * Class PostController
@@ -15,9 +15,11 @@ use Aruna\PostRepositoryReader;
 class PostController
 {
     public function __construct(
-        PostRepositoryReader $postRepository
+        PostRepositoryReader $postRepository,
+        MentionsRepositoryReader $mentionsRepository
     ) {
         $this->postRepository = $postRepository;
+        $this->mentionsRepository = $mentionsRepository;
     }
 
     public function feed(Request $request, Application $app)
@@ -46,26 +48,22 @@ class PostController
             $this->postRepository->findById($post_id),
             $app
         );
+        $mentions = $this->mentionsRepository->findByPostId($post_id);
 
         return $app['twig']->render(
             'post.html',
             [
-                'post' => $post
+                'post' => $post,
+                'mentions' => $mentions
             ]
         );
     }
 
-    protected function createPostView($post, $app)
+    protected function createPostView($post_data, $app)
     {
-        $published = new \DateTimeImmutable($post['published']);
-        $url = $app['url_generator']->generate(
-            'post',
-            array('post_id' => $post['uid']),
-            UrlGeneratorInterface::ABSOLUTE_URL
+        return new \Aruna\PostViewModel(
+            $post_data,
+            $app['url_generator']
         );
-        $post['url'] = $url;
-        $post['human_date'] = $published->format("Y-m-d");
-
-        return $post;
     }
 }

@@ -18,31 +18,29 @@ class MicropubController
     public function __construct(
         $logger,
         $handler,
-        $http
+        $accessToken
     ) {
         $this->log = $logger;
         $this->handler = $handler;
-        $this->http = $http;
+        $this->accessToken = $accessToken;
     }
 
     public function createPost(Application $app, Request $request)
     {
         $this->log->info(__METHOD__);
 
-        // VERIFY ACCESS TOKEN
-        $response = $this->http->request(
-            'GET',
-            $this->token_url,
-            [
-                'headers' => [
-                    'Authorization' => $request->headers->get('Authorization'),
-                    'Content-type' =>  'application/x-www-form-urlencoded'
-                ]
-            ]
-        );
-        parse_str($response->getBody(), $body);
-        if ($body['me'] !== "http://j4y.co/" || $body['scope'] !== "post") {
-            return new Response("", 403);
+        $access_token = (null == $request->headers->get('Authorization'))
+            ? $request->request->get('access_token')
+            : $request->headers->get('Authorization');
+
+        $this->log->info($access_token);
+
+        try {
+            $token = $this->accessToken->getTokenFromAuthCode(
+                $access_token
+            );
+        } catch (\Exception $e) {
+            return new Response($e->getMessage(), Response::HTTP_UNAUTHORIZED);
         }
 
         $entry = $this->buildEntryArray($request);
@@ -56,6 +54,7 @@ class MicropubController
             UrlGeneratorInterface::ABSOLUTE_URL
         );
         $this->log->info("Post Created: ".$url);
+
         return new Response("", Response::HTTP_ACCEPTED, ['Location' => $url]);
     }
 
@@ -64,7 +63,8 @@ class MicropubController
         return $app['twig']->render(
             'micropub.html',
             [
-                'current_date' => date('c')
+                'current_date' => date('c'),
+                'access_token' => $app['session']->get('access_token')
             ]
         );
     }
