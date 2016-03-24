@@ -68,6 +68,17 @@ $app['action.create_post'] = $app->share(function () use ($app) {
     );
 });
 
+$app['response'] = $app->share(function () {
+    return new Symfony\Component\HttpFoundation\Response();
+});
+
+$app['action.show_micropub_form'] = $app->share(function () use ($app) {
+    return new Aruna\ShowMicropubFormAction(
+        new Aruna\ShowMicropubFormResponder($app['response']),
+        new Aruna\ShowMicropubFormHandler($app['session'])
+    );
+});
+
 $app['webmention.controller'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local($app['webmentions_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
