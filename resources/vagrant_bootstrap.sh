@@ -1,4 +1,4 @@
-DATA_DIR="/media/BACKUP/aruna"
+DATA_DIR="/media/jayr/aruna"
 APP_USER="aruna"
 
 sudo locale-gen en_GB.UTF-8
