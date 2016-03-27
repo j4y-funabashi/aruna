@@ -6,23 +6,10 @@ namespace Aruna;
  * Class ShowMicropubFormAction
  * @author yourname
  */
-class ShowMicropubFormAction
+class ShowMicropubFormAction extends Action
 {
-
-    public function __construct(
-        Responder $responder,
-        Handler $handler
-    ) {
-        $this->responder = $responder;
-        $this->handler = $handler;
-    }
-
-    public function __invoke()
+    protected function getCommand($request)
     {
-        $command = new ShowMicropubFormCommand();
-        $this->responder->setPayload(
-            $this->handler->handle($command)
-        );
-        return $this->responder->__invoke();
+        return new ShowMicropubFormCommand();
     }
 }
