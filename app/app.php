@@ -74,7 +74,7 @@ $app['response'] = $app->share(function () {
 
 $app['action.show_micropub_form'] = $app->share(function () use ($app) {
     return new Aruna\ShowMicropubFormAction(
-        new Aruna\ShowMicropubFormResponder($app['response']),
+        new Aruna\ShowMicropubFormResponder($app['response'], $app['twig']),
         new Aruna\ShowMicropubFormHandler($app['session'])
     );
 });

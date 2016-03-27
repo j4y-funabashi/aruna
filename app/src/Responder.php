@@ -16,9 +16,11 @@ abstract class Responder
     protected $view;
 
     public function __construct(
-        Response $response
+        Response $response,
+        $view
     ) {
         $this->response = $response;
+        $this->view = $view;
     }
 
     public function __invoke()
