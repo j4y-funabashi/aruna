@@ -3,13 +3,10 @@
 namespace Aruna;
 
 /**
- * Class Handler
+ * Interface Handler
  * @author yourname
  */
-abstract class Handler
+interface Handler
 {
-
-    public function handle($command)
-    {
-    }
+    public function handle($command);
 }

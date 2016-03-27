@@ -6,14 +6,14 @@ namespace Aruna;
  * Class ShowMicropubFormHandler
  * @author yourname
  */
-class ShowMicropubFormHandler extends Handler
+class ShowMicropubFormHandler implements Handler
 {
     public function __construct($session)
     {
         $this->session = $session;
     }
 
-    public function handle(ShowMicropubFormCommand $command)
+    public function handle($command)
     {
         $data = [
             'current_date' => date('c'),
