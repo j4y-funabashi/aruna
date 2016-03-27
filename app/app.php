@@ -47,10 +47,6 @@ $app['create_post.handler'] = $app->share(function () use ($app) {
     );
 });
 
-$app['micropub.controller'] = $app->share(function () use ($app) {
-    return new Aruna\Controller\MicropubController();
-});
-
 $app['access_token'] = $app->share(function () use ($app) {
     return new Aruna\AccessToken(
         $app['http_client'],
