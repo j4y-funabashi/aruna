@@ -14,11 +14,13 @@ class ShowLatestPostsResponder extends Responder
 
     public function feed()
     {
+
         $this->response->setContent(
             $this->view->render(
                 'feed.html',
                 [
-                    'posts' => $this->payload->get('items')
+                    'posts' => $this->payload->get('items'),
+                    'feed_nav' => $this->payload->get('nav')
                 ]
             )
         );
