@@ -88,12 +88,27 @@ $app['webmention.controller'] = $app->share(function () use ($app) {
         )
     );
 });
+
+$app['action.show_latest_posts'] = $app->share(function () use ($app) {
+    return new Aruna\ShowLatestPostsAction(
+        new Aruna\ShowLatestPostsResponder($app['response'], $app['twig']),
+        new Aruna\CommandBus($app)
+    );
+});
+$app['handler.showlatestposts'] = $app->share(function () use ($app) {
+    return new Aruna\ShowLatestPostsHandler(
+        $app['posts_repository_reader'],
+        $app['url_generator']
+    );
+});
+
 $app['posts.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\PostController(
         $app['posts_repository_reader'],
         $app['mentions_repository_reader']
     );
 });
+
 $app['auth.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\AuthController(
         $app['http_client'],

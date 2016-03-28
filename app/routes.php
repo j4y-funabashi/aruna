@@ -1,7 +1,7 @@
 <?php
 
 // ROUTES
-$app->get("/", 'posts.controller:feed')
+$app->get("/", 'action.show_latest_posts:__invoke')
     ->bind('root');
 
 $app->get("/p/{post_id}", 'posts.controller:getById')

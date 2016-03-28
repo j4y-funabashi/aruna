@@ -87,6 +87,26 @@ class PostRepositoryReader
         return $post;
     }
 
+    public function listMonths()
+    {
+        $q = "SELECT
+            strftime('%Y-%m-01', published) as month,
+            count(*) as count
+            FROM posts
+            ORDER BY published DESC";
+        $r = $this->db->prepare($q);
+        $r->execute();
+
+        $out = [];
+        while ($post = $r->fetch()) {
+            $post['human'] = date("M Y", strtotime($post['month']));
+            $post['link'] = date("Y/m", strtotime($post['month']));
+            $out[] = $post;
+        }
+
+        return $out;
+    }
+
     public function listFromId($from_id, $rpp)
     {
         $q = "SELECT
