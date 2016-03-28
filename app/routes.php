@@ -4,13 +4,13 @@
 $app->get("/", 'action.show_latest_posts:__invoke')
     ->bind('root');
 
+$app->get("/p/{post_id}", 'posts.controller:getById')
+    ->bind('post');
+
 $app->get("/{year}/{month}/{day}", 'action.show_date_feed:__invoke')
     ->value('month', '*')
     ->value('day', '*')
     ->bind('date_feed');
-
-$app->get("/p/{post_id}", 'posts.controller:getById')
-    ->bind('post');
 
 $app->get("/login", 'auth.controller:login')
     ->bind('login');
