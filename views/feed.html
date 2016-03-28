@@ -43,7 +43,7 @@
             <h3>{{ nav.title }}</h3>
             <ul class="list-inline">
                 {% for item in nav.items %}
-                <li><a href="{{ item.link }}">{{ item.human }}</a></li>
+                <li><a rel="feed" href="{{ item.link }}">{{ item.human }}</a></li>
                 {% endfor %}
             </ul>
         {% endfor %}
