@@ -28,7 +28,6 @@ class PostRepositoryReader
             $query_data[":day"] = $day;
         }
 
-        // get previousious
         $q = "SELECT
             id,
             published,
@@ -92,7 +91,7 @@ class PostRepositoryReader
             FROM posts
             WHERE published >= :published
             AND id > :id
-            ORDER BY published ASC, id ASC
+            ORDER BY published ASC, id DESC
             LIMIT 1";
         $r = $this->db->prepare($q);
         $r->execute(
