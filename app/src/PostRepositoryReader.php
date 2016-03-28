@@ -13,6 +13,42 @@ class PostRepositoryReader
         $this->db = $db;
     }
 
+    public function listByDate($year, $month, $day)
+    {
+        $where = array();
+        $query_data = [
+            ":year" => $year
+        ];
+        if ($month != "*") {
+            $where[] = "AND strftime('%m', published) = :month";
+            $query_data[":month"] = $month;
+        }
+        if ($day != "*") {
+            $where[] = "AND strftime('%d', published) = :day";
+            $query_data[":day"] = $day;
+        }
+
+        // get previousious
+        $q = "SELECT
+            id,
+            published,
+            post
+            FROM posts
+            WHERE strftime('%Y', published) = :year
+            ".implode("\n", $where)."
+            ORDER BY published DESC, id DESC
+            ";
+        $r = $this->db->prepare($q);
+        $r->execute($query_data);
+
+        $out = [];
+        while ($post = $r->fetch()) {
+            $out[] = json_decode($post['post'], true);
+        }
+
+        return $out;
+    }
+
     public function findById($post_id)
     {
 
@@ -90,17 +126,19 @@ class PostRepositoryReader
     public function listMonths()
     {
         $q = "SELECT
-            strftime('%Y-%m-01', published) as month,
+            strftime('%Y', published) as year,
+            strftime('%m', published) as month,
             count(*) as count
             FROM posts
+            GROUP BY strftime('%Y', published), strftime('%m', published)
             ORDER BY published DESC";
         $r = $this->db->prepare($q);
         $r->execute();
 
         $out = [];
         while ($post = $r->fetch()) {
-            $post['human'] = date("M Y", strtotime($post['month']));
-            $post['link'] = date("Y/m", strtotime($post['month']));
+            $post['human'] = date("M Y", strtotime($post['year']."-".$post['month']."-01"));
+            $post['link'] = date("Y/m", strtotime($post['year']."-".$post['month']."-01"));
             $out[] = $post;
         }
 

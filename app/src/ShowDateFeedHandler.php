@@ -3,12 +3,11 @@
 namespace Aruna;
 
 /**
- * Class ShowLatestPostsHandler
+ * Class ShowDateFeedHandler
  * @author yourname
  */
-class ShowLatestPostsHandler implements Handler
+class ShowDateFeedHandler implements Handler
 {
-
     public function __construct(
         $postRepository,
         $url_generator
@@ -23,8 +22,13 @@ class ShowLatestPostsHandler implements Handler
             function ($post) {
                 return new \Aruna\PostViewModel($post, $this->url_generator);
             },
-            $this->postRepository->listFromId(0, 50)
+            $this->postRepository->listByDate(
+                $command->getYear(),
+                $command->getMonth(),
+                $command->getDay()
+            )
         );
+
         $out = array(
             'items' => $items,
             'nav' => array(

@@ -89,6 +89,12 @@ $app['webmention.controller'] = $app->share(function () use ($app) {
     );
 });
 
+$app['action.show_date_feed'] = $app->share(function () use ($app) {
+    return new Aruna\ShowDateFeedAction(
+        new Aruna\ShowLatestPostsResponder($app['response'], $app['twig']),
+        new Aruna\CommandBus($app)
+    );
+});
 $app['action.show_latest_posts'] = $app->share(function () use ($app) {
     return new Aruna\ShowLatestPostsAction(
         new Aruna\ShowLatestPostsResponder($app['response'], $app['twig']),
@@ -97,6 +103,12 @@ $app['action.show_latest_posts'] = $app->share(function () use ($app) {
 });
 $app['handler.showlatestposts'] = $app->share(function () use ($app) {
     return new Aruna\ShowLatestPostsHandler(
+        $app['posts_repository_reader'],
+        $app['url_generator']
+    );
+});
+$app['handler.showdatefeed'] = $app->share(function () use ($app) {
+    return new Aruna\ShowDateFeedHandler(
         $app['posts_repository_reader'],
         $app['url_generator']
     );
