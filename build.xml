@@ -1,11 +1,29 @@
 <project name="aruna" default="build">
 
+
     <target name="build">
+
         <!--install modules defined in composer.json-->
         <exec executable="bash" failonerror="true">
             <arg value="-c" />
             <arg value="composer install" />
         </exec>
+
+        <!--run unit tests-->
+        <exec executable="vendor/bin/phpunit" failonerror="true">
+            <arg value="--config" />
+            <arg value="phpunit.xml" />
+            <arg value="tests/unit" />
+        </exec>
+
+        <!--run system tests-->
+        <exec executable="vendor/bin/phpunit" failonerror="true">
+            <arg value="--config" />
+            <arg value="phpunit_ci.xml" />
+            <arg value="tests/system" />
+        </exec>
+
     </target>
+
 
 </project>
