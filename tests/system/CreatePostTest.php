@@ -42,5 +42,10 @@ class CreatePostTest extends SystemTest
         $response = $SUT->__invoke($request);
 
         $this->assertEquals(202, $response->getStatusCode());
+
+        $post = json_decode($response->getContent(), true);
+        $path = getenv("ROOT_DIR")."/posts/".(new \DateTimeImmutable($post['published']))->format("Y")
+            . "/" . $post['uid'].".json";
+        $this->assertFileExists($path);
     }
 }
