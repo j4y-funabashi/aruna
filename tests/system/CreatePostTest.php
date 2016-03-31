@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class CreatePostTest extends SystemTest
 {
-
     /**
     * @test
     */
@@ -41,12 +40,27 @@ class CreatePostTest extends SystemTest
 
         $response = $SUT->__invoke($request);
 
-        $this->assertEquals(202, $response->getStatusCode());
-
         $post = json_decode($response->getContent(), true);
         $path = getenv("ROOT_DIR")."/posts/".(new \DateTimeImmutable($post['published']))->format("Y")
             . "/" . $post['uid'].".json";
+
+        $this->assertEquals(202, $response->getStatusCode());
         $this->assertFileExists($path);
         $this->assertEquals($response->getContent(), file_get_contents($path));
+    }
+
+    /**
+    * @test
+    */
+    public function it_returns_unauthorized_401_if_access_token_is_invalid()
+    {
+        $SUT = $this->app['action.create_post'];
+
+        $post = ["h" => "entry"];
+        $request = new Request([], $post, [], [], []);
+
+        $response = $SUT->__invoke($request);
+
+        $this->assertEquals(401, $response->getStatusCode());
     }
 }
