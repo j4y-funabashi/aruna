@@ -47,5 +47,6 @@ class CreatePostTest extends SystemTest
         $path = getenv("ROOT_DIR")."/posts/".(new \DateTimeImmutable($post['published']))->format("Y")
             . "/" . $post['uid'].".json";
         $this->assertFileExists($path);
+        $this->assertEquals($response->getContent(), file_get_contents($path));
     }
 }
