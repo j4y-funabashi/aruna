@@ -9,4 +9,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision :shell, path: "resources/vagrant_bootstrap.sh"
     config.vm.network :forwarded_port, guest: 80, host: 4567
     config.vm.synced_folder ".", "/srv/aruna"
+    config.vm.synced_folder "/home/jayr/aruna", "/media/jayr/aruna"
 end
