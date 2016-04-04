@@ -5,16 +5,17 @@
     <article class="h-{{ post.h }}">
 
         {% if post.link_preview is defined %}
-        <div class="container">
-            <div class="row">
-                <a href="{{ post.link_preview.url }}">{{ post.link_preview.title|raw }}</a>
-                <p>{{ post.link_preview.description|raw }}</p>
-            </div>
+        <div class="reply-context">
+            <blockquote>
+                <cite>
+                    <a class="u-like-of" href="{{ post.link_preview.url }}">{{ post.link_preview.title }}</a>
+                </cite>
+            </blockquote>
         </div>
         {% endif %}
 
         {% if post.photo is defined %}
-        <img class="u-photo img-rounded img-responsive" src="/{{ post.photo }}" />
+        <img class="u-photo img-rounded img-responsive" alt="{% if post.content is defined %}{{ post.content }}{% endif %}" src="/{{ post.photo }}" />
         {% endif %}
 
         {% if post.title is defined %}
@@ -41,29 +42,37 @@
         </div>
 
 
-        <div class="webmentions">
-            <div class="container-fluid">
-
-                {% for mention in mentions %}
-                <div class="row">
-                    <div class="row-padding">
-                        <div class="col-xs-2">
-                            <img class="img-circle img-responsive" src="{{ mention.author_photo }}" />
-                        </div>
-                        <div class="col-xs-10">
-                            <a href="{{ mention.author_url }}">{{ mention.author_name }}</a>
-                            {% if mention.is_like == 1 %}liked this post{% endif %}
-                            {% if mention.is_comment == 1 %}<p>{{ mention.content }}</p>{% endif %}
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-
-            </div>
+        <div class="reply-context">
+            {% for mention in mentions %}
+            {% if mention.is_like == 1 %}
+            <span class="u-comment h-cite">
+                <a class="u-author h-card" href="{{ mention.author_url }}">
+                    <img class="img-circle" title="{{ mention.author_name }} likes this post" alt="{{ mention.author_name }}" src="{{ mention.author_photo }}" />
+                </a>
+            </span>
+            {% endif %}
+            {% endfor %}
         </div>
+
+        {% for mention in mentions %}
+        {% if mention.is_comment == 1 %}
+        <div class="reply-context">
+            <span class="u-comment h-cite">
+                <p class="p-content">
+                {{ mention.content|raw }}
+                </p>
+                <div class="meta">
+                    <a class="u-author h-card" href="{{ mention.author_url }}">
+                        <img class="img-circle" title="{{ mention.author_name }}" alt="{{ mention.author_name }}" src="{{ mention.author_photo }}" />
+                        {{ mention.author_name }}
+                    </a>
+                </div>
+            </span>
+        </div>
+        {% endif %}
+        {% endfor %}
 
     </article>
 </div>
 
 {% include 'tail.html' %}
-
