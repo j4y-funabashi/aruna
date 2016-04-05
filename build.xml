@@ -12,7 +12,7 @@
         <!--run unit tests-->
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg value="--config" />
-            <arg value="phpunit.xml" />
+            <arg value="phpunit_ci.xml" />
             <arg value="tests/unit" />
         </exec>
 
