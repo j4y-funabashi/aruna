@@ -32,13 +32,13 @@
                 <a class="u-url p-name" href="{{ post.url }}">
                     <time class="dt-published" datetime="{{ post.published }}">{{ post.human_date }}</time>
                 </a>
+
                 {% if post.tags is defined %}
                 {% for tag in post.tags %}
-                <span class="p-category">
-                    <p>{{ tag }}</p>
-                </span>
+                <a class="p-category" href="/tag/{{ tag }}">#{{ tag }}</a>
                 {% endfor %}
                 {% endif %}
+
             </div>
         </article>
         {% endfor %}
