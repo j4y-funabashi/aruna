@@ -52,10 +52,13 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
             )
         )
         ->pipe(
-            new Aruna\Action\ConvertMarkdown(
+            new Aruna\Pipeline\ConvertMarkdown(
                 $app['monolog'],
                 new \cebe\markdown\GithubMarkdown()
             )
+        )
+        ->pipe(
+            new Aruna\Pipeline\ParseCategories()
         )
         ->pipe(
             new Aruna\Pipeline\FetchLinkPreview(
