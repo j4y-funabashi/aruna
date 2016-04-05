@@ -24,7 +24,8 @@ class CreatePostTest extends SystemTest
         $post = [
             "h" => "entry",
             "published" => $now,
-            "content" => "test1"
+            "content" => "test1",
+            "category" => "cat, kitty"
         ];
         $files = [
             "photo" => new UploadedFile(
