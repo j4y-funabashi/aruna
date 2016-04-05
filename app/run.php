@@ -58,7 +58,7 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
             )
         )
         ->pipe(
-            new Aruna\Action\FetchLinkPreview(
+            new Aruna\Pipeline\FetchLinkPreview(
                 $app['monolog'],
                 $linkPreview,
                 $app['event_store']
