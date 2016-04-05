@@ -20,15 +20,17 @@ class ParseCategories
             ? $event['category']
             : explode(",", $event['category']);
 
-        $out = array_filter($out, 'strlen');
-        if (empty($out)) {
-            return $event;
-        }
         $out = array_map('strtolower', $out);
         $out = array_map('trim', $out);
+        $out = array_filter($out, 'strlen');
         $out = array_unique(
             array_filter($out)
         );
+
+        if (empty($out)) {
+            unset($event['category']);
+            return $event;
+        }
 
         $event['category'] = $out;
         return $event;
