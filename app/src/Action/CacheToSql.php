@@ -18,7 +18,6 @@ class CacheToSql
 
     public function __invoke($event)
     {
-        $event = $this->cacheTags($event);
 
         $q = "REPLACE INTO posts (id, published, post)
             VALUES
@@ -34,20 +33,5 @@ class CacheToSql
         $r->execute(
             $data
         );
-    }
-
-    private function cacheTags($event)
-    {
-        if (false === isset($event['category'])) {
-            return $event;
-        }
-        $event['category'] = (array) $event['category'];
-        $event['category'] = array_filter($event['category'], 'strlen');
-        if (empty($event['category'])) {
-            return $event;
-        }
-        $event['category'] = array_map('strtolower', $event['category']);
-
-        return $event;
     }
 }

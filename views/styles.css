@@ -4,12 +4,14 @@ body {
     background-color: #e9e9e9;
 }
 
+article * {
+    word-wrap: break-word;
+}
 article {
     max-width: 640px;
     padding: 10px;
     margin-bottom: 10px;
     background-color: #fff;
-    word-wrap: break-word;
 }
 
 footer {
@@ -17,14 +19,18 @@ footer {
 }
 
 
-.webmentions {
-    margin-top: 30px;
+.reply-context {
+    color: #444;
     font-size: 14px;
-    color: #666;
+    border-top: solid 1px #DDD;
+    background-color: #f5f5f5;
+    padding: 10px;
 }
-.row-padding {
-    padding: 6px 0 6px 0;
+.reply-context img {
+    width: 20px;
+    margin: 4px;
 }
+
 .meta, .meta a {
     color: #999;
     font-size: 12px;

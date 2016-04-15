@@ -18,6 +18,7 @@ sudo apt-get update \
 
 
 ## create data_dir
+sudo usermod -G www-data vagrant
 sudo useradd -G www-data $APP_USER
 sudo mkdir -p $DATA_DIR
 

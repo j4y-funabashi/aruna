@@ -26,7 +26,7 @@ class CreatePostResponder
         );
         $headers = ['Location' => $url];
 
-        return new Response($url, Response::HTTP_ACCEPTED, $headers);
+        return new Response(json_encode($post), Response::HTTP_ACCEPTED, $headers);
     }
 
     public function unauthorized($message)

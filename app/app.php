@@ -47,10 +47,6 @@ $app['create_post.handler'] = $app->share(function () use ($app) {
     );
 });
 
-$app['micropub.controller'] = $app->share(function () use ($app) {
-    return new Aruna\Controller\MicropubController();
-});
-
 $app['access_token'] = $app->share(function () use ($app) {
     return new Aruna\AccessToken(
         $app['http_client'],
@@ -68,6 +64,17 @@ $app['action.create_post'] = $app->share(function () use ($app) {
     );
 });
 
+$app['response'] = $app->share(function () {
+    return new Symfony\Component\HttpFoundation\Response();
+});
+
+$app['action.show_micropub_form'] = $app->share(function () use ($app) {
+    return new Aruna\ShowMicropubFormAction(
+        new Aruna\ShowMicropubFormResponder($app['response'], $app['twig']),
+        new Aruna\ShowMicropubFormHandler($app['session'])
+    );
+});
+
 $app['webmention.controller'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local($app['webmentions_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
@@ -81,12 +88,39 @@ $app['webmention.controller'] = $app->share(function () use ($app) {
         )
     );
 });
+
+$app['action.show_date_feed'] = $app->share(function () use ($app) {
+    return new Aruna\ShowDateFeedAction(
+        new Aruna\ShowLatestPostsResponder($app['response'], $app['twig']),
+        new Aruna\CommandBus($app)
+    );
+});
+$app['action.show_latest_posts'] = $app->share(function () use ($app) {
+    return new Aruna\ShowLatestPostsAction(
+        new Aruna\ShowLatestPostsResponder($app['response'], $app['twig']),
+        new Aruna\CommandBus($app)
+    );
+});
+$app['handler.showlatestposts'] = $app->share(function () use ($app) {
+    return new Aruna\ShowLatestPostsHandler(
+        $app['posts_repository_reader'],
+        $app['url_generator']
+    );
+});
+$app['handler.showdatefeed'] = $app->share(function () use ($app) {
+    return new Aruna\ShowDateFeedHandler(
+        $app['posts_repository_reader'],
+        $app['url_generator']
+    );
+});
+
 $app['posts.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\PostController(
         $app['posts_repository_reader'],
         $app['mentions_repository_reader']
     );
 });
+
 $app['auth.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\AuthController(
         $app['http_client'],

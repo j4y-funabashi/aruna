@@ -22,26 +22,6 @@ class PostController
         $this->mentionsRepository = $mentionsRepository;
     }
 
-    public function feed(Request $request, Application $app)
-    {
-        $from_id = ($request->query->get('from_id') !== null)
-            ? $request->query->get('from_id')
-            : 0;
-        $posts = array_map(
-            function ($post) use ($app) {
-                return new \Aruna\PostViewModel($post, $app['url_generator']);
-            },
-            $this->postRepository->listFromId($from_id, $app['rpp'])
-        );
-
-        return $app['twig']->render(
-            'feed.html',
-            [
-                'posts' => $posts
-            ]
-        );
-    }
-
     public function getById(Application $app, $post_id)
     {
         $post = $this->postRepository->findById($post_id);
