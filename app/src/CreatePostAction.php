@@ -25,11 +25,10 @@ class CreatePostAction
 
     public function __invoke(Request $request)
     {
-        $access_token = $this->getAccessToken($request);
         $command = $this->getCommand($request);
 
         try {
-            $this->accessToken->getTokenFromAuthCode($access_token);
+            $this->accessToken->getTokenFromAuthCode($this->getAccessToken($request));
         } catch (\Exception $e) {
             return $this->responder->unauthorized($e->getMessage());
         }
@@ -43,7 +42,8 @@ class CreatePostAction
     {
         return new \Aruna\CreatePostCommand(
             $entry = $this->buildEntryArray($request),
-            $files = $this->buildFilesArray($request)
+            $files = $this->buildFilesArray($request),
+            $access_token = $this->getAccessToken($request)
         );
     }
 

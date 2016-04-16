@@ -121,7 +121,8 @@ class CreatePostActionTest extends UnitTest
                         'real_path' => "/test",
                         'original_ext' => "jpg"
                     )
-                )
+                ),
+                ""
             )
         )->shouldBeCalled();
 
