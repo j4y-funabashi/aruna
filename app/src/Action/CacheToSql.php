@@ -19,15 +19,16 @@ class CacheToSql
     public function __invoke($event)
     {
 
-        $q = "REPLACE INTO posts (id, published, post)
+        $q = "REPLACE INTO posts (id, published, type, post)
             VALUES
-            (:id, :published, :post)";
+            (:id, :published, :type, :post)";
         $r = $this->db->prepare($q);
 
         $data = [
             ":id" => $event['uid'],
             ":published" => $event['published'],
-            ":post" => json_encode($event)
+            ":post" => json_encode($event),
+            ":type" => $event['post_type']
         ];
 
         $r->execute(

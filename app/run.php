@@ -42,6 +42,9 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
 
     $processPostsPipeline = (new League\Pipeline\Pipeline())
         ->pipe(
+            new Aruna\Pipeline\PostTypeDiscovery()
+        )
+        ->pipe(
             new Aruna\Action\ResizePhoto(
                 $app['monolog'],
                 new Aruna\Action\ImageResizer(
