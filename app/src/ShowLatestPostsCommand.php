@@ -8,4 +8,10 @@ namespace Aruna;
  */
 class ShowLatestPostsCommand
 {
+    public function __construct(
+        $config
+    ) {
+        $this->page = $config['page'];
+        $this->rpp = $config['rpp'];
+    }
 }
