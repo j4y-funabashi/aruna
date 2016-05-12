@@ -19,19 +19,23 @@ class ShowLatestPostsHandler implements Handler
 
     public function handle($command)
     {
-        $items = array_map(
-            function ($post) {
-                return new \Aruna\PostViewModel($post, $this->url_generator);
-            },
-            $this->postRepository->listFromId(0, 50)
-        );
         $out = array(
-            'items' => $items,
+            'items' => $this->getItems(),
             'nav' => array(
                 0 => array('title' => 'archives', 'items' => $this->postRepository->listMonths())
             )
         );
 
         return new Found($out);
+    }
+
+    private function getItems()
+    {
+        return array_map(
+            function ($post) {
+                return new \Aruna\PostViewModel($post, $this->url_generator);
+            },
+            $this->postRepository->listFromId(0, 10)
+        );
     }
 }
