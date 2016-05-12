@@ -38,7 +38,8 @@ curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
 
 ## NGINX PHP CONFIG
-sudo cp /srv/aruna/resources/nginx.conf /etc/nginx/sites-enabled/default \
+sudo rm /etc/nginx/sites-enabled/default
+sudo cp /srv/aruna/resources/nginx.conf /etc/nginx/sites-enabled/aruna \
     && sudo cp /srv/aruna/resources/php5-fpm.conf /etc/php5/fpm/pool.d/aruna.conf \
     && sudo cp /srv/aruna/resources/supervisord.conf /etc/supervisor/conf.d/
 
