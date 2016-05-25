@@ -13,13 +13,13 @@
 <link rel="micropub" href="http://j4y.co/micropub">
 <link rel="webmention" href="http://j4y.co/webmention">
 
-<title>j4y</title>
+<title>j4y{% if page_title is defined %}:{{ page_title }}{% endif %}</title>
 
 </head>
 <body>
 
 <header>
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" rel="me" href="http://j4y.co">j4y.co</a>

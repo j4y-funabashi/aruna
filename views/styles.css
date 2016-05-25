@@ -2,28 +2,40 @@
     color: #181818;
 }
 
-nav {
+.navbar {
     background-color: #282828;
     padding: 10px;
 }
+.navbar-fixed-top {
+    position: fixed;
+    right: 0;
+    left: 0;
+    top: 0;
+    margin-bottom: 10px;
+}
+
+.centered {
+    text-align: center;
+}
 
 body {
-    background-color: #e8e8e8;
+    background-color: #f8f8f8;
     font-family: monospace;
     font-size: 14px;
     color: #181818;
 }
 
 main {
-    max-width: 960px;
+    max-width: 1024px;
     margin: auto;
+    padding-top: 40px;
 }
 
 footer {
-    border-top: 2px solid #b8b8b8;
+    border-top: 1px solid #b8b8b8;
     margin-top: 5px;
     padding: 10px;
-    background-color: #d8d8d8;
+    background-color: #e8e8e8;
 }
 
 p {

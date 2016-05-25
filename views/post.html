@@ -2,7 +2,7 @@
 
 <main>
 
-    <article class="h-{{ post.h }}">
+    <article class="h-{{ post.h }} centered">
 
         {% if post.link_preview is defined %}
         <div class="reply-context">
@@ -15,7 +15,7 @@
         {% endif %}
 
         {% if post.photo is defined %}
-        <img class="u-photo img-rounded img-responsive" alt="{% if post.content is defined %}{{ post.content }}{% endif %}" src="/{{ post.photo }}" />
+        <img class="u-photo" alt="{% if post.content is defined %}{{ post.content }}{% endif %}" src="/{{ post.photo }}" />
         {% endif %}
 
         {% if post.title is defined %}

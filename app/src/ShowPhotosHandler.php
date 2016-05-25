@@ -13,6 +13,9 @@ class ShowPhotosHandler
     public function getLatestPhotos($rpp, $page = 1)
     {
         $offset = ($page - 1) * $rpp;
+        $next_page = ($page > 1)
+            ? $page + 1
+            : 2;
         return new Found(
             array(
                 "items" => array_map(
@@ -21,6 +24,10 @@ class ShowPhotosHandler
                     },
                     $this->postsRepository
                     ->listByType("photo", $rpp, $offset)
+                ),
+                "nav_next" => $this->url_generator->generate(
+                    "photos",
+                    array("page" => $next_page)
                 )
             )
         );

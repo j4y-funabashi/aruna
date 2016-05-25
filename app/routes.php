@@ -1,13 +1,14 @@
 <?php
 
 // ROUTES
-$app->get("/", 'action.show_latest_posts:__invoke')
+$app->get("/", 'action.show.photos:__invoke')
     ->bind('root');
 
 $app->get("/p/{post_id}", 'posts.controller:getById')
     ->bind('post');
 
-$app->get("/photos", "action.show.photos:__invoke");
+$app->get("/photos", "action.show.photos:__invoke")
+    ->bind("photos");
 
 $app->get("/login", 'auth.controller:login')
     ->bind('login');

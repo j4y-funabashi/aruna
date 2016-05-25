@@ -13,9 +13,26 @@ class ShowPhotosResponder extends Responder
         $posts = $this->renderPosts();
         $out = $this->view->render(
             "page_wrapper.html",
-            array("body" => $this->renderPostGrid($posts, 3))
+            array(
+                "page_title" => "photos",
+                "body" => $this->renderFeed($posts, "photos")
+            )
         );
         $this->response->setContent($out);
+    }
+
+    private function renderFeed(
+        $posts,
+        $title
+    ) {
+        return $this->view->render(
+            "post_feed.html",
+            array(
+                "feed_title" => "photos",
+                "items" => $this->renderPostGrid($posts, 3),
+                "nav_next" => $this->payload->get("nav_next")
+            )
+        );
     }
 
     private function renderPosts()
@@ -33,13 +50,13 @@ class ShowPhotosResponder extends Responder
 
     private function renderPostGrid($posts, $per_row)
     {
-        $out = array();
+        $rows = array();
         foreach (array_chunk($posts, $per_row) as $post_row) {
-            $out[] = $this->view->render(
+            $rows[] = $this->view->render(
                 "grid_row.html",
                 array("row" => $post_row)
             );
         }
-        return implode("", $out);
+        return implode("", $rows);
     }
 }
