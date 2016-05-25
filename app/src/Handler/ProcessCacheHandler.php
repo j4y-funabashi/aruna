@@ -28,7 +28,7 @@ class ProcessCacheHandler
     {
         while (true) {
             $this->processPosts();
-            $this->processMentions();
+            //$this->processMentions();
             sleep(60);
         }
     }
