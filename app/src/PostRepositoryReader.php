@@ -168,4 +168,30 @@ class PostRepositoryReader
         }
         return $out;
     }
+
+    public function listByType($post_type, $limit, $offset = 0)
+    {
+        $q = "SELECT
+            id,
+            published,
+            post
+            FROM posts
+            WHERE type = :post_type
+            ORDER BY published DESC
+            LIMIT :offset,:limit";
+        $r = $this->db->prepare($q);
+        $r->execute(
+            array(
+                ":post_type" => $post_type,
+                ":limit" => $limit,
+                ":offset" => $offset
+            )
+        );
+
+        $out = [];
+        while ($post = $r->fetch()) {
+            $out[] = json_decode($post['post'], true);
+        }
+        return $out;
+    }
 }

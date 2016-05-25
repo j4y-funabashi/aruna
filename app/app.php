@@ -6,7 +6,7 @@ $app['debug'] = true;
 $app['posts_root'] = getenv("ROOT_DIR")."/posts";
 $app['webmentions_root'] = getenv("ROOT_DIR")."/webmentions";
 $app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
-$app['rpp'] = 50;
+$app['rpp'] = 12;
 $app['token_endpoint'] = "https://tokens.indieauth.com/token";
 $app['me_endpoint'] = "http://j4y.co/";
 
@@ -129,6 +129,17 @@ $app['auth.controller'] = $app->share(function () use ($app) {
 });
 $app['http_client'] = $app->share(function () {
     return new GuzzleHttp\Client();
+});
+
+$app['action.show.photos'] = $app->share(function () use ($app) {
+    $handler = new Aruna\ShowPhotosHandler(
+        $app['posts_repository_reader'],
+        $app['url_generator']
+    );
+    return new Aruna\ShowPhotosAction(
+        $handler,
+        new Aruna\ShowPhotosResponder($app['response'], $app['twig'])
+    );
 });
 
 require_once __DIR__ . "/routes.php";
