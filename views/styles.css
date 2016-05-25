@@ -1,6 +1,12 @@
 * {
     color: #181818;
 }
+
+nav {
+    background-color: #282828;
+    padding: 10px;
+}
+
 body {
     background-color: #e8e8e8;
     font-family: monospace;
@@ -13,9 +19,11 @@ main {
     margin: auto;
 }
 
-nav {
-    background-color: #282828;
+footer {
+    border-top: 2px solid #b8b8b8;
+    margin-top: 5px;
     padding: 10px;
+    background-color: #d8d8d8;
 }
 
 p {
