@@ -1,8 +1,16 @@
+* {
+    color: #181818;
+}
 body {
     background-color: #e8e8e8;
     font-family: monospace;
     font-size: 14px;
     color: #181818;
+}
+
+main {
+    max-width: 960px;
+    margin: auto;
 }
 
 nav {
@@ -11,7 +19,7 @@ nav {
 }
 
 p {
-    margin: 0;
+    margin: 4px;
 }
 
 blockquote {
@@ -31,18 +39,13 @@ article * {
 }
 article {
     max-width: 640px;
-    padding: 10px 4px 10px 4px;
-    border-left: 4px solid #86c1b9;
+    padding: 10px;
 }
 article img {
     width: 100%;
 }
 
-.post-bookmark {
-    border-left: 4px solid #a1b56c;
-}
-
 .meta * {
-    color: #686868;
-    font-size: 12px;
+    color: #585858;
+    font-size: 11px;
 }

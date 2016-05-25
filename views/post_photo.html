@@ -1,0 +1,22 @@
+<article class="h-entry">
+
+    <img class="u-photo" alt="jpg photo" src="/{{ post.photo }}" />
+
+    {% if post.content is defined %}
+    <div class="e-content">
+        {{ post.content|raw }}
+    </div>
+    {% endif %}
+
+    <div class="meta">
+        <a class="u-url p-name" href="{{ post.url }}"><time class="dt-published" datetime="{{ post.published }}">{{ post.human_date }}</time></a>
+
+        {% if post.tags is defined %}
+        {% for tag in post.tags %}
+        <a class="p-category" href="/tag/{{ tag }}">#{{ tag }}</a>
+        {% endfor %}
+        {% endif %}
+
+    </div>
+
+</article>

@@ -7,6 +7,8 @@ $app->get("/", 'action.show_latest_posts:__invoke')
 $app->get("/p/{post_id}", 'posts.controller:getById')
     ->bind('post');
 
+$app->get("/photos", "action.show.photos:__invoke");
+
 $app->get("/login", 'auth.controller:login')
     ->bind('login');
 

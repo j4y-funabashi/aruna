@@ -15,6 +15,7 @@ class PostViewModel
     public $url;
     public $published;
     public $human_date;
+    public $type;
 
     public function __construct(
         $post_data,
