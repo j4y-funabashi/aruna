@@ -4,8 +4,10 @@ namespace Aruna;
 
 class ShowPhotosHandler
 {
-    public function __construct($postRepository, $url_generator)
-    {
+    public function __construct(
+        $postRepository,
+        $url_generator
+    ) {
         $this->postsRepository = $postRepository;
         $this->url_generator = $url_generator;
     }
@@ -20,7 +22,10 @@ class ShowPhotosHandler
             array(
                 "items" => array_map(
                     function ($post) {
-                        return new \Aruna\PostViewModel($post, $this->url_generator);
+                        return new \Aruna\PostViewModel(
+                            $post,
+                            $this->url_generator
+                        );
                     },
                     $this->postsRepository
                     ->listByType("photo", $rpp, $offset)
