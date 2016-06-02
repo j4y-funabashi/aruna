@@ -14,7 +14,8 @@ sudo apt-get update \
     php5-cli \
     php5-imagick \
     php5-curl \
-    php5-sqlite
+    php5-sqlite \
+    php5-debug
 
 
 ## create data_dir

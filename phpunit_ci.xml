@@ -11,17 +11,6 @@
     bootstrap="common.php"
     >
 
-    <logging>
-        <log type="coverage-html" target="build/coverage"/>
-        <log type="testdox-html" target="build/testdox.html"/>
-    </logging>
-
-    <testsuites>
-        <testsuite name="Unit Test Suite">
-            <directory>./tests/unit/</directory>
-        </testsuite>
-    </testsuites>
-
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">app/src/</directory>

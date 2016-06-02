@@ -11,9 +11,10 @@
     bootstrap="vendor/autoload.php"
     >
 
-    <testsuites>
-        <testsuite name="Unit Test Suite">
-            <directory>./tests/unit/</directory>
-        </testsuite>
-    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">app/src/</directory>
+        </whitelist>
+    </filter>
+
 </phpunit>
