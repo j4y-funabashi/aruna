@@ -36,8 +36,7 @@ class ShowPhotosHandler
             function ($post) {
                 return new \Aruna\PostViewModel($post, $this->url_generator);
             },
-            $this->postsRepository
-            ->listByType("photo", $rpp, $offset)
+            $this->postsRepository->listByType("photo", $rpp, $offset)
         );
     }
 }
