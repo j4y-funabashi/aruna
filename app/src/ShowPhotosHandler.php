@@ -18,23 +18,24 @@ class ShowPhotosHandler
         $next_page = ($page > 1)
             ? $page + 1
             : 2;
-        return new Found(
-            array(
-                "items" => array_map(
-                    function ($post) {
-                        return new \Aruna\PostViewModel(
-                            $post,
-                            $this->url_generator
-                        );
-                    },
-                    $this->postsRepository
-                    ->listByType("photo", $rpp, $offset)
-                ),
-                "nav_next" => $this->url_generator->generate(
-                    "photos",
-                    array("page" => $next_page)
-                )
+
+        $payload = array(
+            "items" => array_map(
+                function ($post) {
+                    return new \Aruna\PostViewModel(
+                        $post,
+                        $this->url_generator
+                    );
+                },
+                $this->postsRepository
+                ->listByType("photo", $rpp, $offset)
+            ),
+            "nav_next" => $this->url_generator->generate(
+                "photos",
+                array("page" => $next_page)
             )
         );
+
+        return new Found($payload);
     }
 }
