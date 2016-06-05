@@ -20,16 +20,7 @@ class ShowPhotosHandler
             : 2;
 
         $payload = array(
-            "items" => array_map(
-                function ($post) {
-                    return new \Aruna\PostViewModel(
-                        $post,
-                        $this->url_generator
-                    );
-                },
-                $this->postsRepository
-                ->listByType("photo", $rpp, $offset)
-            ),
+            "items" => $this->getPhotos($rpp, $offset),
             "nav_next" => $this->url_generator->generate(
                 "photos",
                 array("page" => $next_page)
@@ -37,5 +28,16 @@ class ShowPhotosHandler
         );
 
         return new Found($payload);
+    }
+
+    private function getPhotos($rpp, $offset)
+    {
+        return array_map(
+            function ($post) {
+                return new \Aruna\PostViewModel($post, $this->url_generator);
+            },
+            $this->postsRepository
+            ->listByType("photo", $rpp, $offset)
+        );
     }
 }
