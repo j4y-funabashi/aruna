@@ -19,7 +19,7 @@ class ShowPhotosHandlerTest extends UnitTest
     /**
      * @test
      */
-    public function it_returns_latest_photos()
+    public function it_returns_payload_with_items_from_repository()
     {
         $rpp = 10;
         $page = 22;
