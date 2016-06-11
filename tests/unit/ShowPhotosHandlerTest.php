@@ -3,6 +3,7 @@
 namespace Test;
 
 use \Aruna\ShowPhotosHandler;
+use \Aruna\ShowPhotosCommand;
 
 class ShowPhotosHandlerTest extends UnitTest
 {
@@ -23,10 +24,16 @@ class ShowPhotosHandlerTest extends UnitTest
     {
         $rpp = 10;
         $page = 22;
+        $command = new ShowPhotosCommand(
+            array(
+                "rpp" => $rpp,
+                "page" => $page
+            )
+        );
         $expected = array();
         $this->postRepository->listByType("photo", $rpp, 210)
             ->willReturn($expected);
-        $result = $this->SUT->getLatestPhotos($rpp, $page);
+        $result = $this->SUT->handle($command);
         $this->assertEquals($expected, $result->get("items"));
     }
 

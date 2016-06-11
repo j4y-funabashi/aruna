@@ -2,7 +2,7 @@
 
 namespace Aruna;
 
-class ShowPhotosHandler
+class ShowPhotosHandler implements Handler
 {
     public function __construct(
         $postRepository,
@@ -12,8 +12,10 @@ class ShowPhotosHandler
         $this->url_generator = $url_generator;
     }
 
-    public function getLatestPhotos($rpp, $page = 1)
+    public function handle($command)
     {
+        $page = $command->get("page");
+        $rpp = $command->get("rpp");
         $offset = ($page - 1) * $rpp;
         $next_page = ($page > 1)
             ? $page + 1

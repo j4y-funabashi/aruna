@@ -19,7 +19,7 @@ class ShowPhotosAction
     {
         $rpp = $app['rpp'];
         $this->responder->setPayload(
-            $this->handler->getLatestPhotos(
+            $this->handler->handle(
                 $rpp,
                 $request->query->get("page")
             )
