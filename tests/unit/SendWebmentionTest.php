@@ -27,6 +27,14 @@ class SendWebmentionTest extends UnitTest
         return new Client(['handler' => $handler]);
     }
 
+    private function getSUT($headers, $body, $response_code = 200)
+    {
+        $client = $this->getClient(
+            [new Response($response_code, $headers, $body)]
+        );
+        return new SendWebmention($client);
+    }
+
     /**
      * @test
      */
@@ -42,47 +50,44 @@ class SendWebmentionTest extends UnitTest
             </html>
             ';
 
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-        $expected = "";
-        $SUT = new SendWebmention($client);
+        $SUT = $this->getSUT($headers, $body);
         $result = $SUT->__invoke($this->event);
+        $expected = "";
         $this->assertEquals($expected, $result);
     }
 
 
     /**
      * @test
+     * https://webmention.rocks/test/1
      */
     public function it_discovers_endpoint_in_relative_link_headers()
     {
-        $client = $this->getClient(
-            [new Response(200, ['Link' => '</webmention?test=true>; rel=webmention'])]
-        );
+        $headers = array('Link' => '</webmention?test=true>; rel=webmention');
+        $body = "";
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
 
     /**
      * @test
+     * https://webmention.rocks/test/2
      */
     public function it_discovers_endpoint_in_absolute_link_headers()
     {
-        $client = $this->getClient(
-            [new Response(200, ['Link' => '<http://example.com/webmention?test=true>; rel=webmention'])]
-        );
+        $headers = array('Link' => '<http://example.com/webmention?test=true>; rel=webmention');
+        $body = "";
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
-
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
 
     /**
      * @test
+     * https://webmention.rocks/test/3
      */
     public function it_discovers_endpoint_in_relative_link_tags()
     {
@@ -96,18 +101,15 @@ class SendWebmentionTest extends UnitTest
             </html>
             ';
         $headers = [];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
-
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
 
     /**
      * @test
+     * https://webmention.rocks/test/4
      */
     public function it_discovers_endpoint_in_absolute_link_tags()
     {
@@ -121,21 +123,19 @@ class SendWebmentionTest extends UnitTest
             </html>
             ';
         $headers = [];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
 
     /**
      * @test
+     * https://webmention.rocks/test/5
      */
     public function it_discovers_endpoint_in_relative_anchor_tags()
     {
+        $headers = [];
         $body = '
             <!DOCTYPE html>
             <html lang="en">
@@ -146,19 +146,15 @@ class SendWebmentionTest extends UnitTest
             </body>
             </html>
             ';
-        $headers = [];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
 
     /**
      * @test
+     * https://webmention.rocks/test/6
      */
     public function it_discovers_endpoint_in_absolute_anchor_tags()
     {
@@ -173,42 +169,36 @@ class SendWebmentionTest extends UnitTest
             </html>
             ';
         $headers = [];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
 
     /**
      * @test
+     * https://webmention.rocks/test/7
      */
     public function it_discovers_endpoint_in_absolute_link_headers_with_strange_casing()
     {
-        $client = $this->getClient(
-            [new Response(200, ['LinK' => '<http://example.com/webmention?test=true>; rel=webmention'])]
-        );
+        $headers = array('LinK' => '<http://example.com/webmention?test=true>; rel=webmention');
+        $body = "";
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
-
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
 
     /**
      * @test
+     * https://webmention.rocks/test/8
      */
     public function it_discovers_endpoint_in_absolute_link_headers_with_quoted_rel_value()
     {
-        $client = $this->getClient(
-            [new Response(200, ['LinK' => '<http://example.com/webmention?test=true>; rel="webmention"'])]
-        );
+        $headers = ['LinK' => '<http://example.com/webmention?test=true>; rel="webmention"'];
+        $body = "";
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
-
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
@@ -229,12 +219,8 @@ class SendWebmentionTest extends UnitTest
             </html>
             ';
         $headers = [];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
@@ -245,12 +231,10 @@ class SendWebmentionTest extends UnitTest
      */
     public function it_discovers_endpoint_in_absolute_link_headers_with_multiple_rel_values()
     {
-        $client = $this->getClient(
-            [new Response(200, ['Link' => '<http://example.com/webmention?test=true>; rel="webmention somethingelse"'])]
-        );
+        $headers = ['Link' => '<http://example.com/webmention?test=true>; rel="webmention somethingelse"'];
+        $body = "";
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
-
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
@@ -273,12 +257,8 @@ class SendWebmentionTest extends UnitTest
             </html>
             ';
         $headers = ['Link' => '<http://example.com/webmention?test=true>; rel="webmention"'];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
@@ -302,12 +282,8 @@ class SendWebmentionTest extends UnitTest
             </html>
             ';
         $headers = ['Link' => '<http://example.com/error?linkheader=true>; rel="not-webmention"'];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
@@ -332,16 +308,11 @@ class SendWebmentionTest extends UnitTest
             </html>
             ';
         $headers = [];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
-
 
     /**
      * @test
@@ -356,19 +327,15 @@ class SendWebmentionTest extends UnitTest
             </head>
             <body>
             <div class="e-content">
-			<code>&lt;a href="/webmention/error" rel="webmention"&gt;&lt;/a&gt;</code>
+            <code>&lt;a href="/webmention/error" rel="webmention"&gt;&lt;/a&gt;</code>
             <a href="/webmention?test=true" rel="webmention">correct endpoint</a>
             </div>
             </body>
             </html>
             ';
         $headers = [];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
@@ -383,18 +350,14 @@ class SendWebmentionTest extends UnitTest
             <!DOCTYPE html>
             <html lang="en">
             <head>
-			<link rel="webmention" href="">
+            <link rel="webmention" href="">
             </head>
             <body></body>
             </html>
             ';
         $headers = [];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
@@ -411,18 +374,14 @@ class SendWebmentionTest extends UnitTest
             <head>
             </head>
             <body>
-			<a href="/webmention?test=true" rel="webmention">&lt;a&gt; tag</a>
-			<link rel="webmention" href="/webmention/error">
+            <a href="/webmention?test=true" rel="webmention">&lt;a&gt; tag</a>
+            <link rel="webmention" href="/webmention/error">
             </body>
             </html>
             ';
         $headers = [];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
@@ -439,18 +398,14 @@ class SendWebmentionTest extends UnitTest
             <head>
             </head>
             <body>
-			<link rel="webmention" href="/webmention?test=true">
-			<a href="/webmention/error" rel="webmention">&lt;a&gt; tag</a>
+            <link rel="webmention" href="/webmention?test=true">
+            <a href="/webmention/error" rel="webmention">&lt;a&gt; tag</a>
             </body>
             </html>
             ';
         $headers = [];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
@@ -465,12 +420,9 @@ class SendWebmentionTest extends UnitTest
             'LinK' => '<http://example.com/error>; rel=other',
             'Link' => '<http://example.com/webmention?test=true>; rel=webmention'
         ];
-        $client = $this->getClient(
-            [new Response(200, $headers)]
-        );
+        $body = "";
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
-
+        $SUT = $this->getSUT($headers, $body);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
@@ -484,12 +436,9 @@ class SendWebmentionTest extends UnitTest
         $headers = [
             'Link' => '<http://example.com/error>; rel=other, <http://example.com/webmention?test=true>; rel=webmention'
         ];
-        $client = $this->getClient(
-            [new Response(200, $headers)]
-        );
+        $body = "";
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
-
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
@@ -506,18 +455,14 @@ class SendWebmentionTest extends UnitTest
             <head>
             </head>
             <body>
-			<a href="/webmention?test=true" rel="webmention">&lt;a&gt; tag</a>
-			<link rel="webmention">
+            <a href="/webmention?test=true" rel="webmention">&lt;a&gt; tag</a>
+            <link rel="webmention">
             </body>
             </html>
             ';
         $headers = [];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
@@ -534,17 +479,13 @@ class SendWebmentionTest extends UnitTest
             <head>
             </head>
             <body>
-			<link href="/webmention?test=true" rel="webmention">
+            <link href="/webmention?test=true" rel="webmention">
             </body>
             </html>
             ';
         $headers = [];
-        $client = $this->getClient(
-            [new Response(200, $headers, $body)]
-        );
-
+        $SUT = $this->getSUT($headers, $body);
         $expected = "http://example.com/webmention?test=true";
-        $SUT = new SendWebmention($client);
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
