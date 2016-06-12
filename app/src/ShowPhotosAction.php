@@ -20,8 +20,12 @@ class ShowPhotosAction
         $rpp = $app['rpp'];
         $this->responder->setPayload(
             $this->handler->handle(
-                $rpp,
-                $request->query->get("page")
+                new ShowPhotosCommand(
+                    array(
+                        "rpp" => $rpp,
+                        "page" => $request->query->get("page")
+                    )
+                )
             )
         );
         return $this->responder->__invoke();

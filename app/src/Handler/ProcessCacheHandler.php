@@ -114,7 +114,7 @@ class ProcessCacheHandler
                 $m = sprintf(
                     "Could not process post %s [%s]",
                     $event['uid'],
-                    $e->getMessage()
+                    $e->getMessage() . " " . $e->getTraceAsString()
                 );
                 $this->log->critical($m);
             }
