@@ -42,7 +42,9 @@ class SendWebmention
 
     private function findWebmentionEndpoint($url)
     {
-        return $this->getEndpointFromLinkHeader($url);
+        return ($endpoint = $this->getEndpointFromLinkHeader($url))
+            ? $this->getAbsoluteURL($url, $endpoint)
+            : "";
     }
 
     private function getEndpointFromLinkHeader($url)
@@ -69,16 +71,13 @@ class SendWebmention
             );
 
             if (isset($hrefandrel[1]) && $is_webmention) {
-                return $this->getAbsoluteURL($url, $href);
+                return $href;
             }
         }
 
-        return $this->getAbsoluteURL(
-            $url,
-            $this->parseEndpoint(
-                ($this->loadDOM((string) $result->getBody())),
-                "webmention"
-            )
+        return $this->parseEndpoint(
+            ($this->loadDOM((string) $result->getBody())),
+            "webmention"
         );
     }
 
@@ -126,6 +125,7 @@ class SendWebmention
                 return $link->getAttribute("href");
             }
         }
+        return false;
     }
 
     private function loadDOM($html)

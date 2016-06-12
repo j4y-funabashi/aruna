@@ -30,6 +30,31 @@ class SendWebmentionTest extends UnitTest
     /**
      * @test
      */
+    public function it_returns_an_empty_string_if_no_endpoint_is_discovered()
+    {
+        $headers = [];;
+        $body = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+            </head>
+            <body></body>
+            </html>
+            ';
+
+        $client = $this->getClient(
+            [new Response(200, $headers, $body)]
+        );
+        $expected = "";
+        $SUT = new SendWebmention($client);
+        $result = $SUT->__invoke($this->event);
+        $this->assertEquals($expected, $result);
+    }
+
+
+    /**
+     * @test
+     */
     public function it_discovers_endpoint_in_relative_link_headers()
     {
         $client = $this->getClient(
@@ -277,6 +302,67 @@ class SendWebmentionTest extends UnitTest
             </html>
             ';
         $headers = ['Link' => '<http://example.com/error?linkheader=true>; rel="not-webmention"'];
+        $client = $this->getClient(
+            [new Response(200, $headers, $body)]
+        );
+
+        $expected = "http://example.com/webmention?test=true";
+        $SUT = new SendWebmention($client);
+        $result = $SUT->__invoke($this->event);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     * https://webmention.rocks/test/13
+     */
+    public function it_ignores_endpoint_in_anchor_tags_within_html_comments()
+    {
+        $body = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+            </head>
+            <body>
+            <div class="e-content">
+            <!-- <a href="/webmention/error" rel="webmention"></a> -->
+            <a href="/webmention?test=true" rel="webmention">correct endpoint</a>
+            </div>
+            </body>
+            </html>
+            ';
+        $headers = [];
+        $client = $this->getClient(
+            [new Response(200, $headers, $body)]
+        );
+
+        $expected = "http://example.com/webmention?test=true";
+        $SUT = new SendWebmention($client);
+        $result = $SUT->__invoke($this->event);
+        $this->assertEquals($expected, $result);
+    }
+
+
+    /**
+     * @test
+     * https://webmention.rocks/test/14
+     */
+    public function it_ignores_endpoint_in_anchor_tags_within_escaped_html()
+    {
+        $body = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+            </head>
+            <body>
+            <div class="e-content">
+			<code>&lt;a href="/webmention/error" rel="webmention"&gt;&lt;/a&gt;</code>
+            <a href="/webmention?test=true" rel="webmention">correct endpoint</a>
+            </div>
+            </body>
+            </html>
+            ';
+        $headers = [];
         $client = $this->getClient(
             [new Response(200, $headers, $body)]
         );
