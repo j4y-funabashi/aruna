@@ -35,12 +35,12 @@ class SendWebmention
 
     private function findEndpoint($url, $result, $rel_value)
     {
-        return (false === $endpoint = $this->getEndpointWithRelValue($url, $result, $rel_value))
+        return (false === $endpoint = $this->getEndpointWithRelValue($result, $rel_value))
             ? ""
             : $this->getAbsoluteURL($url, $endpoint);
     }
 
-    private function getEndpointWithRelValue($url, $result, $rel_value)
+    private function getEndpointWithRelValue($result, $rel_value)
     {
         foreach ($result->getHeader('Link') as $links) {
             foreach (explode(", ", $links) as $link) {
@@ -107,5 +107,6 @@ class SendWebmention
         $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
         $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
         return "$scheme$host$path$query$fragment";
+
     }
 }
