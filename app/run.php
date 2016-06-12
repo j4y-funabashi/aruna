@@ -16,6 +16,9 @@ $app['monolog'] = $app->share(function () use ($app) {
     $log->pushHandler(new Monolog\Handler\SyslogHandler('aruna'));
     return $log;
 });
+$app['http_client'] = $app->share(function () {
+    return new GuzzleHttp\Client();
+});
 
 $app['event_store'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
@@ -74,6 +77,13 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
             new Aruna\Action\CacheToSql(
                 $app['monolog'],
                 $app['db_cache']
+            )
+        )
+        ->pipe(
+            new Aruna\SendWebmention(
+                $app['http_client'],
+                new Aruna\DiscoverEndpoints(),
+                new Aruna\FindUrls()
             )
         )
         ;

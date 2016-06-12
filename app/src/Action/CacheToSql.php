@@ -34,5 +34,7 @@ class CacheToSql
         $r->execute(
             $data
         );
+
+        return $event;
     }
 }
