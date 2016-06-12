@@ -17,7 +17,8 @@ class SendWebmention
     {
         $urls = $this->findUrls($event);
         $url = $urls[0];
-        $endpoint = $this->findWebmentionEndpoint($url);
+        $result = $this->http->request("GET", $url);
+        $endpoint = $this->findEndpoint($url, $result, "webmention");
         return $endpoint;
     }
 
@@ -32,22 +33,20 @@ class SendWebmention
         return array_unique(array_filter($out));
     }
 
-    private function findWebmentionEndpoint($url)
+    private function findEndpoint($url, $result, $rel_value)
     {
-        return (false === $endpoint = $this->getEndpointFromLinkHeader($url))
+        return (false === $endpoint = $this->getEndpointWithRelValue($url, $result, $rel_value))
             ? ""
             : $this->getAbsoluteURL($url, $endpoint);
     }
 
-    private function getEndpointFromLinkHeader($url)
+    private function getEndpointWithRelValue($url, $result, $rel_value)
     {
-        $result = $this->http->request("GET", $url);
-
         foreach ($result->getHeader('Link') as $links) {
             foreach (explode(", ", $links) as $link) {
                 $hrefandrel = explode('; ', $link);
                 $href = trim($hrefandrel[0], '<>');
-                if (isset($hrefandrel[1]) && $this->relExists($hrefandrel[1], "webmention")) {
+                if (isset($hrefandrel[1]) && $this->relExists($hrefandrel[1], $rel_value)) {
                     return $href;
                 }
             }
@@ -55,7 +54,7 @@ class SendWebmention
 
         return $this->parseEndpoint(
             ($this->loadDOM((string) $result->getBody())),
-            "webmention"
+            $rel_value
         );
     }
 
@@ -77,11 +76,11 @@ class SendWebmention
         );
     }
 
-    private function parseEndpoint($dom, $endpoint_rel)
+    private function parseEndpoint($dom, $rel_value)
     {
         $xpath = new \DOMXpath($dom);
         foreach ($xpath->query('//a | //link') as $link) {
-            if ($this->relExists($link->getAttribute("rel"), "webmention")) {
+            if ($this->relExists($link->getAttribute("rel"), $rel_value)) {
                 return $link->getAttribute("href");
             }
         }
