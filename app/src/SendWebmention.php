@@ -13,19 +13,11 @@ class SendWebmention
         $this->http = $http;
     }
 
-    # find all urls
-    # foreach url:
-    #
-    # findWebmentionEndpoint()
-    #   check for an HTTP Link header [RFC5988] with a rel value of webmention,
-    #   or an HTML <link>
-    #   or <a> element with a rel value of webmention.
     public function __invoke($event)
     {
         $urls = $this->findUrls($event);
-        foreach ($urls as $url) {
-            $endpoint = $this->findWebmentionEndpoint($url);
-        }
+        $url = $urls[0];
+        $endpoint = $this->findWebmentionEndpoint($url);
         return $endpoint;
     }
 
@@ -55,23 +47,7 @@ class SendWebmention
             foreach (explode(", ", $links) as $link) {
                 $hrefandrel = explode('; ', $link);
                 $href = trim($hrefandrel[0], '<>');
-
-                $is_webmention = in_array(
-                    "webmention",
-                    array_map(
-                        "strtolower",
-                        explode(
-                            " ",
-                            str_replace(
-                                array("rel=", '"'),
-                                null,
-                                $hrefandrel[1]
-                            )
-                        )
-                    )
-                );
-
-                if (isset($hrefandrel[1]) && $is_webmention) {
+                if (isset($hrefandrel[1]) && $this->relExists($hrefandrel[1], "webmention")) {
                     return $href;
                 }
             }
@@ -83,27 +59,29 @@ class SendWebmention
         );
     }
 
+    private function relExists($rel_values, $rel_key)
+    {
+        return in_array(
+            $rel_key,
+            array_map(
+                "strtolower",
+                explode(
+                    " ",
+                    str_replace(
+                        array("rel=", '"'),
+                        null,
+                        $rel_values
+                    )
+                )
+            )
+        );
+    }
+
     private function parseEndpoint($dom, $endpoint_rel)
     {
         $xpath = new \DOMXpath($dom);
         foreach ($xpath->query('//a | //link') as $link) {
-
-            $is_webmention = in_array(
-                "webmention",
-                array_map(
-                    "strtolower",
-                    explode(
-                        " ",
-                        str_replace(
-                            array("rel=", '"'),
-                            null,
-                            $link->getAttribute("rel")
-                        )
-                    )
-                )
-            );
-
-            if ($is_webmention) {
+            if ($this->relExists($link->getAttribute("rel"), "webmention")) {
                 return $link->getAttribute("href");
             }
         }
