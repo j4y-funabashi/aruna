@@ -3,13 +3,7 @@
 namespace Test;
 
 use \Aruna\DiscoverEndpoints;
-
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Exception\RequestException;
 
 class DiscoverEndpointsTest extends UnitTest
 {
@@ -17,16 +11,6 @@ class DiscoverEndpointsTest extends UnitTest
     {
         $this->url = "http://example.com";
         $this->rel_value = "webmention";
-        $this->event = array(
-            "content" => "aruna webmentionz http://example.com"
-        );
-    }
-
-    private function getClient($responses)
-    {
-        $mock = new MockHandler($responses);
-        $handler = HandlerStack::create($mock);
-        return new Client(['handler' => $handler]);
     }
 
     private function getSUT($headers, $body, $response_code = 200)

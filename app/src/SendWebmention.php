@@ -2,8 +2,6 @@
 
 namespace Aruna;
 
-use IndieWeb;
-
 class SendWebmention
 {
 
@@ -18,9 +16,10 @@ class SendWebmention
     public function __invoke($event)
     {
         $urls = $this->findUrls($event);
-        $url = $urls[0];
-        $result = $this->http->request("GET", $url);
-        $endpoint = $this->discoverEndpoint->__invoke($url, $result, "webmention");
+        foreach ($urls as $url) {
+            $result = $this->http->request("GET", $url);
+            $endpoint = $this->discoverEndpoint->__invoke($url, $result, "webmention");
+        }
         return $endpoint;
     }
 
