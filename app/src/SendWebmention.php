@@ -24,7 +24,7 @@ class SendWebmention
             try {
                 $result = $this->http->request("GET", $url);
             } catch (\Exception $e) {
-                $m = "Failed to GET ".$url." ".$e->getMessage;
+                $m = "Failed to GET ".$url." ".$e->getMessage();
                 $this->log->error($m);
             }
             $mention_endpoint = $this->discoverEndpoint->__invoke($url, $result, "webmention");
@@ -42,7 +42,7 @@ class SendWebmention
                         ["form_params" => $form_params]
                     );
                 } catch (\Exception $e) {
-                    $m = "Failed to POST to ".$mention_endpoint." ".$e->getMessage;
+                    $m = "Failed to POST to ".$mention_endpoint." ".$e->getMessage();
                     $this->log->error($m);
                 }
             }
