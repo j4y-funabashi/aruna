@@ -372,4 +372,180 @@ class SendWebmentionTest extends UnitTest
         $result = $SUT->__invoke($this->event);
         $this->assertEquals($expected, $result);
     }
+
+    /**
+     * @test
+     * https://webmention.rocks/test/15
+     */
+    public function it_discovers_endpoint_in_link_tag_with_empty_href()
+    {
+        $body = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+			<link rel="webmention" href="">
+            </head>
+            <body></body>
+            </html>
+            ';
+        $headers = [];
+        $client = $this->getClient(
+            [new Response(200, $headers, $body)]
+        );
+
+        $expected = "http://example.com";
+        $SUT = new SendWebmention($client);
+        $result = $SUT->__invoke($this->event);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     * https://webmention.rocks/test/16
+     */
+    public function it_discovers_endpoint_in_anchor_when_anchor_is_first()
+    {
+        $body = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+            </head>
+            <body>
+			<a href="/webmention?test=true" rel="webmention">&lt;a&gt; tag</a>
+			<link rel="webmention" href="/webmention/error">
+            </body>
+            </html>
+            ';
+        $headers = [];
+        $client = $this->getClient(
+            [new Response(200, $headers, $body)]
+        );
+
+        $expected = "http://example.com/webmention?test=true";
+        $SUT = new SendWebmention($client);
+        $result = $SUT->__invoke($this->event);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     * https://webmention.rocks/test/17
+     */
+    public function it_discovers_endpoint_in_link_when_link_is_first()
+    {
+        $body = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+            </head>
+            <body>
+			<link rel="webmention" href="/webmention?test=true">
+			<a href="/webmention/error" rel="webmention">&lt;a&gt; tag</a>
+            </body>
+            </html>
+            ';
+        $headers = [];
+        $client = $this->getClient(
+            [new Response(200, $headers, $body)]
+        );
+
+        $expected = "http://example.com/webmention?test=true";
+        $SUT = new SendWebmention($client);
+        $result = $SUT->__invoke($this->event);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     * https://webmention.rocks/test/18
+     */
+    public function it_discovers_endpoint__when_multiple_link_headers_are_returned()
+    {
+        $headers = [
+            'LinK' => '<http://example.com/error>; rel=other',
+            'Link' => '<http://example.com/webmention?test=true>; rel=webmention'
+        ];
+        $client = $this->getClient(
+            [new Response(200, $headers)]
+        );
+        $expected = "http://example.com/webmention?test=true";
+        $SUT = new SendWebmention($client);
+
+        $result = $SUT->__invoke($this->event);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     * https://webmention.rocks/test/19
+     */
+    public function it_discovers_endpoint_from_a_link_header_with_multiple_values()
+    {
+        $headers = [
+            'Link' => '<http://example.com/error>; rel=other, <http://example.com/webmention?test=true>; rel=webmention'
+        ];
+        $client = $this->getClient(
+            [new Response(200, $headers)]
+        );
+        $expected = "http://example.com/webmention?test=true";
+        $SUT = new SendWebmention($client);
+
+        $result = $SUT->__invoke($this->event);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     * https://webmention.rocks/test/20
+     */
+    public function it_discovers_endpoint_in_anchor_when_anchor_is_followed_by_link_tag_with_no_href()
+    {
+        $body = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+            </head>
+            <body>
+			<a href="/webmention?test=true" rel="webmention">&lt;a&gt; tag</a>
+			<link rel="webmention">
+            </body>
+            </html>
+            ';
+        $headers = [];
+        $client = $this->getClient(
+            [new Response(200, $headers, $body)]
+        );
+
+        $expected = "http://example.com/webmention?test=true";
+        $SUT = new SendWebmention($client);
+        $result = $SUT->__invoke($this->event);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     * https://webmention.rocks/test/21
+     */
+    public function it_discovers_endpoint_and_preserves_query_string()
+    {
+        $body = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+            </head>
+            <body>
+			<link href="/webmention?test=true" rel="webmention">
+            </body>
+            </html>
+            ';
+        $headers = [];
+        $client = $this->getClient(
+            [new Response(200, $headers, $body)]
+        );
+
+        $expected = "http://example.com/webmention?test=true";
+        $SUT = new SendWebmention($client);
+        $result = $SUT->__invoke($this->event);
+        $this->assertEquals($expected, $result);
+    }
 }

@@ -42,36 +42,38 @@ class SendWebmention
 
     private function findWebmentionEndpoint($url)
     {
-        return ($endpoint = $this->getEndpointFromLinkHeader($url))
-            ? $this->getAbsoluteURL($url, $endpoint)
-            : "";
+        return (false === $endpoint = $this->getEndpointFromLinkHeader($url))
+            ? ""
+            : $this->getAbsoluteURL($url, $endpoint);
     }
 
     private function getEndpointFromLinkHeader($url)
     {
         $result = $this->http->request("GET", $url);
 
-        foreach ($result->getHeader('Link') as $link) {
-            $hrefandrel = explode('; ', $link);
-            $href = trim($hrefandrel[0], '<>');
+        foreach ($result->getHeader('Link') as $links) {
+            foreach (explode(", ", $links) as $link) {
+                $hrefandrel = explode('; ', $link);
+                $href = trim($hrefandrel[0], '<>');
 
-            $is_webmention = in_array(
-                "webmention",
-                array_map(
-                    "strtolower",
-                    explode(
-                        " ",
-                        str_replace(
-                            array("rel=", '"'),
-                            null,
-                            $hrefandrel[1]
+                $is_webmention = in_array(
+                    "webmention",
+                    array_map(
+                        "strtolower",
+                        explode(
+                            " ",
+                            str_replace(
+                                array("rel=", '"'),
+                                null,
+                                $hrefandrel[1]
+                            )
                         )
                     )
-                )
-            );
+                );
 
-            if (isset($hrefandrel[1]) && $is_webmention) {
-                return $href;
+                if (isset($hrefandrel[1]) && $is_webmention) {
+                    return $href;
+                }
             }
         }
 
@@ -83,28 +85,8 @@ class SendWebmention
 
     private function parseEndpoint($dom, $endpoint_rel)
     {
-        foreach ($dom->getElementsByTagName("link") as $link) {
-
-            $is_webmention = in_array(
-                "webmention",
-                array_map(
-                    "strtolower",
-                    explode(
-                        " ",
-                        str_replace(
-                            array("rel=", '"'),
-                            null,
-                            $link->getAttribute("rel")
-                        )
-                    )
-                )
-            );
-
-            if ($is_webmention) {
-                return $link->getAttribute("href");
-            }
-        }
-        foreach ($dom->getElementsByTagName("a") as $link) {
+        $xpath = new \DOMXpath($dom);
+        foreach ($xpath->query('//a | //link') as $link) {
 
             $is_webmention = in_array(
                 "webmention",
@@ -132,7 +114,10 @@ class SendWebmention
     {
         libxml_use_internal_errors(true);
         $dom = new \DOMDocument();
-        $dom->loadHTML($html);
+        try {
+            $dom->loadHTML($html);
+        } catch (\Exception $e) {
+        }
         return $dom;
     }
 
