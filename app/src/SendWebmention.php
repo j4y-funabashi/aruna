@@ -8,16 +8,19 @@ class SendWebmention
     public function __construct(
         $http,
         $discoverEndpoint,
-        $findUrls
+        $findUrls,
+        $log
     ) {
         $this->http = $http;
         $this->discoverEndpoint = $discoverEndpoint;
         $this->findUrls = $findUrls;
+        $this->log = $log;
     }
 
     public function __invoke($event)
     {
         foreach ($this->findUrls->__invoke(json_encode($event)) as $url) {
+            $this->log->info("Finding webmention endpoint [".$url."]");
             $result = $this->http->request("GET", $url);
             $mention_endpoint = $this->discoverEndpoint->__invoke($url, $result, "webmention");
             $source_url = "http://j4y.co/p/".$event['uid'];

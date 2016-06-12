@@ -14,6 +14,8 @@ class SendWebmentionTest extends UnitTest
         $mention_endpoint = "http://example.com/webmention";
         $source_url = "http://j4y.co/p/".$this->post_uid;
 
+        $log = $this->prophesize("Monolog\Logger");
+
         $form_params = ["source" => $source_url, "target" => $target_url];
         $http = $this->prophesize("GuzzleHttp\Client");
         $http->request(
@@ -38,7 +40,8 @@ class SendWebmentionTest extends UnitTest
         $this->SUT = new SendWebmention(
             $http->reveal(),
             $discoverEndpoint->reveal(),
-            $findUrls->reveal()
+            $findUrls->reveal(),
+            $log->reveal()
         );
     }
 

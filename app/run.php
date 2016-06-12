@@ -83,7 +83,8 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
             new Aruna\SendWebmention(
                 $app['http_client'],
                 new Aruna\DiscoverEndpoints(),
-                new Aruna\FindUrls()
+                new Aruna\FindUrls(),
+                $app['monolog']
             )
         )
         ;

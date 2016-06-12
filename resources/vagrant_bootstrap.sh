@@ -37,6 +37,7 @@ sudo cp /srv/aruna/env.example /srv/.env
 ## COMPOSER
 curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
+cd /srv/aruna/; composer install;
 
 ## NGINX PHP CONFIG
 sudo rm /etc/nginx/sites-enabled/default
