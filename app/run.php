@@ -17,7 +17,11 @@ $app['monolog'] = $app->share(function () use ($app) {
     return $log;
 });
 $app['http_client'] = $app->share(function () {
-    return new GuzzleHttp\Client();
+    return new GuzzleHttp\Client(
+        array(
+            'timeout'  => 4.0,
+        )
+    );
 });
 
 $app['event_store'] = $app->share(function () use ($app) {

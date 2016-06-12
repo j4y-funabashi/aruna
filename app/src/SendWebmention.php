@@ -19,7 +19,7 @@ class SendWebmention
 
     public function __invoke($event)
     {
-        foreach ($this->findUrls->__invoke(json_encode($event)) as $url) {
+        foreach ($this->findUrls->__invoke(json_encode($event, JSON_UNESCAPED_SLASHES)) as $url) {
             $this->log->info("Finding webmention endpoint [".$url."]");
             $result = $this->http->request("GET", $url);
             $mention_endpoint = $this->discoverEndpoint->__invoke($url, $result, "webmention");
