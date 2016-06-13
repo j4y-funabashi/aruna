@@ -27,6 +27,7 @@ class SendWebmention
                 $m = "Failed to GET ".$url." ".$e->getMessage();
                 $this->log->error($m);
             }
+
             $mention_endpoint = $this->discoverEndpoint->__invoke($url, $result, "webmention");
 
             $source_url = "http://j4y.co/p/".$event['uid'];

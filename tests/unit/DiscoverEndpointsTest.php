@@ -341,8 +341,8 @@ class DiscoverEndpointsTest extends UnitTest
             ';
         $headers = [];
         $SUT = $this->getSUT($headers, $body);
-        $expected = "http://example.com";
-        $result = $SUT->__invoke($this->url, $this->result, $this->rel_value);
+        $expected = "http://example.com/webmention/15";
+        $result = $SUT->__invoke($expected, $this->result, $this->rel_value);
         $this->assertEquals($expected, $result);
     }
 

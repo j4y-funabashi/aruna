@@ -71,6 +71,9 @@ class DiscoverEndpoints
 
     private function getAbsoluteURL($source_url, $relative_url)
     {
+        if ($relative_url == "") {
+            return $source_url;
+        }
         $parsed_url = array_merge(parse_url($source_url), parse_url($relative_url));
         $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
         $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
@@ -78,6 +81,5 @@ class DiscoverEndpoints
         $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
         $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
         return "$scheme$host$path$query$fragment";
-
     }
 }
