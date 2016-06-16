@@ -10,42 +10,52 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class PostViewModel
 {
-    public $h;
-    public $uid;
-    public $url;
-    public $published;
-    public $human_date;
-    public $type;
+    private $mf_array;
+    private $entry;
 
-    public function __construct(
-        $post_data,
-        $url_generator
-    ) {
-        $this->h = $post_data['h'];
-        $this->uid = $post_data['uid'];
-        $this->type = $post_data['post_type'];
+    public function __construct(array $mf_array) {
+        $this->mf_array = $mf_array;
+        $this->entry = $this->findFirstEntry($mf_array);
+    }
 
-        $this->url = $url_generator->generate(
-            'post',
-            array('post_id' => $post_data['uid']),
-            UrlGeneratorInterface::ABSOLUTE_URL
+    private function findFirstEntry($mf_array)
+    {
+        if (!isset($mf_array['items'])) {
+            throw new \Exception("mf array does not contain items");
+        }
+        $entries = array_values(
+            array_filter(
+                $mf_array['items'],
+                function ($item) {
+                    return (isset($item['type']) && is_array($item['type']) && in_array("h-entry", $item['type']));
+                }
+        )
         );
-        $this->published = (new \DateTimeImmutable($post_data['published']))
-            ->format('c');
-        $this->human_date = (new \DateTimeImmutable($post_data['published']))
-            ->format("Y-m-d");
+        if (isset($entries[0])) {
+            return $entries[0];
+        } else {
+            throw new \Exception("mf array does not contain an entry");
+        }
+    }
 
-        if (isset($post_data['files']['photo'])) {
-            $this->photo = $post_data['files']['photo'];
+    public function get($param)
+    {
+        if (isset($this->entry['properties'][$param])) {
+            return $this->entry['properties'][$param];
         }
-        if (isset($post_data['content'])) {
-            $this->content = $post_data['content'];
+    }
+
+    public function type()
+    {
+        if (null !== ($this->get('photo'))) {
+            return "photo";
         }
-        if (isset($post_data['category'])) {
-            $this->tags = $post_data['category'];
+        if (null !== ($this->get('like-of'))) {
+            return "like";
         }
-        if (isset($post_data['link_preview'])) {
-            $this->link_preview = $post_data['link_preview'];
+        if (null !== ($this->get('bookmark-of'))) {
+            return "bookmark";
         }
+        return "note";
     }
 }

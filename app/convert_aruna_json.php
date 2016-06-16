@@ -22,7 +22,9 @@ function main() {
 
         // convert post_data to mf json
         $mf_array = Aruna\PostData::toMfArray($post_data);
-        var_dump(json_encode($mf_array, JSON_PRETTY_PRINT));
+        //var_dump(json_encode($mf_array));
+        $view_model = new Aruna\PostViewModel($mf_array);
+        var_dump($view_model->type());
 
         // convert mf json to viewModel
         // render viewModel as html

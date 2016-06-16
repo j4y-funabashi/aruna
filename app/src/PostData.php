@@ -4,7 +4,7 @@ namespace Aruna;
 
 class PostData
 {
-    public static function toMfArray($post_data)
+    public static function toMfArray(array $post_data)
     {
         $markdown = new \cebe\markdown\GithubMarkdown();
         $properties = array();
