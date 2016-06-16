@@ -38,10 +38,32 @@ class PostViewModel
         }
     }
 
+    public function category()
+    {
+        if (isset($this->entry['properties']['category'])) {
+            return $this->entry['properties']['category'];
+        }
+        return array();
+    }
+
+    public function author()
+    {
+        if (isset($this->entry['properties']['author']['properties'])) {
+            $out = array(
+                "name" => $this->entry['properties']['author']['properties']['name'][0],
+                "photo" => $this->entry['properties']['author']['properties']['photo'][0],
+                "url" => $this->entry['properties']['author']['properties']['url'][0]
+            );
+            return $out;
+        }
+        return array();
+    }
+
+
     public function get($param)
     {
-        if (isset($this->entry['properties'][$param])) {
-            return $this->entry['properties'][$param];
+        if (isset($this->entry['properties'][$param][0])) {
+            return $this->entry['properties'][$param][0];
         }
     }
 

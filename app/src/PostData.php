@@ -9,6 +9,15 @@ class PostData
         $markdown = new \cebe\markdown\GithubMarkdown();
         $properties = array();
 
+		$properties['author'] = array(
+			"type" => array("h-card"),
+			"properties" => array(
+				"name" => array("Jay Robinson"),
+				"photo" => array("http://j4y.co/profile_pic.jpeg"),
+				"url" => array("http://j4y.co")
+			)
+		);
+
         unset($post_data['access_token']);
 
         // h
