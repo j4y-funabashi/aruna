@@ -9,10 +9,8 @@ function list_files($in_dir) {
 	return new RegexIterator($iterator, '/^.+\.json$/i', RecursiveRegexIterator::GET_MATCH);
 }
 
-function main() {
+function main($in_dir, $out_dir) {
 	require_once __DIR__ . "/app.php";
-	$in_dir = "/home/jayr/Desktop";
-	$out_dir = "/home/jayr/Desktop/html_posts";
 	$files_parsed = 0;
 
 	foreach (list_files($in_dir) as $file) {
@@ -22,11 +20,10 @@ function main() {
 		$out_filename = $out_dir."/".basename($in_filename, ".json").".html";
 		$post_data = json_decode(file_get_contents($in_filename), true);
 
-		// convert post_data to mf json
-		$mf_array = Aruna\PostData::toMfArray($post_data);
-
 		// convert mf json to viewModel
-		$view_model = new Aruna\PostViewModel($mf_array);
+        $view_model = new Aruna\PostViewModel(
+            Aruna\PostData::toMfArray($post_data)
+        );
 
 		// render viewModel as html
 		$post_html = $app['twig']->render(
@@ -39,4 +36,11 @@ function main() {
     }
 }
 
-main();
+
+
+$in_dir = "/home/jayr/Desktop";
+$out_dir = "/home/jayr/Desktop/html_posts";
+main(
+    $in_dir,
+    $out_dir
+);
