@@ -6,11 +6,13 @@ class PostData
 {
     public static function toMfArray(array $post_data)
     {
+        unset($post_data['access_token']);
         $markdown = new \cebe\markdown\GithubMarkdown();
         $properties = array();
         $me = "http://j4y.co";
 
         $properties['url'] = array($me."/p/".$post_data['uid']);
+        unset($post_data['uid']);
 
 		$properties['author'] = array(
 			"type" => array("h-card"),
@@ -21,7 +23,6 @@ class PostData
 			)
 		);
 
-        unset($post_data['access_token']);
 
         // h
         $h = (isset($post_data['h']))
