@@ -7,7 +7,6 @@ class PostData
     public static function toMfArray(array $post_data)
     {
         unset($post_data['access_token']);
-        $markdown = new \cebe\markdown\GithubMarkdown();
         $properties = array();
         $me = "http://j4y.co";
 
@@ -38,6 +37,7 @@ class PostData
             unset($post_data['files']);
         }
 
+        $markdown = new \cebe\markdown\GithubMarkdown();
         // content
         if (isset($post_data['content'])) {
             $content = array(

@@ -4,18 +4,10 @@ namespace Test;
 
 class PostDataTest extends UnitTest
 {
-
-    /**
-     * @test
-     */
-    public function it_does_awesome()
+    public function setUp()
     {
-
-        $SUT = new \Aruna\PostData();
-
-        $post_data = ["uid" => 1];
-        $result = $SUT::toMfArray($post_data);
-        $expected = [
+        $this->SUT = new \Aruna\PostData();
+        $this->expected = [
             "items" => [
                 0 => [
                     "type" => ["h-entry"],
@@ -33,6 +25,15 @@ class PostDataTest extends UnitTest
                 ]
             ]
         ];
-        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function it_removes_access_token()
+    {
+        $post_data = ["uid" => 1, "access_token" => 1];
+        $result = $this->SUT::toMfArray($post_data);
+        $this->assertEquals($this->expected, $result);
     }
 }
