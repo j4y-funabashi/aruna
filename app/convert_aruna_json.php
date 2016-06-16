@@ -14,19 +14,14 @@ function main() {
     $files_parsed = 0;
     foreach (list_files($in_dir) as $file) {
         // read post_data
-        $out = array();
         $in_filename = $file[0];
         $out_filename = basename($in_filename, ".json").".html";
         $post_data = json_decode(file_get_contents($in_filename), true);
-        unset($post_data['access_token']);
 
         // convert post_data to mf json
         $mf_array = Aruna\PostData::toMfArray($post_data);
-        //var_dump(json_encode($mf_array));
-        $view_model = new Aruna\PostViewModel($mf_array);
-        var_dump($view_model->type());
-
         // convert mf json to viewModel
+        $view_model = new Aruna\PostViewModel($mf_array);
         // render viewModel as html
 
         $files_parsed += 1;

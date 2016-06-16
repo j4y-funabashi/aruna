@@ -9,6 +9,8 @@ class PostData
         $markdown = new \cebe\markdown\GithubMarkdown();
         $properties = array();
 
+        unset($post_data['access_token']);
+
         // h
         $h = (isset($post_data['h']))
             ? $post_data['h']
