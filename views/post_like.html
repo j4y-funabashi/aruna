@@ -13,7 +13,7 @@
         </a>
 
 		{% for category in post.category %}
-		<a class="p-category" href="/tag/{{ category }}">#{{ category }}</a>
+		<a class="p-category" href="/tag/{{ category }}">{{ category }}</a>
 		{% endfor %}
 
         {% if post.author is defined %}
