@@ -8,13 +8,16 @@ class PostData
     {
         $markdown = new \cebe\markdown\GithubMarkdown();
         $properties = array();
+        $me = "http://j4y.co";
+
+        $properties['url'] = array($me."/p/".$post_data['uid']);
 
 		$properties['author'] = array(
 			"type" => array("h-card"),
 			"properties" => array(
 				"name" => array("Jay Robinson"),
-				"photo" => array("http://j4y.co/profile_pic.jpeg"),
-				"url" => array("http://j4y.co")
+				"photo" => array("/profile_pic.jpeg"),
+				"url" => array($me)
 			)
 		);
 

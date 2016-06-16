@@ -23,7 +23,6 @@ function main() {
 
 		// convert post_data to mf json
 		$mf_array = Aruna\PostData::toMfArray($post_data);
-        //var_dump($mf_array);
 
 		// convert mf json to viewModel
 		$view_model = new Aruna\PostViewModel($mf_array);
@@ -33,6 +32,12 @@ function main() {
 			"post_".$view_model->type().".html",
 			array("post" => $view_model)
 		);
+
+        if ($view_model->type() == "bookmark") {
+            print "\n";
+            print $post_html;
+            print "\n";
+        }
 
 		$files_parsed += 1;
 	}

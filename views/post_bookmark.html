@@ -1,19 +1,24 @@
 <article class="h-entry">
 
     <a class="u-bookmark-of" href="{{ post.get('bookmark-of') }}">{{ post.get('bookmark-of') }}</a>
-	{% if post.get('content')['html'] is defined %}
-	<div class="e-content">
-		{{ post.get('content')['html']|raw }}
-	</div>
-	{% endif %}
+    {% if post.get('content')['html'] is defined %}
+    <div class="e-content">
+        {{ post.get('content')['html']|raw }}
+    </div>
+    {% endif %}
 
-	<div class="meta">
-		<time class="dt-published" datetime="{{ post.get('published') }}">{{ post.get('published') }}</time>
+    <div class="meta">
+        <a class="u-url" href="{{ post.get('url') }}">
+            <time class="dt-published" datetime="{{ post.get('published') }}">{{ post.get('published') }}</time>
+        </a>
 
-		{% for category in post.category %}
-		<a class="p-category" href="/tag/{{ category }}">#{{ category }}</a>
-		{% endfor %}
+        {% for category in post.category %}
+        <a class="p-category" href="/tag/{{ category }}">#{{ category }}</a>
+        {% endfor %}
 
-	</div>
+        {% if post.author is defined %}
+        <a href="{{ post.author.url }}" class="p-author h-card"><img src="{{ post.author.photo }}">{{ post.author.name }}</a>
+        {% endif %}
+    </div>
 
 </article>
