@@ -4,7 +4,7 @@ namespace Aruna;
 
 class PostData
 {
-    public static function toMfArray(array $post_data)
+    public function toMfArray(array $post_data)
     {
         unset($post_data['access_token']);
         $properties = array();
@@ -13,14 +13,14 @@ class PostData
         $properties['url'] = array($me."/p/".$post_data['uid']);
         unset($post_data['uid']);
 
-		$properties['author'] = array(
-			"type" => array("h-card"),
-			"properties" => array(
-				"name" => array("Jay Robinson"),
-				"photo" => array("/profile_pic.jpeg"),
-				"url" => array($me)
-			)
-		);
+        $properties['author'] = array(
+            "type" => array("h-card"),
+            "properties" => array(
+                "name" => array("Jay Robinson"),
+                "photo" => array("/profile_pic.jpeg"),
+                "url" => array($me)
+            )
+        );
 
 
         // h
