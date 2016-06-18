@@ -13,7 +13,7 @@ class PostData
         $properties['url'] = array($me."/p/".$post_data['uid']);
         unset($post_data['uid']);
 
-        $properties['author'] = array(
+        $properties['author'][] = array(
             "type" => array("h-card"),
             "properties" => array(
                 "name" => array("Jay Robinson"),

@@ -35,11 +35,11 @@ class PostViewModel
 
     public function author()
     {
-        if (isset($this->entry['properties']['author']['properties'])) {
+        if (isset($this->entry['properties']['author'][0]['properties'])) {
             $out = array(
-                "name" => $this->entry['properties']['author']['properties']['name'][0],
-                "photo" => $this->entry['properties']['author']['properties']['photo'][0],
-                "url" => $this->entry['properties']['author']['properties']['url'][0]
+                "name" => $this->entry['properties']['author'][0]['properties']['name'][0],
+                "photo" => $this->entry['properties']['author'][0]['properties']['photo'][0],
+                "url" => $this->entry['properties']['author'][0]['properties']['url'][0]
             );
             return $out;
         }
