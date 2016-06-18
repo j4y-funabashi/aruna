@@ -1,6 +1,6 @@
 <article class="h-entry">
 
-    <a class="u-bookmark-of" href="{{ post.get('bookmark-of') }}">{{ post.get('bookmark-of') }}</a>
+    Bookmarked: <a class="u-bookmark-of" href="{{ post.get('bookmark-of') }}">{{ post.get('bookmark-of') }}</a>
     {% if post.get('content')['html'] is defined %}
     <div class="e-content">
         {{ post.get('content')['html']|raw }}
@@ -16,9 +16,8 @@
         <a class="p-category" href="/tag/{{ category }}">{{ category }}</a>
         {% endfor %}
 
-        {% if post.author is defined %}
-        <a href="{{ post.author.url }}" class="p-author h-card"><img src="{{ post.author.photo }}">{{ post.author.name }}</a>
-        {% endif %}
+        {% include 'post_author.html' %}
+
     </div>
 
 </article>

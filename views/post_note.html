@@ -15,9 +15,14 @@
         <a class="p-category" href="/tag/{{ category }}">{{ category }}</a>
         {% endfor %}
 
-        {% if post.author is defined %}
-        <a href="{{ post.author.url }}" class="p-author h-card"><img src="{{ post.author.photo }}">{{ post.author.name }}</a>
+        {% if post.get('location') is not null %}
+        <div class="p-location">
+            {{ post.get('location') }}
+        </div>
         {% endif %}
+
+        {% include 'post_author.html' %}
+
     </div>
 
 </article>

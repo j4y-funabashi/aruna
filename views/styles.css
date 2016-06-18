@@ -69,3 +69,11 @@ article img {
     color: #585858;
     font-size: 11px;
 }
+
+.author-photo {
+    width: 32px;
+}
+.post-author * {
+    padding-top: 4px;
+    vertical-align: middle;
+}

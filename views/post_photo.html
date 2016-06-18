@@ -1,6 +1,6 @@
 <article class="h-entry">
 
-    <img class="u-photo" alt="jpg photo" src="/{{ post.get('photo') }}" />
+    <img class="u-photo" alt="jpg photo" src="{{ post.get('photo') }}" />
 
     {% if post.get('content')['html'] is defined %}
     <div class="e-content">
@@ -17,9 +17,7 @@
         <a class="p-category" href="/tag/{{ category }}">{{ category }}</a>
         {% endfor %}
 
-        {% if post.author is defined %}
-        <a href="{{ post.author.url }}" class="p-author h-card"><img src="{{ post.author.photo }}">{{ post.author.name }}</a>
-        {% endif %}
+        {% include 'post_author.html' %}
     </div>
 
 </article>

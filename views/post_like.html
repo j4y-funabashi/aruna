@@ -1,11 +1,6 @@
 <article class="h-entry">
 
-    <a class="u-like-of" href="{{ post.get('like-of') }}">{{ post.get('like-of') }}</a>
-	{% if post.get('content')['html'] is defined %}
-	<div class="e-content">
-		{{ post.get('content')['html']|raw }}
-	</div>
-	{% endif %}
+    Liked: <a class="u-like-of" href="{{ post.get('like-of') }}">{{ post.get('like-of') }}</a>
 
 	<div class="meta">
         <a class="u-url" href="{{ post.get('url') }}">
@@ -16,9 +11,8 @@
 		<a class="p-category" href="/tag/{{ category }}">{{ category }}</a>
 		{% endfor %}
 
-        {% if post.author is defined %}
-        <a href="{{ post.author.url }}" class="p-author h-card"><img src="{{ post.author.photo }}">{{ post.author.name }}</a>
-        {% endif %}
+        {% include 'post_author.html' %}
+
 	</div>
 
 </article>
