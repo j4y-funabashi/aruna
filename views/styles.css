@@ -59,12 +59,15 @@ article * {
 article {
     background-color: #f8f8f8;
     max-width: 640px;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 article img {
     width: 100%;
 }
 
+.post-meta {
+    border-top: 1px solid #d8d8d8;
+}
 .post-meta * {
     color: #585858;
     font-size: 11px;
