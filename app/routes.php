@@ -4,7 +4,7 @@
 $app->get("/", 'action.show.photos:__invoke')
     ->bind('root');
 
-$app->get("/p/{post_id}", 'posts.controller:getById')
+$app->get("/p/{post_id}", 'action.show_post:__invoke')
     ->bind('post');
 
 $app->get("/photos", "action.show.photos:__invoke")

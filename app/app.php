@@ -114,10 +114,14 @@ $app['handler.showdatefeed'] = $app->share(function () use ($app) {
     );
 });
 
-$app['posts.controller'] = $app->share(function () use ($app) {
-    return new Aruna\Controller\PostController(
+$app['action.show_post'] = $app->share(function () use ($app) {
+    $handler = new Aruna\ShowPostHandler(
         $app['posts_repository_reader'],
-        $app['mentions_repository_reader']
+        $app['url_generator']
+    );
+    return new Aruna\ShowPostAction(
+        $handler,
+        new Aruna\ShowPostResponder($app['response'], $app['twig'])
     );
 });
 

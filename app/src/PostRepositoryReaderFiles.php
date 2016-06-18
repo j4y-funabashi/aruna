@@ -60,10 +60,23 @@ class PostRepositoryReaderFiles implements PostRepository
         return array_slice($posts, $offset, $limit);
     }
 
+    public function findById($post_id)
+    {
+        $in_dir = getenv("ROOT_DIR")."/posts";
+        $posts = array_filter(
+            $this->list_files($in_dir),
+            function ($post) use ($post_id) {
+                return stripos($post->get("url"), $post_id);;
+            }
+        );
+        return array_slice($posts, 0, 1);
+    }
+
     private function list_files($in_dir) {
         $directory = new \RecursiveDirectoryIterator($in_dir);
         $iterator = new \RecursiveIteratorIterator($directory);
-        $files = new \RegexIterator($iterator, '/^.+\.html$/i', \RecursiveRegexIterator::GET_MATCH);
+        $regex = '/^.+\.html$/i';
+        $files = new \RegexIterator($iterator, $regex, \RecursiveRegexIterator::GET_MATCH);
 
         $out = array();
         foreach ($files as $file) {
