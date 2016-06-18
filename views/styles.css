@@ -32,7 +32,6 @@ main {
 }
 
 footer {
-    border-top: 1px solid #b8b8b8;
     margin-top: 5px;
     padding: 10px;
 }
@@ -66,7 +65,7 @@ article img {
 }
 
 .post-meta {
-    border-top: 1px solid #d8d8d8;
+    border-top: 1px solid #e8e8e8;
 }
 .post-meta * {
     color: #585858;
@@ -74,6 +73,9 @@ article img {
 }
 .post-content, .post-meta {
     padding: 8px;
+}
+.post-author {
+    padding-top: 4px;
 }
 
 .author-photo {
