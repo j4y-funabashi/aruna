@@ -40,7 +40,7 @@ class ShowPhotosResponder extends Responder
         return array_map(
             function ($post) {
                 return $this->view->render(
-                    "post_".$post->type.".html",
+                    "post_".$post->type().".html",
                     array("post" => $post)
                 );
             },

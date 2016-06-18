@@ -18,21 +18,19 @@ class ShowDateFeedHandler implements Handler
 
     public function handle($command)
     {
-        $items = array_map(
-            function ($post) {
-                return new \Aruna\PostViewModel($post, $this->url_generator);
-            },
-            $this->postRepository->listByDate(
-                $command->getYear(),
-                $command->getMonth(),
-                $command->getDay()
-            )
+        $items = $this->postRepository->listByDate(
+            $command->getYear(),
+            $command->getMonth(),
+            $command->getDay()
         );
 
         $out = array(
             'items' => $items,
-            'nav' => array(
-                0 => array('title' => 'archives', 'items' => $this->postRepository->listMonths())
+            "title" => sprintf(
+                "%s/%s/%s",
+                $command->getYear(),
+                $command->getMonth(),
+                $command->getDay()
             )
         );
 
