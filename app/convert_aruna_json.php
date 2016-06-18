@@ -35,6 +35,8 @@ function main($in_dir, $out_dir) {
         file_put_contents($out_filename, $post_html);
         $files_parsed += 1;
     }
+
+    print sprintf("Processed %s files", $files_parsed);
 }
 
 $in_dir = "/home/jayr/Desktop/posts";
