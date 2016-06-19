@@ -31,7 +31,7 @@ $app['db_cache'] = $app->share(function () use ($app) {
     return $db;
 });
 $app['posts_repository_reader'] = $app->share(function () use ($app) {
-    return new Aruna\PostRepositoryReaderFiles($app['db_cache']);
+    return new Aruna\PostRepositoryReader($app['db_cache']);
 });
 $app['mentions_repository_reader'] = $app->share(function () use ($app) {
     return new Aruna\MentionsRepositoryReader($app['db_cache']);
