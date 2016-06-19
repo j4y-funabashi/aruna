@@ -39,7 +39,7 @@ $app['mentions_repository_reader'] = $app->share(function () use ($app) {
 $app['posts_repository_writer'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local($app['posts_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
-    return new Aruna\PostRepositoryWriter($filesystem);
+    return new Aruna\PostRepositoryWriter($filesystem, $app['twig']);
 });
 $app['create_post.handler'] = $app->share(function () use ($app) {
     return new Aruna\CreatePostHandler(
