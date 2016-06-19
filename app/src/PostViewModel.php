@@ -18,6 +18,11 @@ class PostViewModel
         $this->entry = $this->findFirstEntry($mf_array);
     }
 
+    public function toJson()
+    {
+        return json_encode($this->mf_array);
+    }
+
     public function get($param)
     {
         if (isset($this->entry['properties'][$param][0])) {

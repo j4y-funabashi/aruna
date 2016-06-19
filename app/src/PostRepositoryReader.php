@@ -42,7 +42,7 @@ class PostRepositoryReader
 
         $out = [];
         while ($post = $r->fetch()) {
-            $out[] = json_decode($post['post'], true);
+            $out[] = new \Aruna\PostViewModel(json_decode($post['post'], true));
         }
 
         return $out;
@@ -60,48 +60,8 @@ class PostRepositoryReader
             WHERE id = :id";
         $r = $this->db->prepare($q);
         $r->execute([":id" => $post_id]);
-        $current = $r->fetch();
-        $out['current'] = json_decode($current['post'], true);
-
-        // get previousious
-        $q = "SELECT
-            id,
-            published,
-            post
-            FROM posts
-            WHERE published <= :published
-            AND id < :id
-            ORDER BY published DESC, id DESC
-            LIMIT 1";
-        $r = $this->db->prepare($q);
-        $r->execute(
-            [
-                ":id" => $post_id,
-                ":published" => $current['published']
-            ]
-        );
-        $previous = $r->fetch();
-        $out['previous'] = json_decode($previous['post'], true);
-
-        // get next
-        $q = "SELECT
-            id,
-            published,
-            post
-            FROM posts
-            WHERE published >= :published
-            AND id > :id
-            ORDER BY published ASC, id DESC
-            LIMIT 1";
-        $r = $this->db->prepare($q);
-        $r->execute(
-            [
-                ":id" => $post_id,
-                ":published" => $current['published']
-            ]
-        );
-        $next = $r->fetch();
-        $out['next'] = json_decode($next['post'], true);
+        $post = $r->fetch();
+        $out[] = new \Aruna\PostViewModel(json_decode($post['post'], true));
 
         return $out;
     }
@@ -190,7 +150,7 @@ class PostRepositoryReader
 
         $out = [];
         while ($post = $r->fetch()) {
-            $out[] = json_decode($post['post'], true);
+            $out[] = new \Aruna\PostViewModel(json_decode($post['post'], true));
         }
         return $out;
     }
