@@ -12,13 +12,16 @@ class PostDataTest extends UnitTest
                 0 => [
                     "type" => ["h-entry"],
                     "properties" => [
+                        "uid" => [1],
                         "url" => ["http://j4y.co/p/1"],
                         "author" => [
-                            "type" => ["h-card"],
-                            "properties" => [
-                                "name" => ["Jay Robinson"],
-                                "photo" => ["/profile_pic.jpeg"],
-                                "url" => ["http://j4y.co"]
+                            [
+                                "type" => ["h-card"],
+                                "properties" => [
+                                    "name" => ["Jay Robinson"],
+                                    "photo" => ["/profile_pic.jpeg"],
+                                    "url" => ["http://j4y.co"]
+                                ]
                             ]
                         ]
                     ]
