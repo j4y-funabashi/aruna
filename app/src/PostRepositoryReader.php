@@ -78,6 +78,9 @@ class PostRepositoryReader
         $r = $this->db->prepare($q);
         $r->execute();
         $post = $r->fetch();
+        if ($post === false) {
+            return 0;
+        }
         $out = new \Aruna\PostViewModel(json_decode($post['post'], true));
         return basename($out->get("url"));
     }
