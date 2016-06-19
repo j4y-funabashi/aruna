@@ -2,25 +2,20 @@
 
 namespace Aruna;
 
-/**
- * Class ShowLatestPostsResponder
- * @author yourname
- */
-class ShowLatestPostsResponder extends Responder
+class ShowPostResponder extends Responder
 {
     protected $payload_method = [
-        "Aruna\Found" => "feed"
+        "Aruna\Found" => "post"
     ];
 
-    public function feed()
+    public function post()
     {
         $posts = $this->renderPosts();
-
         $out = $this->view->render(
             "page_wrapper.html",
             array(
-                "page_title" => $this->payload->get("title"),
-                "body" => $this->renderFeed($posts, "archive")
+                "page_title" => "photos",
+                "body" => implode("\n", $posts)
             )
         );
         $this->response->setContent($out);
@@ -33,8 +28,8 @@ class ShowLatestPostsResponder extends Responder
         return $this->view->render(
             "post_feed.html",
             array(
-                "feed_title" => $this->payload->get("title"),
-                "items" => implode("\n", $posts),
+                "feed_title" => "photos",
+                "items" => $this->renderPostGrid($posts, 3),
                 "nav_next" => $this->payload->get("nav_next")
             )
         );
@@ -51,5 +46,17 @@ class ShowLatestPostsResponder extends Responder
             },
             $this->payload->get("items")
         );
+    }
+
+    private function renderPostGrid($posts, $per_row)
+    {
+        $rows = array();
+        foreach (array_chunk($posts, $per_row) as $post_row) {
+            $rows[] = $this->view->render(
+                "grid_row.html",
+                array("row" => $post_row)
+            );
+        }
+        return implode("", $rows);
     }
 }

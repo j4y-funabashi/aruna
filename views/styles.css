@@ -19,7 +19,7 @@
 }
 
 body {
-    background-color: #f8f8f8;
+    background-color: #e8e8e8;
     font-family: monospace;
     font-size: 14px;
     color: #181818;
@@ -32,14 +32,12 @@ main {
 }
 
 footer {
-    border-top: 1px solid #b8b8b8;
     margin-top: 5px;
     padding: 10px;
-    background-color: #e8e8e8;
 }
 
 p {
-    margin: 4px;
+    margin: 2px;
 }
 
 blockquote {
@@ -58,14 +56,29 @@ article * {
     word-wrap: break-word;
 }
 article {
+    background-color: #f8f8f8;
     max-width: 640px;
-    padding: 10px;
+    margin-bottom: 8px;
 }
 article img {
     width: 100%;
 }
 
-.meta * {
+.post-meta {
+    border-top: 1px solid #e8e8e8;
+}
+.post-meta * {
     color: #585858;
     font-size: 11px;
+}
+.post-content, .post-meta {
+    padding: 8px;
+}
+.post-author {
+    padding-top: 4px;
+}
+
+.author-photo {
+    width: 32px;
+    vertical-align: middle;
 }

@@ -11,9 +11,10 @@ use RuntimeException;
  */
 class PostRepositoryWriter
 {
-    public function __construct($filesystem)
+    public function __construct($filesystem, $view)
     {
         $this->filesystem = $filesystem;
+        $this->view = $view;
     }
 
     public function save(Post $entry, $files)
@@ -35,10 +36,26 @@ class PostRepositoryWriter
         }
 
         try {
+            // json file
             $this->filesystem->write(
                 $entry->getFilePath().".json",
                 $entry->asJson()
             );
+
+            // html file
+            $postData = new PostData();
+            $view_model = new PostViewModel(
+                $postData->toMfArray(json_decode($entry->asJson(), true))
+            );
+            $post_html = $this->view->render(
+                "post_".$view_model->type().".html",
+                array("post" => $view_model)
+            );
+            $this->filesystem->write(
+                $entry->getFilePath().".html",
+                $post_html
+            );
+
         } catch (FileExistsException $e) {
             throw new RuntimeException($e->getMessage());
         }

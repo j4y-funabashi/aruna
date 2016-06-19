@@ -1,0 +1,6 @@
+{% if post.author is defined %}
+<div class="p-author h-card post-author">
+    <img class="author-photo u-photo" src="{{ post.author.photo }}">
+    <a class="author-name" href="{{ post.author.url }}" class="p-name">{{ post.author.name }}</a>
+</div>
+{% endif %}

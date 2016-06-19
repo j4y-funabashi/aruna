@@ -31,7 +31,7 @@ $app['db_cache'] = $app->share(function () use ($app) {
     return $db;
 });
 $app['posts_repository_reader'] = $app->share(function () use ($app) {
-    return new Aruna\PostRepositoryReader($app['db_cache']);
+    return new Aruna\PostRepositoryReaderFiles($app['db_cache']);
 });
 $app['mentions_repository_reader'] = $app->share(function () use ($app) {
     return new Aruna\MentionsRepositoryReader($app['db_cache']);
@@ -39,7 +39,7 @@ $app['mentions_repository_reader'] = $app->share(function () use ($app) {
 $app['posts_repository_writer'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local($app['posts_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
-    return new Aruna\PostRepositoryWriter($filesystem);
+    return new Aruna\PostRepositoryWriter($filesystem, $app['twig']);
 });
 $app['create_post.handler'] = $app->share(function () use ($app) {
     return new Aruna\CreatePostHandler(
@@ -114,10 +114,14 @@ $app['handler.showdatefeed'] = $app->share(function () use ($app) {
     );
 });
 
-$app['posts.controller'] = $app->share(function () use ($app) {
-    return new Aruna\Controller\PostController(
+$app['action.show_post'] = $app->share(function () use ($app) {
+    $handler = new Aruna\ShowPostHandler(
         $app['posts_repository_reader'],
-        $app['mentions_repository_reader']
+        $app['url_generator']
+    );
+    return new Aruna\ShowPostAction(
+        $handler,
+        new Aruna\ShowPostResponder($app['response'], $app['twig'])
     );
 });
 

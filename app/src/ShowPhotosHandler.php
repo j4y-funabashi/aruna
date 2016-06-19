@@ -14,9 +14,13 @@ class ShowPhotosHandler implements Handler
 
     public function handle($command)
     {
-        $page = $command->get("page");
+        $page = ($command->get("page"))
+            ? $command->get("page")
+            : 0;
         $rpp = $command->get("rpp");
-        $offset = ($page - 1) * $rpp;
+        $offset = ($page == 0)
+            ? 0
+            : ($page - 1) * $rpp;
         $next_page = ($page > 1)
             ? $page + 1
             : 2;
@@ -34,11 +38,6 @@ class ShowPhotosHandler implements Handler
 
     private function getPhotos($rpp, $offset)
     {
-        return array_map(
-            function ($post) {
-                return new \Aruna\PostViewModel($post, $this->url_generator);
-            },
-            $this->postsRepository->listByType("photo", $rpp, $offset)
-        );
+        return $this->postsRepository->listByType("photo", $rpp, $offset);
     }
 }
