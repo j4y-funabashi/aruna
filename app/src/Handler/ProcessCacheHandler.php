@@ -34,9 +34,7 @@ class ProcessCacheHandler
 
     private function processPosts()
     {
-        //$latest = $this->postsRepositoryReader->findLatest();
-        //$initial_id = $latest['uid'];
-        $initial_id = 0;
+        $initial_id = $this->postsRepositoryReader->findLatestId();
         $rpp = 1000;
 
         $m = sprintf(

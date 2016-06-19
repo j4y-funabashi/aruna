@@ -66,7 +66,7 @@ class PostRepositoryReader
         return $out;
     }
 
-    public function findLatest()
+    public function findLatestId()
     {
         $q = "SELECT
             id,
@@ -78,8 +78,8 @@ class PostRepositoryReader
         $r = $this->db->prepare($q);
         $r->execute();
         $post = $r->fetch();
-        $post = json_decode($post['post'], true);
-        return $post;
+        $out = new \Aruna\PostViewModel(json_decode($post['post'], true));
+        return basename($out->get("url"));
     }
 
     public function listMonths()
