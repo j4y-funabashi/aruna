@@ -1,10 +1,16 @@
 <article class="h-entry">
 
-    {% if post.get('content')['html'] is defined %}
-    <div class="e-content post-content">
-        {{ post.get('content')['html']|raw }}
+    <div class="post-content">
+        {% if post.get('in-reply-to') is not null %}
+        <a class="u-in-reply-to" href="{{ post.get('in-reply-to') }}">{{ post.get('in-reply-to') }}</a>
+        {% endif %}
+
+        {% if post.get('content')['html'] is defined %}
+        <div class="e-content">
+            {{ post.get('content')['html']|raw }}
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
 
     {% include 'post_meta.html' %}
 
