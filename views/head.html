@@ -4,7 +4,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
 <link rel="stylesheet" href="/views/styles.css" type="text/css">
 
 <link rel="authorization_endpoint" href="https://indieauth.com/auth">
@@ -12,13 +13,13 @@
 <link rel="micropub" href="http://j4y.co/micropub">
 <link rel="webmention" href="http://j4y.co/webmention">
 
-<title>j4y</title>
+<title>j4y{% if page_title is defined %}:{{ page_title }}{% endif %}</title>
 
 </head>
 <body>
 
 <header>
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" rel="me" href="http://j4y.co">j4y.co</a>

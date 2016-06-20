@@ -11,26 +11,23 @@ use RuntimeException;
  */
 class PostRepositoryWriter
 {
-    public function __construct($filesystem)
+    public function __construct($filesystem, $view)
     {
         $this->filesystem = $filesystem;
+        $this->view = $view;
     }
 
     public function save(Post $entry, $files)
     {
         foreach ($files as $uploadedFile) {
             try {
-                if ($uploadedFile->isReadable() === false) {
-                    $m = "Could not read file ".$uploadedFile->getRealPath();
-                    throw new \RuntimeException($m);
-                }
-                $stream = fopen($uploadedFile->getRealPath(), 'rb');
+                $stream = fopen($uploadedFile['real_path'], 'rb');
                 if (!$stream) {
-                    $m = "Could not open file ".$uploadedFile->getRealPath();
+                    $m = "Could not open file ".$uploadedFile['real_path'];
                     throw new \RuntimeException($m);
                 }
                 $this->filesystem->writeStream(
-                    $entry->getFilePath().".".$uploadedFile->getClientOriginalExtension(),
+                    $entry->getFilePath().".".$uploadedFile['original_ext'],
                     $stream
                 );
             } catch (FileExistsException $e) {
@@ -39,10 +36,26 @@ class PostRepositoryWriter
         }
 
         try {
+            // json file
             $this->filesystem->write(
                 $entry->getFilePath().".json",
                 $entry->asJson()
             );
+
+            // html file
+            $postData = new PostData();
+            $view_model = new PostViewModel(
+                $postData->toMfArray(json_decode($entry->asJson(), true))
+            );
+            $post_html = $this->view->render(
+                "post_".$view_model->type().".html",
+                array("post" => $view_model)
+            );
+            $this->filesystem->write(
+                $entry->getFilePath().".html",
+                $post_html
+            );
+
         } catch (FileExistsException $e) {
             throw new RuntimeException($e->getMessage());
         }

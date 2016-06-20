@@ -1,4 +1,4 @@
-DATA_DIR="/media/BACKUP/aruna"
+DATA_DIR="/media/jayr/aruna"
 APP_USER="aruna"
 
 sudo locale-gen en_GB.UTF-8
@@ -14,10 +14,12 @@ sudo apt-get update \
     php5-cli \
     php5-imagick \
     php5-curl \
-    php5-sqlite
+    php5-sqlite \
+    php5-xdebug
 
 
 ## create data_dir
+sudo usermod -G www-data vagrant
 sudo useradd -G www-data $APP_USER
 sudo mkdir -p $DATA_DIR
 
@@ -35,9 +37,11 @@ sudo cp /srv/aruna/env.example /srv/.env
 ## COMPOSER
 curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
+cd /srv/aruna/; composer install;
 
 ## NGINX PHP CONFIG
-sudo cp /srv/aruna/resources/nginx.conf /etc/nginx/sites-enabled/default \
+sudo rm /etc/nginx/sites-enabled/default
+sudo cp /srv/aruna/resources/nginx.conf /etc/nginx/sites-enabled/aruna \
     && sudo cp /srv/aruna/resources/php5-fpm.conf /etc/php5/fpm/pool.d/aruna.conf \
     && sudo cp /srv/aruna/resources/supervisord.conf /etc/supervisor/conf.d/
 

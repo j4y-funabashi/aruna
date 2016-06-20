@@ -3,18 +3,20 @@
 namespace Aruna;
 
 /**
- * Class CreateEntryCommand
+ * Class CreatePostCommand
  * @author yourname
  */
-class CreateEntryCommand
+class CreatePostCommand
 {
 
     public function __construct(
         array $entry,
-        array $files
+        array $files,
+        $access_token
     ) {
         $this->entry = $entry;
         $this->files = $files;
+        $this->access_token = $access_token;
     }
 
     public function getEntry()

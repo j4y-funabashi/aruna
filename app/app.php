@@ -6,7 +6,7 @@ $app['debug'] = true;
 $app['posts_root'] = getenv("ROOT_DIR")."/posts";
 $app['webmentions_root'] = getenv("ROOT_DIR")."/webmentions";
 $app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
-$app['rpp'] = 100;
+$app['rpp'] = 9;
 $app['token_endpoint'] = "https://tokens.indieauth.com/token";
 $app['me_endpoint'] = "http://j4y.co/";
 
@@ -39,24 +39,42 @@ $app['mentions_repository_reader'] = $app->share(function () use ($app) {
 $app['posts_repository_writer'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local($app['posts_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
-    return new Aruna\PostRepositoryWriter($filesystem);
+    return new Aruna\PostRepositoryWriter($filesystem, $app['twig']);
 });
 $app['create_post.handler'] = $app->share(function () use ($app) {
-    return new Aruna\CreateEntryHandler(
+    return new Aruna\CreatePostHandler(
         $app['posts_repository_writer']
     );
 });
-$app['micropub.controller'] = $app->share(function () use ($app) {
-    return new Aruna\Controller\MicropubController(
-        $app["monolog"],
-        $app["create_post.handler"],
-        new Aruna\AccessToken(
-            $app['http_client'],
-            $app['token_endpoint'],
-            $app['me_endpoint']
-        )
+
+$app['access_token'] = $app->share(function () use ($app) {
+    return new Aruna\AccessToken(
+        $app['http_client'],
+        $app['token_endpoint'],
+        $app['me_endpoint']
     );
 });
+
+$app['action.create_post'] = $app->share(function () use ($app) {
+    return new Aruna\CreatePostAction(
+        $app["monolog"],
+        $app["create_post.handler"],
+        $app['access_token'],
+        new Aruna\CreatePostResponder($app['url_generator'])
+    );
+});
+
+$app['response'] = $app->share(function () {
+    return new Symfony\Component\HttpFoundation\Response();
+});
+
+$app['action.show_micropub_form'] = $app->share(function () use ($app) {
+    return new Aruna\ShowMicropubFormAction(
+        new Aruna\ShowMicropubFormResponder($app['response'], $app['twig']),
+        new Aruna\ShowMicropubFormHandler($app['session'])
+    );
+});
+
 $app['webmention.controller'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local($app['webmentions_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
@@ -70,12 +88,43 @@ $app['webmention.controller'] = $app->share(function () use ($app) {
         )
     );
 });
-$app['posts.controller'] = $app->share(function () use ($app) {
-    return new Aruna\Controller\PostController(
-        $app['posts_repository_reader'],
-        $app['mentions_repository_reader']
+
+$app['action.show_date_feed'] = $app->share(function () use ($app) {
+    return new Aruna\ShowDateFeedAction(
+        new Aruna\ShowLatestPostsResponder($app['response'], $app['twig']),
+        new Aruna\CommandBus($app)
     );
 });
+$app['action.show_latest_posts'] = $app->share(function () use ($app) {
+    return new Aruna\ShowLatestPostsAction(
+        new Aruna\ShowLatestPostsResponder($app['response'], $app['twig']),
+        new Aruna\CommandBus($app)
+    );
+});
+$app['handler.showlatestposts'] = $app->share(function () use ($app) {
+    return new Aruna\ShowLatestPostsHandler(
+        $app['posts_repository_reader'],
+        $app['url_generator']
+    );
+});
+$app['handler.showdatefeed'] = $app->share(function () use ($app) {
+    return new Aruna\ShowDateFeedHandler(
+        $app['posts_repository_reader'],
+        $app['url_generator']
+    );
+});
+
+$app['action.show_post'] = $app->share(function () use ($app) {
+    $handler = new Aruna\ShowPostHandler(
+        $app['posts_repository_reader'],
+        $app['url_generator']
+    );
+    return new Aruna\ShowPostAction(
+        $handler,
+        new Aruna\ShowPostResponder($app['response'], $app['twig'])
+    );
+});
+
 $app['auth.controller'] = $app->share(function () use ($app) {
     return new Aruna\Controller\AuthController(
         $app['http_client'],
@@ -86,4 +135,17 @@ $app['http_client'] = $app->share(function () {
     return new GuzzleHttp\Client();
 });
 
+$app['action.show.photos'] = $app->share(function () use ($app) {
+    $handler = new Aruna\ShowPhotosHandler(
+        $app['posts_repository_reader'],
+        $app['url_generator']
+    );
+    return new Aruna\ShowPhotosAction(
+        $handler,
+        new Aruna\ShowPhotosResponder($app['response'], $app['twig'])
+    );
+});
+
 require_once __DIR__ . "/routes.php";
+
+return $app;

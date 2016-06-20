@@ -26,14 +26,17 @@ class MentionsRepositoryReader
             content
             FROM mentions
             WHERE post_uid = :id
-            ORDER BY uid DESC";
+            ORDER BY uid ASC";
         $r = $this->db->prepare($q);
         $r->execute([":id" => $post_id]);
 
         $out = [];
         while ($mention = $r->fetch()) {
+            $mention['content'] = htmlspecialchars(strip_tags($mention['content']), ENT_QUOTES);
+            $mention['author_url'] = htmlspecialchars(strip_tags($mention['author_url']), ENT_QUOTES);
             $out[] = $mention;
         }
+
 
         return $out;
     }

@@ -13,8 +13,45 @@ class PostRepositoryReader
         $this->db = $db;
     }
 
+    public function listByDate($year, $month, $day)
+    {
+        $where = array();
+        $query_data = [
+            ":year" => $year
+        ];
+        if ($month != "*") {
+            $where[] = "AND strftime('%m', published) = :month";
+            $query_data[":month"] = $month;
+        }
+        if ($day != "*") {
+            $where[] = "AND strftime('%d', published) = :day";
+            $query_data[":day"] = $day;
+        }
+
+        $q = "SELECT
+            id,
+            published,
+            post
+            FROM posts
+            WHERE strftime('%Y', published) = :year
+            ".implode("\n", $where)."
+            ORDER BY published DESC, id DESC
+            ";
+        $r = $this->db->prepare($q);
+        $r->execute($query_data);
+
+        $out = [];
+        while ($post = $r->fetch()) {
+            $out[] = new \Aruna\PostViewModel(json_decode($post['post'], true));
+        }
+
+        return $out;
+    }
+
     public function findById($post_id)
     {
+
+        // current
         $q = "SELECT
             id,
             published,
@@ -24,11 +61,12 @@ class PostRepositoryReader
         $r = $this->db->prepare($q);
         $r->execute([":id" => $post_id]);
         $post = $r->fetch();
-        $post = json_decode($post['post'], true);
-        return $post;
+        $out[] = new \Aruna\PostViewModel(json_decode($post['post'], true));
+
+        return $out;
     }
 
-    public function findLatest()
+    public function findLatestId()
     {
         $q = "SELECT
             id,
@@ -40,8 +78,33 @@ class PostRepositoryReader
         $r = $this->db->prepare($q);
         $r->execute();
         $post = $r->fetch();
-        $post = json_decode($post['post'], true);
-        return $post;
+        if ($post === false) {
+            return 0;
+        }
+        $out = new \Aruna\PostViewModel(json_decode($post['post'], true));
+        return basename($out->get("url"));
+    }
+
+    public function listMonths()
+    {
+        $q = "SELECT
+            strftime('%Y', published) as year,
+            strftime('%m', published) as month,
+            count(*) as count
+            FROM posts
+            GROUP BY strftime('%Y', published), strftime('%m', published)
+            ORDER BY published DESC";
+        $r = $this->db->prepare($q);
+        $r->execute();
+
+        $out = [];
+        while ($post = $r->fetch()) {
+            $post['human'] = date("M Y", strtotime($post['year']."-".$post['month']."-01"));
+            $post['link'] = date("Y/m", strtotime($post['year']."-".$post['month']."-01"));
+            $out[] = $post;
+        }
+
+        return $out;
     }
 
     public function listFromId($from_id, $rpp)
@@ -65,6 +128,32 @@ class PostRepositoryReader
         $out = [];
         while ($post = $r->fetch()) {
             $out[] = json_decode($post['post'], true);
+        }
+        return $out;
+    }
+
+    public function listByType($post_type, $limit, $offset = 0)
+    {
+        $q = "SELECT
+            id,
+            published,
+            post
+            FROM posts
+            WHERE type = :post_type
+            ORDER BY published DESC
+            LIMIT :offset,:limit";
+        $r = $this->db->prepare($q);
+        $r->execute(
+            array(
+                ":post_type" => $post_type,
+                ":limit" => $limit,
+                ":offset" => $offset
+            )
+        );
+
+        $out = [];
+        while ($post = $r->fetch()) {
+            $out[] = new \Aruna\PostViewModel(json_decode($post['post'], true));
         }
         return $out;
     }

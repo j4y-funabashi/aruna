@@ -22,48 +22,34 @@ class PostController
         $this->mentionsRepository = $mentionsRepository;
     }
 
-    public function feed(Request $request, Application $app)
-    {
-        $from_id = ($request->query->get('from_id') !== null)
-            ? $request->query->get('from_id')
-            : 0;
-        $posts = array_map(
-            function ($post) use ($app) {
-                return $this->createPostView($post, $app);
-            },
-            $this->postRepository->listFromId($from_id, $app['rpp'])
-        );
-
-        return $app['twig']->render(
-            'feed.html',
-            [
-                'posts' => $posts
-            ]
-        );
-    }
-
     public function getById(Application $app, $post_id)
     {
-        $post = $this->createPostView(
-            $this->postRepository->findById($post_id),
-            $app
-        );
+        $post = $this->postRepository->findById($post_id);
         $mentions = $this->mentionsRepository->findByPostId($post_id);
+        $view_model = [
+            'post' => new \Aruna\PostViewModel(
+                $post['current'],
+                $app['url_generator']
+            ),
+            'mentions' => $mentions,
+        ];
+
+        if (isset($post['next'])) {
+            $view_model['next'] = new \Aruna\PostViewModel(
+                $post['next'],
+                $app['url_generator']
+            );
+        }
+        if (isset($post['previous'])) {
+            $view_model['previous'] = new \Aruna\PostViewModel(
+                $post['previous'],
+                $app['url_generator']
+            );
+        }
 
         return $app['twig']->render(
             'post.html',
-            [
-                'post' => $post,
-                'mentions' => $mentions
-            ]
-        );
-    }
-
-    protected function createPostView($post_data, $app)
-    {
-        return new \Aruna\PostViewModel(
-            $post_data,
-            $app['url_generator']
+            $view_model
         );
     }
 }

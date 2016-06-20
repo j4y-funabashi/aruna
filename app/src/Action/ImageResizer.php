@@ -37,7 +37,7 @@ class ImageResizer
         $this->ensureDirectory(dirname($out_path));
 
         $img = Image::make($in_path);
-        $img->fit(1080);
+        $img->fit(640);
         $img->save($out_path);
     }
 

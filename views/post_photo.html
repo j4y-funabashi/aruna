@@ -1,0 +1,13 @@
+<article class="h-entry">
+
+    <img class="u-photo post-photo" alt="jpg photo" src="{{ post.get('photo') }}" />
+
+    {% if post.get('content')['html'] is defined %}
+    <div class="e-content post-content">
+        {{ post.get('content')['html']|raw }}
+    </div>
+    {% endif %}
+
+    {% include 'post_meta.html' %}
+
+</article>

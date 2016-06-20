@@ -3,10 +3,10 @@
 namespace Aruna;
 
 /**
- * Class CreateEntryHandler
+ * Class CreatePostHandler
  * @author yourname
  */
-class CreateEntryHandler
+class CreatePostHandler
 {
     public function __construct(
         PostRepositoryWriter $postRepository
@@ -14,7 +14,7 @@ class CreateEntryHandler
         $this->postRepository = $postRepository;
     }
 
-    public function handle(CreateEntryCommand $command)
+    public function handle(CreatePostCommand $command)
     {
         $post = new Post($command->getEntry(), $command->getFiles());
         $this->postRepository->save($post, $command->getFiles());

@@ -69,7 +69,9 @@ class EventStore
         return array_filter(
             array_map(
                 function ($post_filepath) {
-                    return json_decode($this->filesystem->read($post_filepath['path']), true);
+                    $file_contents = $this->filesystem->read($post_filepath['path']);
+                    $mf_array = \Mf2\parse($file_contents, "http://j4y.co");
+                    return new \Aruna\PostViewModel($mf_array);
                 },
                 array_slice($all_paths, $key, $rpp)
             )
@@ -82,7 +84,7 @@ class EventStore
             array_filter(
                 $this->filesystem->listContents($root_dir, true),
                 function ($file_path) {
-                    return substr($file_path['path'], -4) == "json";
+                    return substr($file_path['path'], -4) == "html";
                 }
             )
         );
