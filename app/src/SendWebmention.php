@@ -17,24 +17,28 @@ class SendWebmention
         $this->log = $log;
     }
 
-    public function __invoke($event)
+    public function __invoke($post)
     {
-        foreach ($this->findUrls->__invoke(print_r($event, true)) as $url) {
+        foreach ($this->findUrls->__invoke($post->toString()) as $url) {
+
             $this->log->info("Finding webmention endpoint [".$url."]");
+
             try {
                 $result = $this->http->request("GET", $url);
             } catch (\Exception $e) {
                 $m = "Failed to GET ".$url." ".$e->getMessage();
                 $this->log->error($m);
+                continue;
             }
+
 
             $mention_endpoint = $this->discoverEndpoint->__invoke($url, $result, "webmention");
 
-            $source_url = "http://j4y.co/p/".$event['uid'];
+            $source_url = $post->get('url');
             $form_params = array("source" => $source_url, "target" => $url);
 
             if ($mention_endpoint != "") {
-                $this->log->info("sending mention to [".$mention_endpoint."]");
+                $this->log->info("sending mention to [".$mention_endpoint."]", $form_params);
 
                 try {
                     $response = $this->http->request(
@@ -45,9 +49,10 @@ class SendWebmention
                 } catch (\Exception $e) {
                     $m = "Failed to POST to ".$mention_endpoint." ".$e->getMessage();
                     $this->log->error($m);
+                    continue;
                 }
             }
         }
-        return $event;
+        return $post;
     }
 }

@@ -3,6 +3,7 @@
 namespace Test;
 
 use Aruna\SendWebmention;
+use Aruna\PostViewModel;
 use Prophecy\Argument;
 
 class SendWebmentionTest extends UnitTest
@@ -12,11 +13,11 @@ class SendWebmentionTest extends UnitTest
         $this->post_uid = "1234";
         $target_url = "http://example.com";
         $mention_endpoint = "http://example.com/webmention";
-        $source_url = "http://j4y.co/p/".$this->post_uid;
+        $this->source_url = "http://j4y.co/p/".$this->post_uid;
 
         $log = $this->prophesize("Monolog\Logger");
 
-        $form_params = ["source" => $source_url, "target" => $target_url];
+        $form_params = ["source" => $this->source_url, "target" => $target_url];
         $http = $this->prophesize("GuzzleHttp\Client");
         $http->request(
             "GET",
@@ -50,7 +51,17 @@ class SendWebmentionTest extends UnitTest
      */
     public function it_does_awesome()
     {
-        $event = array("uid" => $this->post_uid);
-        $this->SUT->__invoke($event);
+        $mf_array = array(
+            "items" => array(
+                array(
+                    "type" => array("h-entry"),
+                    "properties" => array(
+                        "url" => [$this->source_url]
+                    )
+                )
+            )
+        );
+        $post = new PostViewModel($mf_array);
+        $this->SUT->__invoke($post);
     }
 }

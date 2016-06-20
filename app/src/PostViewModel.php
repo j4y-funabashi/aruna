@@ -23,6 +23,11 @@ class PostViewModel
         return json_encode($this->mf_array);
     }
 
+    public function toString()
+    {
+        return json_encode($this->mf_array, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    }
+
     public function get($param)
     {
         if (isset($this->entry['properties'][$param][0])) {
