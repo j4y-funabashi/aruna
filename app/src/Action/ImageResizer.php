@@ -22,15 +22,20 @@ class ImageResizer
         Image::configure(array('driver' => 'imagick'));
     }
 
-    public function resize($photo_path)
+    public function resize($in_path, $out_path)
     {
-        $in_path = $this->root_dir."/".$photo_path;
-        $out_path = $this->thumbnails_dir."/".$photo_path;
+        $in_path = $this->root_dir."/".$in_path;
+        $out_path = $this->thumbnails_dir."/".$out_path;
         if (file_exists($out_path)) {
+            return;
+        }
+        if ($in_path == $out_path) {
             $m = sprintf(
-                "Photo already exists [%s]",
+                "Source photo cannot be target photo [%s] [%s]",
+                $in_path,
                 $out_path
             );
+            $this->log->critical($m);
             return;
         }
 
@@ -38,6 +43,14 @@ class ImageResizer
 
         $img = Image::make($in_path);
         $img->fit(640);
+
+        $m = sprintf(
+            "Resizing [%s] to [%s]",
+            $in_path,
+            $out_path
+        );
+        $this->log->info($m);
+
         $img->save($out_path);
     }
 

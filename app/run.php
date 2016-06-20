@@ -25,6 +25,13 @@ $app['http_client'] = $app->share(function () {
     );
 });
 
+$app['image_resizer'] = $app->share(function () use ($app) {
+    return new Aruna\Action\ImageResizer(
+        $app['monolog'],
+        getenv("ROOT_DIR"),
+        $app['thumbnails_root']
+    );
+});
 $app['event_store'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
     $filesystem = new League\Flysystem\Filesystem($adapter);
@@ -39,43 +46,13 @@ $app['db_cache'] = $app->share(function () use ($app) {
 $app['posts_repository_reader'] = $app->share(function () use ($app) {
     return new Aruna\PostRepositoryReader($app['db_cache']);
 });
-$app['mentions_repository_reader'] = $app->share(function () use ($app) {
-    return new Aruna\MentionsRepositoryReader($app['db_cache']);
-});
 
 $app['process_cache_handler'] = $app->share(function () use ($app) {
 
-    $linkPreview = new LinkPreview\LinkPreview();
-    $linkPreview->addParser(new LinkPreview\Parser\GeneralParser());
-
     $processPostsPipeline = (new League\Pipeline\Pipeline())
-        //->pipe(
-            //new Aruna\Action\ResizePhoto(
-                //$app['monolog'],
-                //new Aruna\Action\ImageResizer(
-                    //$app['monolog'],
-                    //$app['posts_root'],
-                    //$app['thumbnails_root']
-                //)
-            //)
-        //)
         ->pipe(
             new Aruna\Action\CacheToSql(
                 $app['monolog'],
-                $app['db_cache']
-            )
-        )
-        ;
-
-    $processMentionsPipeline = (new League\Pipeline\Pipeline())
-        ->pipe(
-            new Aruna\Action\ParseWebMention(
-                $app['monolog'],
-                $app['event_store']
-            )
-        )
-        ->pipe(
-            new Aruna\Action\CacheMentionToSql(
                 $app['db_cache']
             )
         )
@@ -85,12 +62,19 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
         $app['monolog'],
         $app['event_store'],
         $processPostsPipeline,
-        $processMentionsPipeline,
-        $app['posts_repository_reader'],
-        $app['mentions_repository_reader']
+        $app['posts_repository_reader']
+    );
+});
+
+$app['action.resize_photos'] = $app->share(function () use ($app) {
+    return new Aruna\ResizePhotosAction(
+        $app['monolog'],
+        $app['event_store'],
+        $app['image_resizer']
     );
 });
 
 $app->command(new CLI\ProcessCacheCommand());
+$app->command(new CLI\ResizePhotoCommand());
 
 $app->run();

@@ -12,16 +12,12 @@ class ProcessCacheHandler
         $log,
         $eventStore,
         $processPostsPipeline,
-        $processMentionsPipeline,
-        $postsRepositoryReader,
-        $mentionsRepositoryReader
+        $postsRepositoryReader
     ) {
         $this->log = $log;
         $this->eventStore = $eventStore;
         $this->processPostsPipeline = $processPostsPipeline;
-        $this->processMentionsPipeline = $processMentionsPipeline;
         $this->postsRepositoryReader = $postsRepositoryReader;
-        $this->mentionsRepositoryReader = $mentionsRepositoryReader;
     }
 
     public function handle()
