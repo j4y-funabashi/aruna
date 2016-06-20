@@ -20,7 +20,7 @@ $app['monolog'] = $app->share(function () use ($app) {
 $app['http_client'] = $app->share(function () {
     return new GuzzleHttp\Client(
         array(
-            'timeout'  => 4.0,
+            'timeout'  => 20.0,
         )
     );
 });
@@ -54,6 +54,14 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
             new Aruna\Action\CacheToSql(
                 $app['monolog'],
                 $app['db_cache']
+            )
+        )
+        ->pipe(
+            new Aruna\SendWebmention(
+                $app['http_client'],
+                new Aruna\DiscoverEndpoints(),
+                new Aruna\FindUrls(),
+                $app['monolog']
             )
         )
         ;
