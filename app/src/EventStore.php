@@ -43,7 +43,7 @@ class EventStore
     {
         $post_filepath = array_shift(
             array_filter(
-                $this->getJsonFilePaths(),
+                $this->findByExtension(),
                 function ($file_path) use ($post_id) {
                     return $file_path['filename'] == $post_id;
                 }
@@ -57,7 +57,7 @@ class EventStore
         $from_id,
         $rpp
     ) {
-        $all_paths = $this->getJsonFilePaths($root_dir);
+        $all_paths = $this->findByExtension($root_dir);
 
         $key = array_search($from_id, array_column($all_paths, 'filename'));
         if (false === $key) {
@@ -78,13 +78,13 @@ class EventStore
         );
     }
 
-    private function getJsonFilePaths($root_dir = '')
+    public function findByExtension($root_dir = 'posts', $extension = "html")
     {
         $files = array_values(
             array_filter(
                 $this->filesystem->listContents($root_dir, true),
-                function ($file_path) {
-                    return substr($file_path['path'], -4) == "html";
+                function ($file_path) use ($extension) {
+                    return substr($file_path['path'], -strlen($extension)) == $extension;
                 }
             )
         );
