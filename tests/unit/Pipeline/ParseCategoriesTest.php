@@ -3,6 +3,7 @@
 namespace Test;
 
 use Aruna\Pipeline\ParseCategories;
+use Aruna\PostViewModel;
 
 /**
  * Class ParseCategoriesTest
@@ -18,95 +19,78 @@ class ParseCategoriesTest extends UnitTest
     /**
     * @test
     */
-    public function it_does_nothing_if_event_has_no_category()
+    public function it_does_nothing_if_post_has_no_category()
     {
-        $event = array();
-        $result = $this->SUT->__invoke($event);
-        $this->assertEquals($event, $result);
+        $mf_array = array(
+            "items" => [
+                [
+                    "type" => ["h-entry"]
+                ]
+            ]
+        );
+        $post = new PostViewModel($mf_array);
+        $result = $this->SUT->__invoke($post);
+        $this->assertEquals($post, $result);
     }
 
     /**
     * @test
     */
-    public function it_parses_events_with_an_array_of_categories()
+    public function it_does_nothing_if_post_has__categories_but_no_person_tags()
     {
-        $event = array(
-            'category' => array('test1', 'test2')
+        $mf_array = array(
+            "items" => [
+                [
+                    "type" => ["h-entry"],
+                    "properties" => [
+                        "category" => ["test"]
+                    ]
+                ]
+            ]
         );
-        $result = $this->SUT->__invoke($event);
-        $this->assertEquals($event, $result);
+        $post = new PostViewModel($mf_array);
+        $result = $this->SUT->__invoke($post);
+        $this->assertEquals($post, $result);
     }
 
     /**
     * @test
     */
-    public function it_parses_events_with_a_csv_of_categories()
+    public function it_replaces_person_tag_with_hcard()
     {
-        $event = array(
-            'category' => 'test1,test2'
+        $mf_array = array(
+            "items" => [
+                [
+                    "type" => ["h-entry"],
+                    "properties" => [
+                        "category" => ["@test"]
+                    ]
+                ]
+            ]
         );
-        $expected = array(
-            'category' => array('test1', 'test2')
-        );
-        $result = $this->SUT->__invoke($event);
-        $this->assertEquals($expected, $result);
-    }
+        $post = new PostViewModel($mf_array);
 
-    /**
-    * @test
-    */
-    public function it_trims_categories()
-    {
-        $event = array(
-            'category' => array(' test1 ', ' test2')
+        $mf_array = array(
+            "items" => [
+                [
+                    "type" => ["h-entry"],
+                    "properties" => [
+                        "category" => [
+                            [
+                                "type" => ["h-card"],
+                                "properties" => [
+                                    "name" => ["@test"],
+                                    "url" => ["test"]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
         );
-        $expected = array(
-            'category' => array('test1', 'test2')
-        );
-        $result = $this->SUT->__invoke($event);
-        $this->assertEquals($expected, $result);
-    }
+        $expected = new PostViewModel($mf_array);
 
-    /**
-    * @test
-    */
-    public function it_converts_categories_to_lowercase()
-    {
-        $event = array(
-            'category' => array(' tEsT1 ', ' TEST2')
-        );
-        $expected = array(
-            'category' => array('test1', 'test2')
-        );
-        $result = $this->SUT->__invoke($event);
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-    * @test
-    */
-    public function it_dedupes_categories()
-    {
-        $event = array(
-            'category' => 'test1,test2,test1'
-        );
-        $expected = array(
-            'category' => array('test1', 'test2')
-        );
-        $result = $this->SUT->__invoke($event);
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-    * @test
-    */
-    public function it_filters_out_empty_categories()
-    {
-        $event = array(
-            'category' => array("", null, " ")
-        );
-        $expected = array();
-        $result = $this->SUT->__invoke($event);
-        $this->assertEquals($expected, $result);
+        $post = $this->SUT->__invoke($post);
+        $this->assertEquals($expected->category(), $post->category());
     }
 }

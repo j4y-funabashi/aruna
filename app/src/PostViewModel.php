@@ -43,6 +43,12 @@ class PostViewModel
         return array();
     }
 
+    public function setCategory($category)
+    {
+        $this->entry['properties']['category'] = $category;
+        $this->mf_array["items"] = [$this->entry];
+    }
+
     public function author()
     {
         if (isset($this->entry['properties']['author'][0]['properties'])) {

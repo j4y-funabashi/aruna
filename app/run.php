@@ -51,6 +51,9 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
 
     $processPostsPipeline = (new League\Pipeline\Pipeline())
         ->pipe(
+            new Aruna\Pipeline\ParseCategories()
+        )
+        ->pipe(
             new Aruna\Action\CacheToSql(
                 $app['monolog'],
                 $app['db_cache']
