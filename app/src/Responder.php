@@ -17,10 +17,12 @@ abstract class Responder
 
     public function __construct(
         Response $response,
-        $view
+        $view,
+        $postRenderer
     ) {
         $this->response = $response;
         $this->view = $view;
+        $this->postRenderer = $postRenderer;
     }
 
     public function __invoke()
@@ -36,5 +38,10 @@ abstract class Responder
     public function setPayload(PayloadInterface $payload)
     {
         $this->payload = $payload;
+    }
+
+    protected function renderPost($post)
+    {
+        return $this->postRenderer->__invoke($post);
     }
 }
