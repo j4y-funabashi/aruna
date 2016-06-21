@@ -94,8 +94,10 @@ class RenderPostTest extends UnitTest
     <img class="author-photo u-photo" src="/profile_pic.jpeg">
     <a class="author-name" href="http://j4y.co" class="p-name">Jay Robinson</a>
 </div>
-</div>
 
+    <a href="https://brid.gy/publish/facebook"></a>
+
+</div>
 
 </article>
 ';
@@ -205,8 +207,10 @@ class RenderPostTest extends UnitTest
     <img class="author-photo u-photo" src="/profile_pic.jpeg">
     <a class="author-name" href="http://j4y.co" class="p-name">Jay Robinson</a>
 </div>
-</div>
 
+    <a href="https://brid.gy/publish/facebook"></a>
+
+</div>
 
 </article>
 ';
