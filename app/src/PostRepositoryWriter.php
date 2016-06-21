@@ -47,10 +47,8 @@ class PostRepositoryWriter
             $view_model = new PostViewModel(
                 $postData->toMfArray(json_decode($entry->asJson(), true))
             );
-            $post_html = $this->view->render(
-                "post_".$view_model->type().".html",
-                array("post" => $view_model)
-            );
+            $renderPost = (new RenderPost($this->view));
+            $post_html = $renderPost->__invoke($view_model);
             $this->filesystem->write(
                 $entry->getFilePath().".html",
                 $post_html
