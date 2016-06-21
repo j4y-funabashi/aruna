@@ -2,6 +2,8 @@
 
 namespace Aruna\Pipeline;
 
+use Aruna\PostViewModel;
+
 /**
  * Class ParseCategories
  * @author yourname
@@ -9,30 +11,23 @@ namespace Aruna\Pipeline;
 class ParseCategories
 {
 
-    public function __invoke($event)
+    public function __invoke(PostViewModel $post)
     {
-
-        if (false === isset($event['category'])) {
-            return $event;
+        $new_categories = [];
+        foreach ($post->category() as $category) {
+            $category = trim($category);
+            if (is_string($category) && substr($category, 0, 1) == "@") {
+                $category = array(
+                    "type" => ["h-card"],
+                    "properties" => [
+                        "name" => [$category],
+                        "url" => [substr($category, 1)]
+                    ]
+                );
+            }
+            $new_categories[] = $category;
         }
-
-        $out = (is_array($event['category']))
-            ? $event['category']
-            : explode(",", $event['category']);
-
-        $out = array_map('strtolower', $out);
-        $out = array_map('trim', $out);
-        $out = array_filter($out, 'strlen');
-        $out = array_unique(
-            array_filter($out)
-        );
-
-        if (empty($out)) {
-            unset($event['category']);
-            return $event;
-        }
-
-        $event['category'] = $out;
-        return $event;
+        $post->setCategory($new_categories);
+        return $post;
     }
 }

@@ -1,12 +1,6 @@
 <div class="post-meta">
 
-    {% if post.category is not null %}
-    <div class="post-tags">
-        {% for category in post.category %}
-        <a class="p-category" href="/tag/{{ category }}">{{ category }}</a>
-        {% endfor %}
-    </div>
-    {% endif %}
+    {{ category|raw }}
 
     <a class="u-url post-url" href="{{ post.get('url') }}">
         <time class="dt-published" datetime="{{ post.get('published') }}">{{ post.get('published') }}</time>

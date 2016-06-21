@@ -25,7 +25,7 @@ class CreatePostTest extends SystemTest
             "h" => "entry",
             "published" => $now,
             "content" => "test1",
-            "category" => "cat, kitty"
+            "category" => "cat, kitty, @https://www.facebook.com/alexandra.pinnock.35"
         ];
         $files = [
             "photo" => new UploadedFile(

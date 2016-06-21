@@ -33,9 +33,6 @@ $app['db_cache'] = $app->share(function () use ($app) {
 $app['posts_repository_reader'] = $app->share(function () use ($app) {
     return new Aruna\PostRepositoryReader($app['db_cache']);
 });
-$app['mentions_repository_reader'] = $app->share(function () use ($app) {
-    return new Aruna\MentionsRepositoryReader($app['db_cache']);
-});
 $app['posts_repository_writer'] = $app->share(function () use ($app) {
     $adapter = new League\Flysystem\Adapter\Local($app['posts_root']);
     $filesystem = new League\Flysystem\Filesystem($adapter);
@@ -91,22 +88,25 @@ $app['webmention.controller'] = $app->share(function () use ($app) {
 
 $app['action.show_date_feed'] = $app->share(function () use ($app) {
     return new Aruna\ShowDateFeedAction(
-        new Aruna\ShowLatestPostsResponder($app['response'], $app['twig']),
+        new Aruna\ShowLatestPostsResponder(
+            $app['response'],
+            $app['twig'],
+            new Aruna\RenderPost($app['twig'])
+        ),
         new Aruna\CommandBus($app)
     );
 });
 $app['action.show_latest_posts'] = $app->share(function () use ($app) {
     return new Aruna\ShowLatestPostsAction(
-        new Aruna\ShowLatestPostsResponder($app['response'], $app['twig']),
+        new Aruna\ShowLatestPostsResponder(
+            $app['response'],
+            $app['twig'],
+            new Aruna\RenderPost($app['twig'])
+        ),
         new Aruna\CommandBus($app)
     );
 });
-$app['handler.showlatestposts'] = $app->share(function () use ($app) {
-    return new Aruna\ShowLatestPostsHandler(
-        $app['posts_repository_reader'],
-        $app['url_generator']
-    );
-});
+
 $app['handler.showdatefeed'] = $app->share(function () use ($app) {
     return new Aruna\ShowDateFeedHandler(
         $app['posts_repository_reader'],
@@ -121,7 +121,11 @@ $app['action.show_post'] = $app->share(function () use ($app) {
     );
     return new Aruna\ShowPostAction(
         $handler,
-        new Aruna\ShowPostResponder($app['response'], $app['twig'])
+        new Aruna\ShowPostResponder(
+            $app['response'],
+            $app['twig'],
+            new Aruna\RenderPost($app['twig'])
+        )
     );
 });
 
@@ -142,7 +146,11 @@ $app['action.show.photos'] = $app->share(function () use ($app) {
     );
     return new Aruna\ShowPhotosAction(
         $handler,
-        new Aruna\ShowPhotosResponder($app['response'], $app['twig'])
+        new Aruna\ShowPhotosResponder(
+            $app['response'],
+            $app['twig'],
+            new Aruna\RenderPost($app['twig'])
+        )
     );
 });
 

@@ -38,12 +38,7 @@ class ShowPostResponder extends Responder
     private function renderPosts()
     {
         return array_map(
-            function ($post) {
-                return $this->view->render(
-                    "post_".$post->type().".html",
-                    array("post" => $post)
-                );
-            },
+            array($this, "renderPost"),
             $this->payload->get("items")
         );
     }
