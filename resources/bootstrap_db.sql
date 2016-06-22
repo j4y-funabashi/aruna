@@ -10,14 +10,9 @@ CREATE TABLE IF NOT EXISTS posts (
 );
 
 CREATE TABLE IF NOT EXISTS mentions (
-    uid,
+    id,
     published,
-    post_uid,
-    author_name,
-    author_photo,
-    author_url,
-    is_like,
-    is_comment,
-    content,
-    PRIMARY KEY (uid)
+    post_id,
+    mention,
+    PRIMARY KEY (id)
 );

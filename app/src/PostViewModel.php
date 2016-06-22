@@ -33,6 +33,15 @@ class PostViewModel
         if (isset($this->entry['properties'][$param][0])) {
             return $this->entry['properties'][$param][0];
         }
+        return null;
+    }
+
+    public function published()
+    {
+        if (null !== $this->get("published")) {
+            return $this->get("published");
+        }
+        return date("c");
     }
 
     public function category()
