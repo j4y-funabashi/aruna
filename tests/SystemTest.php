@@ -12,6 +12,11 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->app = require __DIR__ . "/../app/app.php";
+        exec("sh ".__DIR__ . "/../resources/reset_db.sh");
+        $this->http = new Client(
+            array(
+                "http_errors" => false
+            )
+        );
     }
 }

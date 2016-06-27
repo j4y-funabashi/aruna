@@ -1,12 +1,11 @@
-DATA_DIR="/media/jayr/aruna"
-APP_USER="aruna"
+export DATA_DIR="/media/jayr/aruna"
+export APP_USER="aruna"
 
 sudo locale-gen en_GB.UTF-8
 
 sudo apt-get update \
     && sudo apt-get install -y \
     nginx \
-    ant \
     git \
     supervisor \
     sqlite3 \
@@ -16,7 +15,6 @@ sudo apt-get update \
     php5-curl \
     php5-sqlite \
     php5-xdebug
-
 
 ## create data_dir
 sudo usermod -G www-data vagrant
