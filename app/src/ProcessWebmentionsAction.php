@@ -38,7 +38,7 @@ class ProcessWebmentionsAction
 
             try {
                 // verify
-                $mention_html = $this->verifyWebmention($mention);
+                $mention_html = (new VerifyWebmention($this->log, $this->http))->__invoke($mention);
 
                 // save html
                 $mention['id'] = md5($mention['source'].$mention['target']);
@@ -71,42 +71,9 @@ class ProcessWebmentionsAction
             $this->eventStore->delete($mention_file['path']);
 
             $count += 1;
-            if ($count > 10) {
+            if ($count > 2) {
                 exit;
             }
         }
-    }
-
-    private function verifyWebmention(array $mention)
-    {
-        $mention_html = $this->fetchMentionHtml($mention['source']);
-        $this->htmlContainsLink($mention_html, $mention['target']);
-        return $mention_html;
-    }
-    private function fetchMentionHtml($url)
-    {
-        $this->log->info(sprintf("Fetching HTML from %s", $url));
-        $result = $this->http->request("GET", $url);
-        return (string) $result->getBody();
-    }
-    private function loadDOM($html)
-    {
-        libxml_use_internal_errors(true);
-        $dom = new \DOMDocument();
-        try {
-            $dom->loadHTML($html);
-        } catch (\Exception $e) {
-        }
-        return $dom;
-    }
-    private function htmlContainsLink($html, $url)
-    {
-        $xpath = new \DOMXpath($this->loadDOM($html));
-        foreach ($xpath->query('//a') as $link) {
-            if ($link->getAttribute("href") == $url) {
-                return true;
-            }
-        }
-        throw new \Exception(sprintf("Source html does not contain link to target [%s]", $url));
     }
 }
