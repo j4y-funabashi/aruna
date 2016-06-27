@@ -48,10 +48,10 @@ class ProcessWebmentionsAction
 
     private function processWebmention($mention_file, $mention)
     {
-        $mention = (new VerifyWebmentionRequest())->__invoke($mention);
-
         // verify
+        $mention = (new VerifyWebmentionRequest())->__invoke($mention);
         $mention_html = (new VerifyWebmention($this->log, $this->http))->__invoke($mention);
+        $mention_view_model = new \Aruna\PostViewModel(\Mf2\parse($mention_html));
 
         // save html
         $mention['id'] = md5($mention['source'].$mention['target']);
@@ -59,7 +59,6 @@ class ProcessWebmentionsAction
         $this->eventStore->save($file_path, $mention_html);
 
         // cache to db
-        $mention_view_model = new \Aruna\PostViewModel(\Mf2\parse($mention_html));
         $this->mentionsRepositoryWriter->save(
             $mention['id'],
             basename($mention['target']),
