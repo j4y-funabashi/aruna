@@ -29,51 +29,51 @@ class ProcessWebmentionsAction
 
             $mention = json_decode($this->eventStore->readContents($mention_file['path']), true);
             try {
-                $mention = (new VerifyWebmentionRequest())->__invoke($mention);
+                $this->processWebmention($mention_file, $mention);
             } catch (\Exception $e) {
-                $this->log->error(sprintf("Invalid Webmention: %s\n", $e->getMessage()));
-                $this->eventStore->delete($mention_file['path']);
-                continue;
-            }
-
-            try {
-                // verify
-                $mention_html = (new VerifyWebmention($this->log, $this->http))->__invoke($mention);
-
-                // save html
-                $mention['id'] = md5($mention['source'].$mention['target']);
-                $file_path = "processed_webmentions/".$mention['id'].".html";
-                $this->eventStore->save($file_path, $mention_html);
-
-                // cache to db
-                $mention_view_model = new \Aruna\PostViewModel(\Mf2\parse($mention_html));
-                $this->mentionsRepositoryWriter->save(
-                    $mention['id'],
-                    basename($mention['target']),
-                    $mention_view_model
+                $this->log->error(
+                    sprintf("Invalid Webmention: %s\n", $e->getMessage()),
+                    $mention
                 );
-
-                // notify
-                $m = sprintf(
-                    '%s %s %s: %s',
-                    $mention_view_model->author()['name'],
-                    $mention_view_model->type(),
-                    $mention['target'],
-                    $mention_view_model->get("url")
-                );
-                $this->log->notice($m);
-            } catch (\Exception $e) {
-                $this->log->error(sprintf("Invalid Webmention: %s\n", $e->getMessage()));
-                $this->eventStore->delete($mention_file['path']);
-                continue;
             }
 
             $this->eventStore->delete($mention_file['path']);
 
             $count += 1;
-            if ($count > 2) {
+            if ($count > 10) {
                 exit;
             }
         }
+    }
+
+    private function processWebmention($mention_file, $mention)
+    {
+        $mention = (new VerifyWebmentionRequest())->__invoke($mention);
+
+        // verify
+        $mention_html = (new VerifyWebmention($this->log, $this->http))->__invoke($mention);
+
+        // save html
+        $mention['id'] = md5($mention['source'].$mention['target']);
+        $file_path = "processed_webmentions/".$mention['id'].".html";
+        $this->eventStore->save($file_path, $mention_html);
+
+        // cache to db
+        $mention_view_model = new \Aruna\PostViewModel(\Mf2\parse($mention_html));
+        $this->mentionsRepositoryWriter->save(
+            $mention['id'],
+            basename($mention['target']),
+            $mention_view_model
+        );
+
+        // notify
+        $m = sprintf(
+            '%s %s %s: %s',
+            $mention_view_model->author()['name'],
+            $mention_view_model->type(),
+            $mention['target'],
+            $mention_view_model->get("url")
+        );
+        $this->log->notice($m);
     }
 }
