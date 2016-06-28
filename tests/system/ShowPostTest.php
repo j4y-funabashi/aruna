@@ -15,7 +15,9 @@ class ShowPostTest extends SystemTest
     {
         $this->insertValidPost();
         $result = $this->http->get("http://localhost/p/1234");
-        $this->assertEquals("cheese", (string) $result->getBody());
+
+        $mf_array = \Mf2\parse((string) $result->getBody(), "http://localhost");
+        $this->assertContains($this->getValidPostArray(), $mf_array);
         $this->assertEquals(200, $result->getStatusCode());
     }
 }

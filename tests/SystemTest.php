@@ -21,6 +21,30 @@ class SystemTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    protected function getValidPostArray()
+    {
+        return array(
+            "items" => array(
+                array(
+                    "type" => ["h-entry"],
+                    "properties" => [
+                        "published" => ["2016-01-01T01:01:01"],
+                        "author" => [
+                            [
+                                "type" => ["h-card"],
+                                "properties" => [
+                                    "name" => ["jay"],
+                                    "url" => ["http://j4y.co"],
+                                    "photo" => [""]
+                                ]
+                            ]
+                        ]
+                    ]
+                )
+            )
+        );
+    }
+
     protected function insertValidPost()
     {
         $db_file = getenv("ROOT_DIR")."/aruna_db.sq3";
@@ -28,14 +52,7 @@ class SystemTest extends \PHPUnit_Framework_TestCase
         $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $db->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
-        $post = array(
-            "items" => array(
-                array(
-                    "type" => ["h-entry"]
-                )
-            )
-        );
-        $post = json_encode($post);
+        $post = json_encode($this->getValidPostArray());
 
         $q = "REPLACE INTO posts (id, published, type, post)
             VALUES
