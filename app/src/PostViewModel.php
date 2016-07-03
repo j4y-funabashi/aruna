@@ -82,6 +82,9 @@ class PostViewModel
         if (null !== ($this->get('bookmark-of'))) {
             return "bookmark";
         }
+        if (null !== ($this->get('in-reply-to'))) {
+            return "reply";
+        }
         return "note";
     }
 
