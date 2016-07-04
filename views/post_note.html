@@ -1,5 +1,7 @@
 <article class="h-entry">
 
+    {% include 'post_author.html' %}
+
     <div class="post-content">
         {% if post.get('in-reply-to') is not null %}
         <a class="u-in-reply-to" href="{{ post.get('in-reply-to') }}">{{ post.get('in-reply-to') }}</a>
@@ -13,5 +15,7 @@
     </div>
 
     {% include 'post_meta.html' %}
+
+    {{ comments|raw }}
 
 </article>

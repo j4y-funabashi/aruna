@@ -16,13 +16,51 @@ class RenderPost
     public function __invoke($post)
     {
         $category = $this->renderCategory($post->category());
+        $comments = $this->renderComments($post->comments());
         return $this->view->render(
             "post_".$post->type().".html",
             array(
                 "post" => $post,
-                "category" => $category
+                "category" => $category,
+                "comments" => $comments
             )
         );
+    }
+
+    private function renderComments($comments)
+    {
+        if (empty($comments)) {
+            return "";
+        }
+
+        $out = array();
+        foreach ($comments as $comment) {
+            $out[] = '<div class="u-comment h-cite">';
+
+            // author
+            $out[] = sprintf(
+                '<a class="u-author h-card" href="%s">%s</a>',
+                $comment['properties']['author'][0]['properties']['url'],
+                $comment['properties']['author'][0]['properties']['name']
+            );
+            // content
+            $out[] = sprintf(
+                '<p class="p-content p-name">%s</p>',
+                $comment['properties']['content'][0]['value']
+            );
+            $out[] = sprintf(
+                '<a class="u-url" href="%s">
+                    <time class="dt-published">%s</time>
+                </a>',
+                $comment['properties']['url'][0],
+                $comment['properties']['published'][0]
+            );
+
+
+            $out[] = '</div>';
+        }
+
+        return implode("", $out);
     }
 
     private function renderCategory($category)

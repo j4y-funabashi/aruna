@@ -28,6 +28,11 @@ class PostViewModel
         return json_encode($this->mf_array, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
 
+    public function getEntry()
+    {
+        return $this->entry;
+    }
+
     public function get($param)
     {
         if (isset($this->entry['properties'][$param][0])) {
@@ -56,6 +61,39 @@ class PostViewModel
     {
         $this->entry['properties']['category'] = $category;
         $this->mf_array["items"] = [$this->entry];
+    }
+
+    public function setComment($comment)
+    {
+        $comment = array(
+            "type" => "h-cite",
+            "properties" => [
+                "published" => [$comment->published()],
+                    "url" => [$comment->get("url")],
+                    "content" => array(
+                            [
+                                "value" => $comment->get("content")["value"],
+                                "html" => $comment->get("content")["html"]
+                            ]
+                        ),
+                        "author" => array(
+                            [
+                                "type" => ["h-card"],
+                                "properties" => $comment->author()
+                            ]
+                        )
+                    ]
+                );
+        $this->entry['properties']['comment'][] = $comment;
+        $this->mf_array["items"] = [$this->entry];
+    }
+
+    public function comments()
+    {
+        if (isset($this->entry['properties']['comment'])) {
+        return $this->entry['properties']['comment'];
+        }
+        return [];
     }
 
     public function author()

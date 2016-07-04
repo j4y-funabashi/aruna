@@ -13,12 +13,14 @@ class ProcessWebmentionsAction
         $log,
         $eventStore,
         $http,
-        $mentionsRepositoryWriter
+        $mentionsRepositoryWriter,
+        $postsRepositoryReader
     ) {
         $this->log = $log;
         $this->eventStore = $eventStore;
         $this->http = $http;
         $this->mentionsRepositoryWriter = $mentionsRepositoryWriter;
+        $this->postsRepositoryReader = $postsRepositoryReader;
     }
 
     public function __invoke()
@@ -40,7 +42,7 @@ class ProcessWebmentionsAction
             $this->eventStore->delete($mention_file['path']);
 
             $count += 1;
-            if ($count > 10) {
+            if ($count > 100) {
                 exit;
             }
         }
@@ -58,21 +60,53 @@ class ProcessWebmentionsAction
         $file_path = "processed_webmentions/".$mention['id'].".html";
         $this->eventStore->save($file_path, $mention_html);
 
+        $post_id = basename($mention['target']);
         // cache to db
         $this->mentionsRepositoryWriter->save(
             $mention['id'],
-            basename($mention['target']),
+            $post_id,
             $mention_view_model
         );
 
-        // notify
-        $m = sprintf(
-            '%s %s %s: %s',
+        $post_view_model = $this->postsRepositoryReader->findById($post_id);
+
+        if (isset($post_view_model[0])) {
+            // notify
+            $m = $this->buildNotifyMessage(
+                $post_view_model[0],
+                $mention_view_model,
+                $mention
+            );
+        } else {
+            $m = "HOMEPAGE MENTION";
+        }
+        $this->log->notice($m);
+    }
+
+    private function buildNotifyMessage(
+        $post_view_model,
+        $mention_view_model,
+        $mention
+    ) {
+        switch ($mention_view_model->type()) {
+            case 'reply':
+                $action = "commented on your";
+                break;
+            case 'like':
+                $action = "liked your";
+                break;
+            default:
+                $action = "linked to your";
+                break;
+        }
+        return sprintf(
+            '%s %s %s %s [%s][%s]',
             $mention_view_model->author()['name'],
-            $mention_view_model->type(),
-            $mention['target'],
+            $action,
+            $post_view_model->type(),
+            $post_view_model->get("content")["value"],
+            $post_view_model->get("url"),
             $mention_view_model->get("url")
         );
-        $this->log->notice($m);
     }
 }

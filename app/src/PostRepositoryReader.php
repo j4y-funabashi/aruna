@@ -61,8 +61,35 @@ class PostRepositoryReader
         $r = $this->db->prepare($q);
         $r->execute([":id" => $post_id]);
         $post = $r->fetch();
-        $out[] = new \Aruna\PostViewModel(json_decode($post['post'], true));
+        if ($post === false) {
+            return array();
+        }
+        $post = new \Aruna\PostViewModel(json_decode($post['post'], true));
+        foreach ($this->findMentionsByPostId($post_id) as $mention) {
+            if ($mention->type() == "reply") {
+                $post->setComment($mention);
+            }
+        }
+        $out = array($post);
 
+        return $out;
+    }
+
+    private function findMentionsByPostId($post_id)
+    {
+        $out = [];
+        // current
+        $q = "SELECT
+            *
+            FROM mentions
+            WHERE post_id = :id
+            ORDER BY published ASC";
+        $r = $this->db->prepare($q);
+        $r->execute([":id" => $post_id]);
+        while ($mention = $r->fetch()) {
+            $mention = new \Aruna\PostViewModel(json_decode($mention['mention'], true));
+            $out[] = $mention;
+        }
         return $out;
     }
 

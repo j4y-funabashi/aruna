@@ -95,7 +95,8 @@ $app['action.process_webmentions'] = $app->share(function () use ($app) {
         $app['monolog'],
         $app['event_store'],
         $app['http_client'],
-        $app['mentions_repository_writer']
+        $app['mentions_repository_writer'],
+        $app['posts_repository_reader']
     );
 });
 
