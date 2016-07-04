@@ -63,6 +63,25 @@ class PostViewModel
         $this->mf_array["items"] = [$this->entry];
     }
 
+    public function setLike($like)
+    {
+        $like = array(
+            "type" => "h-cite",
+            "properties" => [
+                "published" => [$like->published()],
+                    "url" => [$like->get("url")],
+                        "author" => array(
+                            [
+                                "type" => ["h-card"],
+                                "properties" => $like->author()
+                            ]
+                        )
+                    ]
+                );
+        $this->entry['properties']['like'][] = $like;
+        $this->mf_array["items"] = [$this->entry];
+    }
+
     public function setComment($comment)
     {
         $comment = array(
@@ -92,6 +111,14 @@ class PostViewModel
     {
         if (isset($this->entry['properties']['comment'])) {
         return $this->entry['properties']['comment'];
+        }
+        return [];
+    }
+
+    public function likes()
+    {
+        if (isset($this->entry['properties']['like'])) {
+        return $this->entry['properties']['like'];
         }
         return [];
     }

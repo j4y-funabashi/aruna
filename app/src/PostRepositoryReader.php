@@ -70,6 +70,11 @@ class PostRepositoryReader
                 $post->setComment($mention);
             }
         }
+        foreach ($this->findMentionsByPostId($post_id) as $mention) {
+            if ($mention->type() == "like") {
+                $post->setLike($mention);
+            }
+        }
         $out = array($post);
 
         return $out;
