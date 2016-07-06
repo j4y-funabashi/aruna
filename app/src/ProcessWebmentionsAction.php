@@ -14,13 +14,15 @@ class ProcessWebmentionsAction
         $eventStore,
         $http,
         $mentionsRepositoryWriter,
-        $postsRepositoryReader
+        $postsRepositoryReader,
+        $mentionNotification
     ) {
         $this->log = $log;
         $this->eventStore = $eventStore;
         $this->http = $http;
         $this->mentionsRepositoryWriter = $mentionsRepositoryWriter;
         $this->postsRepositoryReader = $postsRepositoryReader;
+        $this->mentionNotification = $mentionNotification;
     }
 
     public function __invoke()
@@ -68,7 +70,7 @@ class ProcessWebmentionsAction
 
         $post_view_model = $this->postsRepositoryReader->findById($post_id);
         // notify
-        $m = $this->buildNotifyMessage(
+        $m = $this->mentionNotification->build(
             $post_view_model[0],
             $mention_view_model
         );
@@ -95,32 +97,6 @@ class ProcessWebmentionsAction
             $mention['id'],
             $post_id,
             $mention_view_model
-        );
-    }
-
-    private function buildNotifyMessage(
-        $post_view_model,
-        $mention_view_model
-    ) {
-        switch ($mention_view_model->type()) {
-            case 'reply':
-                $action = "commented on your";
-                break;
-            case 'like':
-                $action = "liked your";
-                break;
-            default:
-                $action = "linked to your";
-                break;
-        }
-        return sprintf(
-            '%s %s %s %s [%s][%s]',
-            $mention_view_model->author()['name'],
-            $action,
-            $post_view_model->type(),
-            $post_view_model->get("content")["value"],
-            $post_view_model->get("url"),
-            $mention_view_model->get("url")
         );
     }
 }

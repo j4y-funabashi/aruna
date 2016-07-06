@@ -96,7 +96,8 @@ $app['action.process_webmentions'] = $app->share(function () use ($app) {
         $app['event_store'],
         $app['http_client'],
         $app['mentions_repository_writer'],
-        $app['posts_repository_reader']
+        $app['posts_repository_reader'],
+        new Aruna\WebmentionNotification()
     );
 });
 
