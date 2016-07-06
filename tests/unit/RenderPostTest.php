@@ -76,6 +76,11 @@ class RenderPostTest extends UnitTest
 
         $expected = '<article class="h-entry">
 
+    <div class="p-author h-card post-author">
+    <img class="author-photo u-photo" src="/profile_pic.jpeg">
+    <a class="author-name" href="http://j4y.co" class="p-name">Jay Robinson</a>
+</div>
+
     <img class="u-photo post-photo" alt="jpg photo" src="2016/20160525153645_5745b87d52719.jpg" />
 
         <div class="e-content post-content">
@@ -90,14 +95,12 @@ class RenderPostTest extends UnitTest
         <time class="dt-published" datetime="2016-04-09T14:51:28+01:00">2016-04-09T14:51:28+01:00</time>
     </a>
 
-    <div class="p-author h-card post-author">
-    <img class="author-photo u-photo" src="/profile_pic.jpeg">
-    <a class="author-name" href="http://j4y.co" class="p-name">Jay Robinson</a>
-</div>
-
     <a href="https://brid.gy/publish/facebook"></a>
 
 </div>
+
+
+
 
 </article>
 ';
@@ -189,6 +192,11 @@ class RenderPostTest extends UnitTest
 
         $expected = '<article class="h-entry">
 
+    <div class="p-author h-card post-author">
+    <img class="author-photo u-photo" src="/profile_pic.jpeg">
+    <a class="author-name" href="http://j4y.co" class="p-name">Jay Robinson</a>
+</div>
+
     <img class="u-photo post-photo" alt="jpg photo" src="2016/20160525153645_5745b87d52719.jpg" />
 
         <div class="e-content post-content">
@@ -203,14 +211,12 @@ class RenderPostTest extends UnitTest
         <time class="dt-published" datetime="2016-04-09T14:51:28+01:00">2016-04-09T14:51:28+01:00</time>
     </a>
 
-    <div class="p-author h-card post-author">
-    <img class="author-photo u-photo" src="/profile_pic.jpeg">
-    <a class="author-name" href="http://j4y.co" class="p-name">Jay Robinson</a>
-</div>
-
     <a href="https://brid.gy/publish/facebook"></a>
 
 </div>
+
+
+
 
 </article>
 ';

@@ -70,8 +70,7 @@ class ProcessWebmentionsAction
         // notify
         $m = $this->buildNotifyMessage(
             $post_view_model[0],
-            $mention_view_model,
-            $mention
+            $mention_view_model
         );
         $this->log->notice($m);
     }
@@ -101,8 +100,7 @@ class ProcessWebmentionsAction
 
     private function buildNotifyMessage(
         $post_view_model,
-        $mention_view_model,
-        $mention
+        $mention_view_model
     ) {
         switch ($mention_view_model->type()) {
             case 'reply':
