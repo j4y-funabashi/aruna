@@ -21,4 +21,18 @@ class WebmentionNotificationTest extends UnitTest
         $expected = 'Joe Bloggs liked your photo "Go Ape, Newcastle" [http://j4y.co/p/20160525153645_5745b87d52719][http://j4y.co/p/20160525153645_5745b87d52mmds]';
         $this->assertEquals($expected, $result);
     }
+
+    /**
+     * @test
+     */
+    public function it_prints_message_for_replies()
+    {
+        $SUT = new WebmentionNotification();
+        $mention = new PostViewModel(json_decode($this->loadJsonFixture("post_reply"), true));
+        $post = new PostViewModel(json_decode($this->loadJsonFixture("post_photo"), true));
+
+        $result = $SUT->build($post, $mention);
+        $expected = 'Joe Bloggs commented on your photo "Go Ape, Newcastle" [http://j4y.co/p/20160525153645_5745b87d52719][http://j4y.co/p/20160525153645_5745b87d52mmds]';
+        $this->assertEquals($expected, $result);
+    }
 }
