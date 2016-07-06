@@ -42,7 +42,7 @@ class ProcessWebmentionsAction
             $this->eventStore->delete($mention_file['path']);
 
             $count += 1;
-            if ($count > 100) {
+            if ($count > 1) {
                 exit;
             }
         }
@@ -53,34 +53,50 @@ class ProcessWebmentionsAction
         // verify
         $mention = (new VerifyWebmentionRequest())->__invoke($mention);
         $mention_html = (new VerifyWebmention($this->log, $this->http))->__invoke($mention);
-        $mention_view_model = new \Aruna\PostViewModel(\Mf2\parse($mention_html));
 
-        // save html
-        $mention['id'] = md5($mention['source'].$mention['target']);
-        $file_path = "processed_webmentions/".$mention['id'].".html";
-        $this->eventStore->save($file_path, $mention_html);
+        $source_parts = parse_url($mention['source']);
+        $source_base = $source_parts['scheme']."://".$source_parts['host'];
+        $mention_view_model = new \Aruna\PostViewModel(\Mf2\parse($mention_html, $source_base));
 
         $post_id = basename($mention['target']);
+        $this->saveData(
+            $mention,
+            $mention_html,
+            $mention_view_model,
+            $post_id
+        );
+
+        $post_view_model = $this->postsRepositoryReader->findById($post_id);
+        // notify
+        $m = $this->buildNotifyMessage(
+            $post_view_model[0],
+            $mention_view_model,
+            $mention
+        );
+        $this->log->notice($m);
+    }
+
+    private function saveData(
+        $mention,
+        $mention_html,
+        $mention_view_model,
+        $post_id
+    ) {
+        // save html
+        $mention['id'] = md5($mention['source'].$mention['target']);
+        $file_path = sprintf(
+            "processed_webmentions/%s_%s_%s.html",
+            $mention['id'],
+            urlencode($mention['source']),
+            urlencode($mention['target'])
+        );
+        $this->eventStore->save($file_path, $mention_html);
         // cache to db
         $this->mentionsRepositoryWriter->save(
             $mention['id'],
             $post_id,
             $mention_view_model
         );
-
-        $post_view_model = $this->postsRepositoryReader->findById($post_id);
-
-        if (isset($post_view_model[0])) {
-            // notify
-            $m = $this->buildNotifyMessage(
-                $post_view_model[0],
-                $mention_view_model,
-                $mention
-            );
-        } else {
-            $m = "HOMEPAGE MENTION";
-        }
-        $this->log->notice($m);
     }
 
     private function buildNotifyMessage(

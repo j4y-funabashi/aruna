@@ -110,7 +110,7 @@ class PostViewModel
     public function comments()
     {
         if (isset($this->entry['properties']['comment'])) {
-        return $this->entry['properties']['comment'];
+            return $this->entry['properties']['comment'];
         }
         return [];
     }
@@ -118,7 +118,7 @@ class PostViewModel
     public function likes()
     {
         if (isset($this->entry['properties']['like'])) {
-        return $this->entry['properties']['like'];
+            return $this->entry['properties']['like'];
         }
         return [];
     }
