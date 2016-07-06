@@ -94,6 +94,13 @@ $app['action.process_webmentions'] = $app->share(function () use ($app) {
     return new Aruna\ProcessWebmentionsAction(
         $app['monolog'],
         $app['event_store'],
+        $app['handler.process_webmentions']
+    );
+});
+$app['handler.process_webmentions'] = $app->share(function () use ($app) {
+    return new Aruna\ProcessWebmentionsHandler(
+        $app['monolog'],
+        $app['event_store'],
         $app['http_client'],
         $app['mentions_repository_writer'],
         $app['posts_repository_reader'],
