@@ -24,6 +24,7 @@ class ProcessWebmentionsAction
         $count = 0;
         foreach ($this->eventStore->findByExtension('webmentions', 'json') as $mention_file) {
             $this->handleMention($mention_file);
+            $this->eventStore->delete($mention_file['path']);
             $count += 1;
             if ($count > 1) {
                 exit;
@@ -33,7 +34,10 @@ class ProcessWebmentionsAction
 
     private function handleMention($mention_file)
     {
-        $mention = json_decode($this->eventStore->readContents($mention_file['path']), true);
+        $mention = json_decode(
+            $this->eventStore->readContents($mention_file['path']),
+            true
+        );
         try {
             $this->handler->handle($mention_file, $mention);
         } catch (\Exception $e) {
@@ -42,6 +46,5 @@ class ProcessWebmentionsAction
                 $mention
             );
         }
-        $this->eventStore->delete($mention_file['path']);
     }
 }
