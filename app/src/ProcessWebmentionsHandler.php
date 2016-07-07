@@ -22,23 +22,18 @@ class ProcessWebmentionsHandler
 
     public function handle($mention_file, $mention)
     {
-        // verify
-        $mention = (new VerifyWebmentionRequest())->__invoke($mention);
-        $mention_html = (new VerifyWebmention($this->log, $this->http))->__invoke($mention);
-
-        $source_parts = parse_url($mention['source']);
-        $source_base = $source_parts['scheme']."://".$source_parts['host'];
-        $mention_view_model = new \Aruna\PostViewModel(\Mf2\parse($mention_html, $source_base));
-
+        $mention = $this->validate($mention);
+        $mention_view_model = $this->getViewModel($mention);
         $post_id = basename($mention['target']);
+
         $this->saveData(
             $mention,
-            $mention_html,
             $mention_view_model,
             $post_id
         );
 
         $post_view_model = $this->postsRepositoryReader->findById($post_id);
+
         // notify
         $m = $this->mentionNotification->build(
             $post_view_model[0],
@@ -47,14 +42,34 @@ class ProcessWebmentionsHandler
         $this->log->notice($m);
     }
 
+    private function getViewModel($mention)
+    {
+        $source_base = $this->getBaseUrl($mention['source']);
+        return new \Aruna\PostViewModel(
+            \Mf2\parse($mention['html'], $source_base)
+        );
+    }
+
+    private function validate($mention)
+    {
+        $mention = (new VerifyWebmentionRequest())->__invoke($mention);
+        $mention['html'] = (new VerifyWebmention($this->log, $this->http))->__invoke($mention);
+        return $mention;
+    }
+
+    private function getBaseUrl($url)
+    {
+        $source_parts = parse_url($url);
+        return $source_parts['scheme']."://".$source_parts['host'];
+    }
+
     private function saveData(
         $mention,
-        $mention_html,
         $mention_view_model,
         $post_id
     ) {
         $mention_id = md5($mention['source'].$mention['target']);
-        $this->saveHtml($mention, $mention_html, $mention_id);
+        $this->saveHtml($mention, $mention['html'], $mention_id);
         $this->mentionsRepositoryWriter->save(
             $mention_id,
             $post_id,

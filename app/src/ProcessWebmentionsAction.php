@@ -22,7 +22,8 @@ class ProcessWebmentionsAction
     public function __invoke()
     {
         $count = 0;
-        foreach ($this->eventStore->findByExtension('webmentions', 'json') as $mention_file) {
+        $mention_files = $this->eventStore->findByExtension('webmentions', 'json');
+        foreach ($mention_files as $mention_file) {
             $this->handleMention($mention_file);
             $this->eventStore->delete($mention_file['path']);
             $count += 1;
