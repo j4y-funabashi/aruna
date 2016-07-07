@@ -35,27 +35,19 @@ class RenderPost
             return "";
         }
 
-        $out = array();
+        $out = array('<div class="post-replies">');
         foreach ($comments as $comment) {
-            $out[] = '<div class="p-like h-cite">';
+            $out[] = '<span class="p-like h-cite">';
 
             // author
             $out[] = sprintf(
-                '<a class="u-author h-card" href="%s">%s liked this</a>',
+                '<a class="u-author h-card" href="%s"><img src="%s" /></a>',
                 $comment['properties']['author'][0]['properties']['url'],
-                $comment['properties']['author'][0]['properties']['name']
+                $comment['properties']['author'][0]['properties']['photo']
             );
-            $out[] = sprintf(
-                '<a class="u-url" href="%s">
-                    <time class="dt-published">%s</time>
-                </a>',
-                $comment['properties']['url'][0],
-                $comment['properties']['published'][0]
-            );
-
-
-            $out[] = '</div>';
+            $out[] = '</span>';
         }
+        $out[] = '</div>';
 
         return implode("", $out);
     }
@@ -66,19 +58,19 @@ class RenderPost
             return "";
         }
 
-        $out = array();
+        $out = array('<div class="post-replies">');
         foreach ($comments as $comment) {
             $out[] = '<div class="u-comment h-cite">';
 
             // author
             $out[] = sprintf(
-                '<a class="u-author h-card" href="%s">%s</a>',
+                '<a class="u-author h-card" href="%s"><img src="%s" /></a>',
                 $comment['properties']['author'][0]['properties']['url'],
-                $comment['properties']['author'][0]['properties']['name']
+                $comment['properties']['author'][0]['properties']['photo']
             );
             // content
             $out[] = sprintf(
-                '<p class="p-content p-name">%s</p>',
+                '<span class="p-content p-name">%s</span>',
                 $comment['properties']['content'][0]['value']
             );
             $out[] = sprintf(
@@ -92,6 +84,7 @@ class RenderPost
 
             $out[] = '</div>';
         }
+        $out[] = '</div>';
 
         return implode("", $out);
     }
