@@ -35,13 +35,13 @@ class RenderPost
             return "";
         }
 
-        $out = array('<div class="post-replies">');
+        $out = array('<div class="post-meta">');
         foreach ($comments as $comment) {
             $out[] = '<span class="p-like h-cite">';
 
             // author
             $out[] = sprintf(
-                '<a class="u-author h-card" href="%s"><img src="%s" /></a>',
+                '<a class="u-author h-card" href="%s"><img src="%s" class="author-photo" /></a>',
                 $comment['properties']['author'][0]['properties']['url'],
                 $comment['properties']['author'][0]['properties']['photo']
             );
@@ -58,13 +58,14 @@ class RenderPost
             return "";
         }
 
-        $out = array('<div class="post-replies">');
+        $out = array('<div class="post-meta">');
         foreach ($comments as $comment) {
             $out[] = '<div class="u-comment h-cite">';
 
+            $out[] = '<div class="post-comment">';
             // author
             $out[] = sprintf(
-                '<a class="u-author h-card" href="%s"><img src="%s" /></a>',
+                '<a class="u-author h-card" href="%s"><img src="%s" class="author-photo" /></a>',
                 $comment['properties']['author'][0]['properties']['url'],
                 $comment['properties']['author'][0]['properties']['photo']
             );
@@ -80,6 +81,7 @@ class RenderPost
                 $comment['properties']['url'][0],
                 $comment['properties']['published'][0]
             );
+            $out[] = "</div>";
 
 
             $out[] = '</div>';

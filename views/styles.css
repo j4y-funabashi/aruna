@@ -71,15 +71,15 @@ article img {
     color: #585858;
     font-size: 11px;
 }
-.post-content, .post-meta, .post-author, .post-replies {
+.post-content, .post-meta, .post-author {
     padding: 8px;
 }
 
-.post-replies {
-    border-top: 1px solid #e8e8e8;
+.post-comment {
+    margin-bottom: 4px;
 }
-.post-replies img {
-    width: 32px;
+.post-comment img {
+    margin-right: 4px;
 }
 
 .author-photo {
