@@ -27,7 +27,7 @@ class ProcessWebmentionsAction
             $this->handleMention($mention_file);
             $this->eventStore->delete($mention_file['path']);
             $count += 1;
-            if ($count > 1) {
+            if ($count > 10) {
                 exit;
             }
         }
