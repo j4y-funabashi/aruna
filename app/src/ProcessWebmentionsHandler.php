@@ -81,12 +81,34 @@ class ProcessWebmentionsHandler
         $mention_html,
         $mention_id
     ) {
-        $file_path = sprintf(
-            "processed_webmentions/%s_%s_%s.html",
-            $mention_id,
-            urlencode($mention['source']),
-            urlencode($mention['target'])
+        $file_path = sprintf("processed_webmentions/%s.html", $mention_id);
+
+        $dom = $this->loadDOM($mention_html);
+        $head = $dom->getElementsByTagName('head')->item(0);
+        $head->appendChild(
+            $this->createLink($dom, "webmention-source", $mention['source'])
         );
-        $this->eventStore->save($file_path, $mention_html);
+        $head->appendChild(
+            $this->createLink($dom, "webmention-target", $mention['target'])
+        );
+
+        $this->eventStore->save($file_path, $dom->saveHtml());
+    }
+    private function createLink($dom, $rel, $href)
+    {
+        $link = $dom->createElement('link');
+        $link->setAttribute("rel", $rel);
+        $link->setAttribute("href", $href);
+        return $link;
+    }
+    private function loadDOM($html)
+    {
+        libxml_use_internal_errors(true);
+        $dom = new \DOMDocument();
+        try {
+            $dom->loadHTML($html);
+        } catch (\Exception $e) {
+        }
+        return $dom;
     }
 }
