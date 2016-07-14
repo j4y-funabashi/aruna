@@ -36,7 +36,7 @@ class EventStore
 
     public function readContents($file_path)
     {
-        return json_decode($this->filesystem->read($file_path), true);
+        return $this->filesystem->read($file_path);
     }
 
     public function readById($post_id)
@@ -94,5 +94,10 @@ class EventStore
         }
         ksort($out);
         return $out;
+    }
+
+    public function delete($file_path)
+    {
+        $this->filesystem->delete($file_path);
     }
 }

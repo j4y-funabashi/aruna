@@ -58,6 +58,37 @@ article * {
 article {
     background-color: #f8f8f8;
     max-width: 640px;
+    margin: auto;
+}
+
+footer {
+    margin-top: 5px;
+    padding: 10px;
+}
+
+p {
+    margin: 2px;
+}
+
+blockquote {
+    margin: 0 10px 0 10px;
+}
+
+a {
+    text-decoration: none;
+    color: #ab4642;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+article * {
+    word-wrap: break-word;
+}
+article {
+    background-color: #f8f8f8;
+    max-width: 640px;
+    margin-bottom: 8px;
     margin-bottom: 8px;
 }
 article img {
@@ -71,11 +102,15 @@ article img {
     color: #585858;
     font-size: 11px;
 }
-.post-content, .post-meta {
+.post-content, .post-meta, .post-author {
     padding: 8px;
 }
-.post-author {
-    padding-top: 4px;
+
+.post-comment {
+    margin-bottom: 4px;
+}
+.post-comment img {
+    margin-right: 4px;
 }
 
 .author-photo {

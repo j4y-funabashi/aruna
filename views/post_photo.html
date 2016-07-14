@@ -1,5 +1,7 @@
 <article class="h-entry">
 
+    {% include 'post_author.html' %}
+
     <img class="u-photo post-photo" alt="jpg photo" src="{{ post.get('photo') }}" />
 
     {% if post.get('content')['html'] is defined %}
@@ -9,5 +11,8 @@
     {% endif %}
 
     {% include 'post_meta.html' %}
+
+{{ likes|raw }}
+{{ comments|raw }}
 
 </article>

@@ -1,5 +1,7 @@
 <article class="h-entry">
 
+    {% include 'post_author.html' %}
+
     <div class="post-content">
     likes <a class="u-like-of" href="{{ post.get('like-of') }}">{{ post.get('like-of') }}</a>
     </div>

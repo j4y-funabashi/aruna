@@ -3,9 +3,7 @@
     {% include 'post_author.html' %}
 
     <div class="post-content">
-        {% if post.get('in-reply-to') is not null %}
         <a class="u-in-reply-to" href="{{ post.get('in-reply-to') }}">{{ post.get('in-reply-to') }}</a>
-        {% endif %}
 
         {% if post.get('content')['html'] is defined %}
         <div class="e-content">

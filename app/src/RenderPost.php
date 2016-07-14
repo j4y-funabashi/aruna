@@ -16,13 +16,79 @@ class RenderPost
     public function __invoke($post)
     {
         $category = $this->renderCategory($post->category());
+        $comments = $this->renderComments($post->comments());
+        $likes = $this->renderLikes($post->likes());
         return $this->view->render(
             "post_".$post->type().".html",
             array(
                 "post" => $post,
-                "category" => $category
+                "category" => $category,
+                "comments" => $comments,
+                "likes" => $likes
             )
         );
+    }
+
+    private function renderLikes($comments)
+    {
+        if (empty($comments)) {
+            return "";
+        }
+
+        $out = array('<div class="post-meta">');
+        foreach ($comments as $comment) {
+            $out[] = '<span class="p-like h-cite">';
+
+            // author
+            $out[] = sprintf(
+                '<a class="u-author h-card" href="%s"><img src="%s" class="author-photo" /></a>',
+                $comment['properties']['author'][0]['properties']['url'],
+                $comment['properties']['author'][0]['properties']['photo']
+            );
+            $out[] = '</span>';
+        }
+        $out[] = '</div>';
+
+        return implode("", $out);
+    }
+
+    private function renderComments($comments)
+    {
+        if (empty($comments)) {
+            return "";
+        }
+
+        $out = array('<div class="post-meta">');
+        foreach ($comments as $comment) {
+            $out[] = '<div class="u-comment h-cite">';
+
+            $out[] = '<div class="post-comment">';
+            // author
+            $out[] = sprintf(
+                '<a class="u-author h-card" href="%s"><img src="%s" class="author-photo" /></a>',
+                $comment['properties']['author'][0]['properties']['url'],
+                $comment['properties']['author'][0]['properties']['photo']
+            );
+            // content
+            $out[] = sprintf(
+                '<span class="p-content p-name">%s</span>',
+                $comment['properties']['content'][0]['value']
+            );
+            $out[] = sprintf(
+                '<a class="u-url" href="%s">
+                    <time class="dt-published">%s</time>
+                </a>',
+                $comment['properties']['url'][0],
+                $comment['properties']['published'][0]
+            );
+            $out[] = "</div>";
+
+
+            $out[] = '</div>';
+        }
+        $out[] = '</div>';
+
+        return implode("", $out);
     }
 
     private function renderCategory($category)

@@ -24,6 +24,11 @@ $app['http_client'] = $app->share(function () {
         )
     );
 });
+$app['mentions_repository_writer'] = $app->share(function () use ($app) {
+    return new Aruna\MentionsRepositoryWriter(
+        $app['db_cache']
+    );
+});
 
 $app['image_resizer'] = $app->share(function () use ($app) {
     return new Aruna\Action\ImageResizer(
@@ -85,7 +90,26 @@ $app['action.resize_photos'] = $app->share(function () use ($app) {
     );
 });
 
+$app['action.process_webmentions'] = $app->share(function () use ($app) {
+    return new Aruna\ProcessWebmentionsAction(
+        $app['monolog'],
+        $app['event_store'],
+        $app['handler.process_webmentions']
+    );
+});
+$app['handler.process_webmentions'] = $app->share(function () use ($app) {
+    return new Aruna\ProcessWebmentionsHandler(
+        $app['monolog'],
+        $app['event_store'],
+        $app['http_client'],
+        $app['mentions_repository_writer'],
+        $app['posts_repository_reader'],
+        new Aruna\WebmentionNotification()
+    );
+});
+
 $app->command(new CLI\ProcessCacheCommand());
 $app->command(new CLI\ResizePhotoCommand());
+$app->command(new CLI\ProcessWebmentionsCommand());
 
 $app->run();
