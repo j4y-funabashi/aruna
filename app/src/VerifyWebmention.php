@@ -26,7 +26,7 @@ class VerifyWebmention
 
     private function fetchMentionHtml($url)
     {
-        $this->log->info(sprintf("Fetching HTML from %s", $url));
+        $this->log->debug(sprintf("Fetching HTML from %s", $url));
         $result = $this->http->request("GET", $url);
         return (string) $result->getBody();
     }

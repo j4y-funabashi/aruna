@@ -24,6 +24,17 @@ class ProcessWebmentionsHandler
     {
         $mention = $this->validate($mention);
         $mention_view_model = $this->getViewModel($mention);
+
+        // homepage mention?
+        $target_bits = parse_url($mention['target']);
+        if (
+            $target_bits['host'] == 'j4y.co'
+            && (!isset($target_bits['path']) || $target_bits['path'] == '/')
+        ) {
+            $this->log->notice("HOMEPAGE MENTION", ["source" => $mention['source'], "target" => $mention['target']]);
+            return;
+        }
+
         $post_id = basename($mention['target']);
 
         $this->saveData(
