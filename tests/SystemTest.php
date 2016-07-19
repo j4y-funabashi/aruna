@@ -19,6 +19,7 @@ class SystemTest extends \PHPUnit_Framework_TestCase
                 "http_errors" => false
             )
         );
+        $this->app = \Aruna\Application::build();
     }
 
     protected function getValidPostArray()
