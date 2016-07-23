@@ -2,7 +2,7 @@
 
 namespace Aruna;
 
-class Application
+class App
 {
 
     public static function build()

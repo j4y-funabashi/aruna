@@ -1,3 +1,3 @@
 <?php
 
-return \Aruna\Application::build();
+return \Aruna\App::build();
