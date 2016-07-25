@@ -161,6 +161,25 @@ class App
             );
         });
 
+
+        $app['action.receive_webmention'] = $app->share(function () use ($app) {
+            $adapter = new \League\Flysystem\Adapter\Local($app['webmentions_root']);
+            $filesystem = new \League\Flysystem\Filesystem($adapter);
+            $eventWriter = new EventWriter($filesystem);
+
+            return new ReceiveWebmentionAction(
+                new ReceiveWebmentionResponder(
+                    $app['response'],
+                    $app['twig'],
+                    new RenderPost($app['twig'])
+                ),
+                new ReceiveWebmentionHandler(
+                    new VerifyWebmentionRequest(),
+                    $eventWriter
+                )
+            );
+        });
+
         // ROUTES
         $app->get("/", 'action.show.photos:__invoke')
             ->bind('root');
@@ -180,9 +199,7 @@ class App
         $app->post('/micropub', 'action.create_post:__invoke');
         $app->get('/micropub', 'action.show_micropub_form:__invoke');
 
-        $app->post('/webmention', 'webmention.controller:createMention');
-        $app->get('/webmention/{mention_id}', 'webmention.controller:view')
-            ->bind("webmention");
+        $app->post('/webmention', 'action.receive_webmention:__invoke');
 
         $app->get("/{year}/{month}/{day}", 'action.show_date_feed:__invoke')
             ->value('month', '*')
