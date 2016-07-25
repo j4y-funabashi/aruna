@@ -161,6 +161,33 @@ class App
             );
         });
 
+        $app['event_store'] = $app->share(function () use ($app) {
+            $adapter = new \League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
+            $filesystem = new \League\Flysystem\Filesystem($adapter);
+            return new EventStore($filesystem);
+        });
+        $app['action.process_webmentions'] = $app->share(function () use ($app) {
+            return new ProcessWebmentionsAction(
+                $app['monolog'],
+                $app['event_store'],
+                $app['handler.process_webmentions']
+            );
+        });
+        $app['handler.process_webmentions'] = $app->share(function () use ($app) {
+            return new ProcessWebmentionsHandler(
+                $app['monolog'],
+                $app['event_store'],
+                $app['http_client'],
+                $app['mentions_repository_writer'],
+                $app['posts_repository_reader'],
+                new WebmentionNotification()
+            );
+        });
+        $app['mentions_repository_writer'] = $app->share(function () use ($app) {
+            return new MentionsRepositoryWriter(
+                $app['db_cache']
+            );
+        });
 
         $app['action.receive_webmention'] = $app->share(function () use ($app) {
             $adapter = new \League\Flysystem\Adapter\Local($app['webmentions_root']);
