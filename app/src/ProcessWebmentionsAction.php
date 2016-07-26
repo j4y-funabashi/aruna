@@ -22,15 +22,22 @@ class ProcessWebmentionsAction
     public function __invoke()
     {
         $count = 0;
-        $mention_files = $this->eventStore->findByExtension('webmentions', 'json');
+        $limit = 10;
+
+        $mention_files = array_slice(
+            $this->eventStore->findByExtension('webmentions', 'json'),
+            0,
+            $limit
+        );
         foreach ($mention_files as $mention_file) {
             $this->handleMention($mention_file);
             $this->eventStore->delete($mention_file['path']);
             $count += 1;
-            if ($count > 10) {
-                exit;
-            }
         }
+
+        return array(
+            "count" => $count
+        );
     }
 
     private function handleMention($mention_file)
