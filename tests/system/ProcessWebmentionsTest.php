@@ -11,6 +11,8 @@ class ProcessWebmentionsTest extends SystemTest
     public function it_awesome()
     {
         $this->SUT = $this->app['action.process_webmentions'];
-        $this->SUT->__invoke();
+        $expected = 0;
+        $result = $this->SUT->__invoke();
+        $this->assertEquals($expected, $result['count']);
     }
 }
