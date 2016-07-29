@@ -78,8 +78,11 @@ class EventStore
         );
     }
 
-    public function findByExtension($root_dir = 'posts', $extension = "html")
-    {
+    public function findByExtension(
+        $root_dir = 'posts',
+        $extension = "html",
+        $limit = 0
+    ) {
         $files = array_values(
             array_filter(
                 $this->filesystem->listContents($root_dir, true),
@@ -93,6 +96,13 @@ class EventStore
             $out[$file['path']] = $file;
         }
         ksort($out);
+        if ($limit > 0) {
+            $out = array_slice(
+                $out,
+                0,
+                $limit
+            );
+        }
         return $out;
     }
 
