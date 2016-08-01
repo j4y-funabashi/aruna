@@ -73,13 +73,6 @@ class App
             return new \Symfony\Component\HttpFoundation\Response();
         });
 
-        $app['action.show_micropub_form'] = $app->share(function () use ($app) {
-            return new ShowMicropubFormAction(
-                new ShowMicropubFormResponder($app['response'], $app['twig']),
-                new ShowMicropubFormHandler($app['session'])
-            );
-        });
-
         $app['webmention.controller'] = $app->share(function () use ($app) {
             $adapter = new \League\Flysystem\Adapter\Local($app['webmentions_root']);
             $filesystem = new \League\Flysystem\Filesystem($adapter);
@@ -225,7 +218,6 @@ class App
             ->bind('auth');
 
         $app->post('/micropub', 'action.create_post:__invoke');
-        $app->get('/micropub', 'action.show_micropub_form:__invoke');
 
         $app->post('/webmention', 'action.receive_webmention:__invoke');
 
