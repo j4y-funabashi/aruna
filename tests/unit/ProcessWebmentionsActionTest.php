@@ -35,7 +35,7 @@ class ProcessWebmentionsActionTest extends UnitTest
      */
     public function it_passes_files_to_handler()
     {
-        $this->handler->handle($this->files[0], json_decode('{"test":"123"}', true))
+        $this->handler->handle($this->files[0])
             ->shouldBeCalled();
         $this->SUT->__invoke();
     }
@@ -55,7 +55,7 @@ class ProcessWebmentionsActionTest extends UnitTest
      */
     public function it_logs_handler_exceptions()
     {
-        $this->handler->handle($this->files[0], json_decode('{"test":"123"}', true))
+        $this->handler->handle($this->files[0])
             ->willThrow(new \Exception());
         $this->log->error(Argument::cetera())
             ->shouldBeCalled();
