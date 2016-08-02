@@ -10,8 +10,9 @@ class ProcessWebmentionsTest extends SystemTest
      */
     public function it_awesome()
     {
+        $this->addWebmention();
         $this->SUT = $this->app['action.process_webmentions'];
-        $expected = 0;
+        $expected = 1;
         $result = $this->SUT->__invoke();
         $this->assertEquals($expected, $result['count']);
     }

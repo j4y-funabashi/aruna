@@ -22,6 +22,15 @@ class SystemTest extends \PHPUnit_Framework_TestCase
         $this->app = \Aruna\App::build();
     }
 
+    protected function addWebmention()
+    {
+        $out_dir = "/media/jayr/aruna/webmentions";
+        $mention_file = "/srv/aruna/tests/fixtures/webmention.json";
+        mkdir($out_dir);
+        $mention = file_get_contents($mention_file);
+        file_put_contents($out_dir."/test.json", $mention);
+    }
+
     protected function getValidPostArray()
     {
         return array(
