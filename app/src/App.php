@@ -14,6 +14,7 @@ class App
             : false;
         $app['posts_root'] = getenv("ROOT_DIR")."/posts";
         $app['webmentions_root'] = getenv("ROOT_DIR")."/webmentions";
+        $app['rpp'] = 9;
         $app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
         $app['token_endpoint'] = "https://tokens.indieauth.com/token";
         $app['me_endpoint'] = "http://j4y.co/";
