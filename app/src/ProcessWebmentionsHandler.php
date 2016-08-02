@@ -24,6 +24,7 @@ class ProcessWebmentionsHandler
 
     public function handle($mention_file)
     {
+        // VALIDATE
         $mention = json_decode(
             $this->eventStore->readContents($mention_file['path']),
             true
@@ -31,28 +32,28 @@ class ProcessWebmentionsHandler
         $mention = $this->validate($mention);
         $mention_view_model = $this->getViewModel($mention);
         $post_id = basename($mention['target']);
+        // SAVE
         $this->saveData(
             $mention,
             $mention_view_model,
             $post_id
         );
-
-        // homepage mention?
+        // NOTIFY
         $target_bits = parse_url($mention['target']);
         if (
             $target_bits['host'] == 'j4y.co'
             && (!isset($target_bits['path']) || $target_bits['path'] == '/')
         ) {
-            $this->log->notice("HOMEPAGE MENTION", ["source" => $mention['source'], "target" => $mention['target']]);
+            $m = sprintf("Homepage mention [%s]", $mention['source']);
             return;
+        } else {
+            $post_view_model = $this->postsRepositoryReader->findById($post_id);
+            // notify
+            $m = $this->mentionNotification->build(
+                $post_view_model[0],
+                $mention_view_model
+            );
         }
-        $post_view_model = $this->postsRepositoryReader->findById($post_id);
-
-        // notify
-        $m = $this->mentionNotification->build(
-            $post_view_model[0],
-            $mention_view_model
-        );
 
         $this->notifyService->notify($m);
     }
