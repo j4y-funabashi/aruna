@@ -7,6 +7,8 @@ $app = new Cilex\Application("aruna");
 $app['posts_root'] = getenv("ROOT_DIR")."/posts";
 $app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
 $app['thumbnails_root'] = getenv("ROOT_DIR")."/thumbnails";
+$app['pushover_user_token'] = getenv("PUSHOVER_USER_TOKEN");
+$app['pushover_api_token'] = getenv("PUSHOVER_API_TOKEN");
 
 // PROVIDERS
 
@@ -104,7 +106,13 @@ $app['handler.process_webmentions'] = $app->share(function () use ($app) {
         $app['http_client'],
         $app['mentions_repository_writer'],
         $app['posts_repository_reader'],
-        new Aruna\WebmentionNotification()
+        new Aruna\WebmentionNotification(),
+        new Aruna\NotifyService(
+            $app['http_client'],
+            $app['monolog'],
+            $app['pushover_api_token'],
+            $app['pushover_user_token']
+        )
     );
 });
 

@@ -26,7 +26,13 @@ class ProcessWebmentionsAction
 
         $mention_files = $this->eventStore->findByExtension('webmentions', 'json', $limit);
         foreach ($mention_files as $mention_file) {
-            $this->handleMention($mention_file);
+            try {
+                $this->handler->handle($mention_file);
+            } catch (\Exception $e) {
+                $this->log->error(
+                    sprintf("Invalid Webmention: %s\n", $e->getMessage())
+                );
+            }
             $this->eventStore->delete($mention_file['path']);
             $count += 1;
         }
@@ -34,21 +40,5 @@ class ProcessWebmentionsAction
         return array(
             "count" => $count
         );
-    }
-
-    private function handleMention($mention_file)
-    {
-        $mention = json_decode(
-            $this->eventStore->readContents($mention_file['path']),
-            true
-        );
-        try {
-            $this->handler->handle($mention_file, $mention);
-        } catch (\Exception $e) {
-            $this->log->error(
-                sprintf("Invalid Webmention: %s\n", $e->getMessage()),
-                $mention
-            );
-        }
     }
 }

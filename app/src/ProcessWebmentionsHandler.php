@@ -10,7 +10,8 @@ class ProcessWebmentionsHandler
         $http,
         $mentionsRepositoryWriter,
         $postsRepositoryReader,
-        $mentionNotification
+        $mentionNotification,
+        $notifyService
     ) {
         $this->log = $log;
         $this->eventStore = $eventStore;
@@ -18,12 +19,23 @@ class ProcessWebmentionsHandler
         $this->mentionsRepositoryWriter = $mentionsRepositoryWriter;
         $this->postsRepositoryReader = $postsRepositoryReader;
         $this->mentionNotification = $mentionNotification;
+        $this->notifyService = $notifyService;
     }
 
-    public function handle($mention_file, $mention)
+    public function handle($mention_file)
     {
+        $mention = json_decode(
+            $this->eventStore->readContents($mention_file['path']),
+            true
+        );
         $mention = $this->validate($mention);
         $mention_view_model = $this->getViewModel($mention);
+        $post_id = basename($mention['target']);
+        $this->saveData(
+            $mention,
+            $mention_view_model,
+            $post_id
+        );
 
         // homepage mention?
         $target_bits = parse_url($mention['target']);
@@ -34,15 +46,6 @@ class ProcessWebmentionsHandler
             $this->log->notice("HOMEPAGE MENTION", ["source" => $mention['source'], "target" => $mention['target']]);
             return;
         }
-
-        $post_id = basename($mention['target']);
-
-        $this->saveData(
-            $mention,
-            $mention_view_model,
-            $post_id
-        );
-
         $post_view_model = $this->postsRepositoryReader->findById($post_id);
 
         // notify
@@ -50,7 +53,8 @@ class ProcessWebmentionsHandler
             $post_view_model[0],
             $mention_view_model
         );
-        $this->log->notice($m);
+
+        $this->notifyService->notify($m);
     }
 
     private function getViewModel($mention)
