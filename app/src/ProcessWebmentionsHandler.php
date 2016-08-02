@@ -48,7 +48,6 @@ class ProcessWebmentionsHandler
             return;
         } else {
             $post_view_model = $this->postsRepositoryReader->findById($post_id);
-            // notify
             $m = $this->mentionNotification->build(
                 $post_view_model[0],
                 $mention_view_model
