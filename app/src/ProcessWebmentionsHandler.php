@@ -85,11 +85,19 @@ class ProcessWebmentionsHandler
     ) {
         $mention_id = md5($mention['source'].$mention['target']);
         $this->saveHtml($mention, $mention['html'], $mention_id);
+        $this->saveJson($mention, $mention_id);
         $this->mentionsRepositoryWriter->save(
             $mention_id,
             $post_id,
             $mention_view_model
         );
+    }
+    private function saveJson(
+        $mention,
+        $mention_id
+    ) {
+        $file_path = sprintf("processed_webmentions/%s.json", $mention_id);
+        $this->eventStore->save($file_path, json_encode($mention));
     }
     private function saveHtml(
         $mention,
