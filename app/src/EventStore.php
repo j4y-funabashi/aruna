@@ -18,15 +18,10 @@ class EventStore
         $file_path,
         $data
     ) {
-
-        try {
-            $this->filesystem->write(
-                $file_path,
-                $data
-            );
-        } catch (\Exception $e) {
-            throw new \RuntimeException($e->getMessage());
-        }
+        $this->filesystem->write(
+            $file_path,
+            $data
+        );
     }
 
     public function exists($file_path)

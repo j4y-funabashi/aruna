@@ -30,7 +30,7 @@ class ProcessWebmentionsAction
                 $this->handler->handle($mention_file);
             } catch (\Exception $e) {
                 $this->log->error(
-                    sprintf("Invalid Webmention: %s\n", $e->getMessage())
+                    sprintf("Failed to process webmention: [%s] %s\n", get_class($e), $e->getMessage())
                 );
             }
             $this->eventStore->delete($mention_file['path']);
