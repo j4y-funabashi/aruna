@@ -22,30 +22,23 @@ class ProcessWebmentionsAction
     public function __invoke()
     {
         $count = 0;
-        $mention_files = $this->eventStore->findByExtension('webmentions', 'json');
+        $limit = 10;
+
+        $mention_files = $this->eventStore->findByExtension('webmentions', 'json', $limit);
         foreach ($mention_files as $mention_file) {
-            $this->handleMention($mention_file);
+            try {
+                $this->handler->handle($mention_file);
+            } catch (\Exception $e) {
+                $this->log->error(
+                    sprintf("Failed to process webmention: [%s] %s\n", get_class($e), $e->getMessage())
+                );
+            }
             $this->eventStore->delete($mention_file['path']);
             $count += 1;
-            if ($count > 10) {
-                exit;
-            }
         }
-    }
 
-    private function handleMention($mention_file)
-    {
-        $mention = json_decode(
-            $this->eventStore->readContents($mention_file['path']),
-            true
+        return array(
+            "count" => $count
         );
-        try {
-            $this->handler->handle($mention_file, $mention);
-        } catch (\Exception $e) {
-            $this->log->error(
-                sprintf("Invalid Webmention: %s\n", $e->getMessage()),
-                $mention
-            );
-        }
     }
 }

@@ -10,7 +10,8 @@ class ProcessWebmentionsHandler
         $http,
         $mentionsRepositoryWriter,
         $postsRepositoryReader,
-        $mentionNotification
+        $mentionNotification,
+        $notifyService
     ) {
         $this->log = $log;
         $this->eventStore = $eventStore;
@@ -18,39 +19,42 @@ class ProcessWebmentionsHandler
         $this->mentionsRepositoryWriter = $mentionsRepositoryWriter;
         $this->postsRepositoryReader = $postsRepositoryReader;
         $this->mentionNotification = $mentionNotification;
+        $this->notifyService = $notifyService;
     }
 
-    public function handle($mention_file, $mention)
+    public function handle($mention_file)
     {
+        // VALIDATE
+        $mention = json_decode(
+            $this->eventStore->readContents($mention_file['path']),
+            true
+        );
         $mention = $this->validate($mention);
         $mention_view_model = $this->getViewModel($mention);
-
-        // homepage mention?
-        $target_bits = parse_url($mention['target']);
-        if (
-            $target_bits['host'] == 'j4y.co'
-            && (!isset($target_bits['path']) || $target_bits['path'] == '/')
-        ) {
-            $this->log->notice("HOMEPAGE MENTION", ["source" => $mention['source'], "target" => $mention['target']]);
-            return;
-        }
-
         $post_id = basename($mention['target']);
-
+        // SAVE
         $this->saveData(
             $mention,
             $mention_view_model,
             $post_id
         );
+        // NOTIFY
+        $target_bits = parse_url($mention['target']);
+        if (
+            $target_bits['host'] == 'j4y.co'
+            && (!isset($target_bits['path']) || $target_bits['path'] == '/')
+        ) {
+            $m = sprintf("Homepage mention [%s]", $mention['source']);
+            return;
+        } else {
+            $post_view_model = $this->postsRepositoryReader->findById($post_id);
+            $m = $this->mentionNotification->build(
+                $post_view_model[0],
+                $mention_view_model
+            );
+        }
 
-        $post_view_model = $this->postsRepositoryReader->findById($post_id);
-
-        // notify
-        $m = $this->mentionNotification->build(
-            $post_view_model[0],
-            $mention_view_model
-        );
-        $this->log->notice($m);
+        $this->notifyService->notify($m);
     }
 
     private function getViewModel($mention)
@@ -81,11 +85,19 @@ class ProcessWebmentionsHandler
     ) {
         $mention_id = md5($mention['source'].$mention['target']);
         $this->saveHtml($mention, $mention['html'], $mention_id);
+        $this->saveJson($mention, $mention_id);
         $this->mentionsRepositoryWriter->save(
             $mention_id,
             $post_id,
             $mention_view_model
         );
+    }
+    private function saveJson(
+        $mention,
+        $mention_id
+    ) {
+        $file_path = sprintf("processed_webmentions/%s.json", $mention_id);
+        $this->eventStore->save($file_path, json_encode($mention));
     }
     private function saveHtml(
         $mention,
