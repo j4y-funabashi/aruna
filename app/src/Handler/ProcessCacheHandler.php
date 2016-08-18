@@ -33,25 +33,11 @@ class ProcessCacheHandler
         $initial_id = $this->postsRepositoryReader->findLatestId();
         $rpp = 1000;
 
-        $m = sprintf(
-            "BEGIN Processing Posts, initial_id: [%s]",
-            $initial_id
-        );
-        $this->log->debug($m);
-
         $posts = $this->eventStore->listFromId(
             "posts",
             $initial_id,
             $rpp
         );
-
-        if (empty($posts)) {
-            $m = sprintf(
-                "No new Posts to process",
-                $initial_id
-            );
-            $this->log->debug($m);
-        }
 
         foreach ($posts as $post) {
 
