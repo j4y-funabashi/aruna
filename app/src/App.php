@@ -30,7 +30,7 @@ class App
         // SERVICES
         $app['monolog'] = $app->share(function () use ($app) {
             $log = new \Monolog\Logger("aruna");
-            $log->pushHandler(new \Monolog\Handler\SyslogHandler('aruna'));
+            $log->pushHandler(new \Monolog\Handler\StreamHandler('php://stdout'));
             return $log;
         });
         $app['db_cache'] = $app->share(function () use ($app) {
