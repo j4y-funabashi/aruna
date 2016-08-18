@@ -40,18 +40,12 @@ class ImageResizer
         }
 
         $this->ensureDirectory(dirname($out_path));
-
         $img = Image::make($in_path);
         $img->fit(640);
-
-        $m = sprintf(
-            "Resizing [%s] to [%s]",
-            $in_path,
-            $out_path
-        );
-        $this->log->info($m);
-
         $img->save($out_path);
+
+        $m = sprintf("Resized [%s] to [%s]", $in_path, $out_path);
+        $this->log->info($m);
     }
 
     protected function ensureDirectory($root)
