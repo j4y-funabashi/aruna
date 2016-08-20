@@ -1,9 +1,9 @@
 test:
-	vendor/bin/phpunit tests/unit
+	docker-compose -f resources/docker/docker-compose-dev.yml run app vendor/bin/phpunit --config phpunit_ci.xml --coverage-html reports/coverage/unit tests/unit
 
 test_ci:
-	vendor/bin/phpunit --config phpunit_ci.xml --coverage-html build/coverage tests/unit
-	vendor/bin/phpunit --config phpunit_ci.xml tests/system
+	docker-compose -f resources/docker/docker-compose-dev.yml run app vendor/bin/phpunit --config phpunit_ci.xml --coverage-html reports/coverage/unit tests/unit
+	docker-compose -f resources/docker/docker-compose-dev.yml run app vendor/bin/phpunit --config phpunit_ci.xml tests/system
 
-test_system:
-	vendor/bin/phpunit --config phpunit_ci.xml tests/system
+docker-build-dev:
+	docker-compose -f resources/docker/docker-compose-dev.yml build

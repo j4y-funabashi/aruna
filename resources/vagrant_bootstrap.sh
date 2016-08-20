@@ -1,49 +1,13 @@
-export DATA_DIR="/media/jayr/aruna"
-export APP_USER="aruna"
+locale-gen en_GB.UTF-8
+apt-get update -q
+apt-get install -q -y apt-transport-https ca-certificates
+apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+echo deb https://apt.dockerproject.org/repo ubuntu-trusty main > /etc/apt/sources.list.d/docker.list
+apt-get update -q
+apt-get purge -q -y lxc-docker
+apt-get install -q -y --force-yes docker-engine
+apt-get install -q -y linux-image-extra-$(uname -r)
 
-sudo locale-gen en_GB.UTF-8
-
-sudo apt-get update \
-    && sudo apt-get install -y \
-    nginx \
-    git \
-    supervisor \
-    sqlite3 \
-    php5-fpm \
-    php5-cli \
-    php5-imagick \
-    php5-curl \
-    php5-sqlite \
-    php5-xdebug
-
-## create data_dir
-sudo usermod -G www-data vagrant
-sudo useradd -G www-data $APP_USER
-sudo mkdir -p $DATA_DIR
-
-## bootstrap db
-sudo sqlite3 $DATA_DIR/aruna_db.sq3 < /srv/aruna/resources/bootstrap_db.sql
-
-## data dir perms
-sudo chown -Rv $APP_USER $DATA_DIR
-sudo chgrp -Rv www-data $DATA_DIR;
-sudo chmod -Rv g+w $DATA_DIR;
-
-## APP CONFIG
-sudo cp /srv/aruna/env.example /srv/.env
-
-## COMPOSER
-curl -sS https://getcomposer.org/installer | php
-sudo mv composer.phar /usr/local/bin/composer
-cd /srv/aruna/; composer install;
-
-## NGINX PHP CONFIG
-sudo rm /etc/nginx/sites-enabled/default
-sudo cp /srv/aruna/resources/nginx.conf /etc/nginx/sites-enabled/aruna \
-    && sudo cp /srv/aruna/resources/php5-fpm.conf /etc/php5/fpm/pool.d/aruna.conf \
-    && sudo cp /srv/aruna/resources/supervisord.conf /etc/supervisor/conf.d/
-
-## RESTART SERVICES
-sudo service php5-fpm restart
-sudo service nginx restart
-sudo service supervisor restart
+curl -fsSL https://github.com/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+usermod -aG docker vagrant

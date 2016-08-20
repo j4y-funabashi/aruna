@@ -1,0 +1,5 @@
+app:
+    build: app
+    volumes:
+        - ../..:/srv/aruna
+    env_file: .env
