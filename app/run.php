@@ -15,7 +15,6 @@ $app['pushover_api_token'] = getenv("PUSHOVER_API_TOKEN");
 // SERVICES
 $app['monolog'] = $app->share(function () use ($app) {
     $log = new Monolog\Logger("aruna");
-    $log->pushHandler(new Monolog\Handler\SyslogHandler('aruna'));
     $log->pushHandler(new Monolog\Handler\StreamHandler('php://stdout'));
     return $log;
 });
