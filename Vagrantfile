@@ -10,5 +10,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             v.cpus = 2
     end
     config.vm.box = "ubuntu/trusty64"
+    config.vm.network "forwarded_port", guest: 4567, host: 4567
     config.vm.provision :shell, path: "resources/vagrant_bootstrap.sh"
 end

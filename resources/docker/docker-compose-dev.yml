@@ -1,6 +1,13 @@
-app:
+app_daemon:
     build: app
+    env_file: .env
     volumes:
         - ../..:/srv/aruna
         - /media/jayr/aruna:/media/jayr/aruna
-    env_file: .env
+
+webserver:
+    build: webserver
+    ports:
+        - "4567:80"
+    environment:
+        - NGINX_PORT=80
