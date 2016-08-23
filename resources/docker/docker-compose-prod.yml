@@ -4,3 +4,6 @@ app:
         - ../..:/srv/aruna
         - /media/jayr/aruna:/media/jayr/aruna
     env_file: .env
+    log_driver: syslog
+    log_opt:
+        tag: aruna

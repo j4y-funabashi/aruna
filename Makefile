@@ -7,3 +7,6 @@ test_ci:
 
 docker-build-dev:
 	docker-compose -f resources/docker/docker-compose-dev.yml build
+
+run:
+	docker-compose -f resources/docker/docker-compose-dev.yml up
