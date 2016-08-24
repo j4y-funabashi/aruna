@@ -10,3 +10,7 @@ docker-build-dev:
 
 run:
 	docker-compose -f resources/docker/docker-compose-dev.yml up
+
+deploy:
+	docker-compose -f resources/docker/docker-compose-prod.yml build
+	docker-compose -f resources/docker/docker-compose-prod.yml up
