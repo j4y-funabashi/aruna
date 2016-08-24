@@ -20,8 +20,13 @@ class ProcessCacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $handler = $this->getApplication()
-            ->getService("process_cache_handler");
-        $handler->handle();
+        $app = $this->getApplication();
+        try {
+            $handler = $app->getService("process_cache_handler");
+            $handler->handle();
+        } catch (\Exception $e) {
+            $m = sprintf("Failed to run app %s", $e->getMessage());
+            $app->getService('monolog')->critical($m);
+        }
     }
 }
