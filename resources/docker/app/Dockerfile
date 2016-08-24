@@ -6,8 +6,7 @@ RUN apt-get update \
         libsqlite3-dev \
         && docker-php-ext-install pdo \
         && docker-php-ext-install pdo_sqlite \
-        && docker-php-ext-install pcntl \
-        && docker-php-ext-install gd
+        && docker-php-ext-install pcntl
 
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY supervisor_app.conf /etc/supervisor/conf.d/app.conf
