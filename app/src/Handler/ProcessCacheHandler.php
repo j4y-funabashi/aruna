@@ -22,10 +22,7 @@ class ProcessCacheHandler
 
     public function handle()
     {
-        while (true) {
-            $this->processPosts();
-            sleep(60);
-        }
+        $this->processPosts();
     }
 
     private function processPosts()
