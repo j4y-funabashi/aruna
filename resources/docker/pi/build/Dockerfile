@@ -9,4 +9,6 @@ RUN apt-get update \
     libssl-dev \
     libpcre3-dev
 
+RUN docker-php-ext-install zip
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename composer
