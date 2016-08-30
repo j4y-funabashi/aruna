@@ -40,7 +40,7 @@ class CreatePostAction
 
     private function getCommand($request)
     {
-        return new \Aruna\CreatePostCommand(
+        return new CreatePostCommand(
             $entry = $this->buildEntryArray($request),
             $files = $this->buildFilesArray($request),
             $access_token = $this->getAccessToken($request)

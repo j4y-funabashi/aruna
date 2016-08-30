@@ -42,33 +42,37 @@ class App
         $app['posts_repository_reader'] = $app->share(function () use ($app) {
             return new PostRepositoryReader($app['db_cache']);
         });
-        $app['posts_repository_writer'] = $app->share(function () use ($app) {
-            $adapter = new \League\Flysystem\Adapter\Local($app['posts_root']);
-            $filesystem = new \League\Flysystem\Filesystem($adapter);
-            return new PostRepositoryWriter($filesystem, $app['twig']);
-        });
-        $app['create_post.handler'] = $app->share(function () use ($app) {
-            return new CreatePostHandler(
-                $app['posts_repository_writer']
+
+
+
+        // MICROPUB
+        $app['action.create_post'] = $app->share(function () use ($app) {
+            return new Micropub\CreatePostAction(
+                $app["monolog"],
+                $app["create_post.handler"],
+                $app['access_token'],
+                new Micropub\CreatePostResponder($app['url_generator'])
             );
         });
-
         $app['access_token'] = $app->share(function () use ($app) {
-            return new AccessToken(
+            return new Micropub\AccessToken(
                 $app['http_client'],
                 $app['token_endpoint'],
                 $app['me_endpoint']
             );
         });
-
-        $app['action.create_post'] = $app->share(function () use ($app) {
-            return new CreatePostAction(
-                $app["monolog"],
-                $app["create_post.handler"],
-                $app['access_token'],
-                new CreatePostResponder($app['url_generator'])
+        $app['create_post.handler'] = $app->share(function () use ($app) {
+            return new Micropub\CreatePostHandler(
+                $app['posts_repository_writer']
             );
         });
+        $app['posts_repository_writer'] = $app->share(function () use ($app) {
+            $adapter = new \League\Flysystem\Adapter\Local($app['posts_root']);
+            $filesystem = new \League\Flysystem\Filesystem($adapter);
+            return new Micropub\PostRepositoryWriter($filesystem, $app['twig']);
+        });
+
+
 
         $app['response'] = $app->share(function () {
             return new \Symfony\Component\HttpFoundation\Response();

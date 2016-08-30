@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Micropub;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Response;
