@@ -6,7 +6,7 @@ class PostDataTest extends UnitTest
 {
     public function setUp()
     {
-        $this->SUT = new \Aruna\PostData();
+        $this->SUT = new \Aruna\Micropub\PostData();
         $this->expected = [
             "items" => [
                 0 => [

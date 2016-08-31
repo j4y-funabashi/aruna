@@ -2,7 +2,7 @@
 
 namespace Test;
 
-use Aruna\AccessToken;
+use Aruna\Micropub\AccessToken;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;

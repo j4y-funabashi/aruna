@@ -2,7 +2,7 @@
 
 namespace Test;
 
-use Aruna\CreatePostAction;
+use Aruna\Micropub\CreatePostAction;
 use Symfony\Component\HttpFoundation\Request;
 use Prophecy\Argument;
 
@@ -16,9 +16,9 @@ class CreatePostActionTest extends UnitTest
     {
         $this->log = new \Monolog\Logger("test");
         $this->log->pushHandler(new \Monolog\Handler\TestHandler());
-        $this->handler = $this->prophesize("\Aruna\CreatePostHandler");
-        $this->token = $this->prophesize("\Aruna\AccessToken");
-        $this->responder = $this->prophesize("\Aruna\CreatePostResponder");
+        $this->handler = $this->prophesize("\Aruna\Micropub\CreatePostHandler");
+        $this->token = $this->prophesize("\Aruna\Micropub\AccessToken");
+        $this->responder = $this->prophesize("\Aruna\Micropub\CreatePostResponder");
 
         $this->SUT = new CreatePostAction(
             $this->log,
@@ -114,7 +114,7 @@ class CreatePostActionTest extends UnitTest
         );
 
         $this->handler->handle(
-            new \Aruna\CreatePostCommand(
+            new \Aruna\Micropub\CreatePostCommand(
                 array("h" => "entry"),
                 array(
                     "photo" => array(
