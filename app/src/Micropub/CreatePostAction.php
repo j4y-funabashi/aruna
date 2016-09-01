@@ -14,28 +14,19 @@ class CreatePostAction
     public function __construct(
         $logger,
         $handler,
-        $accessToken,
         $responder
     ) {
         $this->log = $logger;
         $this->handler = $handler;
-        $this->accessToken = $accessToken;
         $this->responder = $responder;
     }
 
     public function __invoke(Request $request)
     {
-        $command = $this->getCommand($request);
-
-        try {
-            $this->accessToken->getTokenFromAuthCode($this->getAccessToken($request));
-        } catch (\Exception $e) {
-            return $this->responder->unauthorized($e->getMessage());
-        }
-
-        return $this->responder->postCreated(
-            $this->handler->handle($command)
+        $this->responder->setPayload(
+            $this->handler->handle($this->getCommand($request))
         );
+        return $this->responder->__invoke();
     }
 
     private function getCommand($request)
@@ -85,7 +76,7 @@ class CreatePostAction
 
     private function checkUploadIsReadable($uploadedFile)
     {
-        if ($uploadedFile->isReadable() === false) {
+        if ($uploadedFile->isReadable() !== true) {
             $m = "Could not read file ".$uploadedFile->getRealPath();
             throw new \RuntimeException($m);
         }

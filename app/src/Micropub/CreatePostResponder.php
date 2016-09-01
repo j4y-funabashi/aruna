@@ -5,18 +5,14 @@ namespace Aruna\Micropub;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Response;
 
+use Aruna\Responder;
+
 /**
  * Class CreatePostResponder
  * @author yourname
  */
-class CreatePostResponder
+class CreatePostResponder extends Responder
 {
-    public function __construct(
-        $urlGenerator
-    ) {
-        $this->urlGenerator = $urlGenerator;
-    }
-
     public function postCreated($post)
     {
         $url = $this->urlGenerator->generate(

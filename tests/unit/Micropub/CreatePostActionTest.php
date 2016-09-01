@@ -5,6 +5,7 @@ namespace Test;
 use Aruna\Micropub\CreatePostAction;
 use Symfony\Component\HttpFoundation\Request;
 use Prophecy\Argument;
+use Aruna\Found;
 
 /**
  * Class CreatePostActionTest
@@ -17,31 +18,13 @@ class CreatePostActionTest extends UnitTest
         $this->log = new \Monolog\Logger("test");
         $this->log->pushHandler(new \Monolog\Handler\TestHandler());
         $this->handler = $this->prophesize("\Aruna\Micropub\CreatePostHandler");
-        $this->token = $this->prophesize("\Aruna\Micropub\AccessToken");
         $this->responder = $this->prophesize("\Aruna\Micropub\CreatePostResponder");
 
         $this->SUT = new CreatePostAction(
             $this->log,
             $this->handler->reveal(),
-            $this->token->reveal(),
             $this->responder->reveal()
         );
-    }
-
-    /**
-     * @test
-     */
-    public function it_calls_unauthorized_method_on_responder_when_token_is_invalid()
-    {
-        $error_message = "test";
-        $this->token->getTokenFromAuthCode(Argument::cetera())
-            ->willThrow(new \Exception($error_message));
-
-        $request = new Request();
-        $response = $this->SUT->__invoke($request);
-
-        $this->responder->unauthorized($error_message)
-            ->shouldBeCalled();
     }
 
     /**
@@ -107,24 +90,31 @@ class CreatePostActionTest extends UnitTest
 
         $request = new Request(
             $query = array(),
-            $request = array("h" => "entry"),
+            $post_request = array("h" => "entry", "access_token" => 123),
             $attributes = array(),
             $cookies = array(),
             $files = array("photo" => $file)
         );
+        $handler_response = new Found([]);
 
         $this->handler->handle(
             new \Aruna\Micropub\CreatePostCommand(
-                array("h" => "entry"),
+                $post_request,
                 array(
                     "photo" => array(
                         'real_path' => "/test",
                         'original_ext' => "jpg"
                     )
                 ),
-                ""
+                "123"
             )
-        )->shouldBeCalled();
+        )->shouldBeCalled()
+        ->willReturn($handler_response);
+
+        $this->responder->setPayload($handler_response)
+            ->shouldBeCalled();
+        $this->responder->__invoke()
+            ->shouldBeCalled();
 
         $response = $this->SUT->__invoke($request);
     }
