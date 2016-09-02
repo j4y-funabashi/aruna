@@ -2,9 +2,6 @@
 
 namespace Aruna\Micropub;
 
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\HttpFoundation\Response;
-
 use Aruna\Responder;
 
 /**
@@ -13,20 +10,15 @@ use Aruna\Responder;
  */
 class CreatePostResponder extends Responder
 {
-    public function postCreated($post)
+    public function ok()
     {
-        $url = $this->urlGenerator->generate(
-            'post',
-            array('post_id' => $post->getPostId()),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        $headers = ['Location' => $url];
-
-        return new Response(json_encode($post), Response::HTTP_ACCEPTED, $headers);
+        return $this->response;
     }
 
-    public function unauthorized($message)
+    public function unauthorized()
     {
-        return new Response($message, Response::HTTP_UNAUTHORIZED);
+        $this->response->setContent($this->payload->get("message"));
+        $this->response->setStatusCode(401);
+        return $this->response;
     }
 }

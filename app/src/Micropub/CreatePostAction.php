@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CreatePostAction
 {
-
     public function __construct(
         $logger,
         $handler,

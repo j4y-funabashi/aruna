@@ -28,7 +28,6 @@ class CreatePostHandler
             $message = sprintf("Invalid access token [%s]", $command->getAccessToken());
             return new Unauthorized(["message" => $message]);
         }
-
         try {
             $post = new Post($command->getEntry(), $command->getFiles());
             $this->postRepository->save($post, $command->getFiles());
@@ -36,7 +35,6 @@ class CreatePostHandler
             $message = sprintf("Failed to save new post [%s]", $e->getMessage());
             return new ServerError(["message" => $message]);
         }
-
         return new OK(["items" => [$post]]);
     }
 }
