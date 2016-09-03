@@ -8,7 +8,7 @@ namespace Aruna\Micropub;
  */
 class AccessToken
 {
-    private $token_url = "https://tokens.indieauth.com/token";
+    private $token_url;
     private $me;
 
     public function __construct(
