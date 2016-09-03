@@ -36,6 +36,8 @@ class CreatePostActionTest extends UnitTest
         $file = $this->getMockBuilder("\Symfony\Component\HttpFoundation\File\UploadedFile")
             ->disableOriginalConstructor()
             ->getMock();
+        $file->method("isReadable")
+            ->willReturn(true);
         $file->method("isValid")
             ->willReturn(false);
 
@@ -60,6 +62,8 @@ class CreatePostActionTest extends UnitTest
         $file = $this->getMockBuilder("\Symfony\Component\HttpFoundation\File\UploadedFile")
             ->disableOriginalConstructor()
             ->getMock();
+        $file->method("isValid")
+            ->willReturn(true);
         $file->method("isReadable")
             ->willReturn(false);
 
@@ -87,6 +91,10 @@ class CreatePostActionTest extends UnitTest
             ->willReturn("/test");
         $file->method("getClientOriginalExtension")
             ->willReturn("jpg");
+        $file->method("isReadable")
+            ->willReturn(true);
+        $file->method("isValid")
+            ->willReturn(true);
 
         $request = new Request(
             $query = array(),

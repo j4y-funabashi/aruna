@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CreatePostAction
 {
-
     public function __construct(
         $logger,
         $handler,
@@ -84,7 +83,7 @@ class CreatePostAction
 
     private function checkUploadIsValid($uploadedFile)
     {
-        if (false === $uploadedFile->isValid()) {
+        if (true !== $uploadedFile->isValid()) {
             throw new \RuntimeException("Upload Error: (".$uploadedFile->getError().")");
         }
     }

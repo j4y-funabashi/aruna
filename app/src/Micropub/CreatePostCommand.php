@@ -28,4 +28,9 @@ class CreatePostCommand
     {
         return $this->files;
     }
+
+    public function getAccessToken()
+    {
+        return $this->access_token;
+    }
 }
