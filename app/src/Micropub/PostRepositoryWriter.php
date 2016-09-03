@@ -4,6 +4,8 @@ namespace Aruna\Micropub;
 
 use League\Flysystem\FileExistsException;
 use RuntimeException;
+use Aruna\PostViewModel;
+use Aruna\RenderPost;
 
 /**
  * Class PostRepositoryWriter

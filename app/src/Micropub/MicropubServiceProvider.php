@@ -14,8 +14,11 @@ class MicropubServiceProvider implements ServiceProviderInterface
             return new CreatePostAction(
                 $app["monolog"],
                 $app["create_post.handler"],
-                $app['access_token'],
-                new CreatePostResponder($app['url_generator'])
+                new CreatePostResponder(
+                    $app['response'],
+                    $app['twig'],
+                    new \Aruna\RenderPost($app['twig'])
+                )
             );
         });
         $app['access_token'] = $app->share(function () use ($app) {
@@ -27,7 +30,8 @@ class MicropubServiceProvider implements ServiceProviderInterface
         });
         $app['create_post.handler'] = $app->share(function () use ($app) {
             return new CreatePostHandler(
-                $app['posts_repository_writer']
+                $app['posts_repository_writer'],
+                $app['access_token']
             );
         });
         $app['posts_repository_writer'] = $app->share(function () use ($app) {
