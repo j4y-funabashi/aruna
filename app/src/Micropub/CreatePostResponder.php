@@ -21,4 +21,11 @@ class CreatePostResponder extends Responder
         $this->response->setStatusCode(401);
         return $this->response;
     }
+
+    public function servererror()
+    {
+        $this->response->setContent($this->payload->get("message"));
+        $this->response->setStatusCode(500);
+        return $this->response;
+    }
 }
