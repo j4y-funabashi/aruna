@@ -11,6 +11,9 @@ RUN apt-get update \
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY supervisor_app.conf /etc/supervisor/conf.d/app.conf
 
+RUN pecl install xdebug
+RUN docker-php-ext-enable xdebug
+
 WORKDIR /srv/aruna
 
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
