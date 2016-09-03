@@ -17,7 +17,7 @@ class Post implements \JsonSerializable
     {
         $config['published'] = $this->validateDate($config);
         $this->properties = $config;
-        $this->properties['uid'] = (new DateTimeImmutable())->format("YmdHis")."_".uniqid();
+        $this->properties['uid'] = (new DateTimeImmutable())->format("YmdHis")."_".uniqid("", true);
 
         foreach ($files as $file_key => $uploadedFile) {
             $this->properties['files'][$file_key] = $this->getFilePath().".".$uploadedFile['original_ext'];
