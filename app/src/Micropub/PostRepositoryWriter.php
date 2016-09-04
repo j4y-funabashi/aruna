@@ -4,8 +4,6 @@ namespace Aruna\Micropub;
 
 use League\Flysystem\FileExistsException;
 use RuntimeException;
-use Aruna\PostViewModel;
-use Aruna\RenderPost;
 
 /**
  * Class PostRepositoryWriter
@@ -43,19 +41,6 @@ class PostRepositoryWriter
                 $entry->getFilePath().".json",
                 $entry->asJson()
             );
-
-            // html file
-            $postData = new PostData();
-            $view_model = new PostViewModel(
-                $postData->toMfArray(json_decode($entry->asJson(), true))
-            );
-            $renderPost = (new RenderPost($this->view));
-            $post_html = $renderPost->__invoke($view_model);
-            $this->filesystem->write(
-                $entry->getFilePath().".html",
-                $post_html
-            );
-
         } catch (FileExistsException $e) {
             throw new RuntimeException($e->getMessage());
         }
