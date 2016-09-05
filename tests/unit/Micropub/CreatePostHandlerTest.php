@@ -15,7 +15,7 @@ class CreatePostHandlerTest extends UnitTest
     public function setUp()
     {
         $this->postRepository = $this->prophesize("\Aruna\Micropub\PostRepositoryWriter");
-        $this->accessToken = $this->prophesize("\Aruna\Micropub\AccessToken");
+        $this->verifyAccessToken = $this->prophesize("\Aruna\Micropub\VerifyAccessToken");
 
         $this->access_token = null;
         $this->files = [];
@@ -23,7 +23,7 @@ class CreatePostHandlerTest extends UnitTest
 
         $this->SUT = new CreatePostHandler(
             $this->postRepository->reveal(),
-            $this->accessToken->reveal()
+            $this->verifyAccessToken->reveal()
         );
     }
 
@@ -32,7 +32,7 @@ class CreatePostHandlerTest extends UnitTest
      */
     public function it_returns_unauthorized_for_invalid_access_token()
     {
-        $this->accessToken->getTokenFromAuthCode(null)
+        $this->verifyAccessToken->getTokenFromAuthCode($this->access_token)
             ->willThrow(new \Exception());
         $result = $this->SUT->handle($this->getCommand());
         $this->assertInstanceOf(Unauthorized::class, $result);
