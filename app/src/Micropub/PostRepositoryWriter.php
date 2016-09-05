@@ -11,10 +11,9 @@ use RuntimeException;
  */
 class PostRepositoryWriter
 {
-    public function __construct($filesystem, $view)
+    public function __construct($filesystem)
     {
         $this->filesystem = $filesystem;
-        $this->view = $view;
     }
 
     public function save(Post $entry, $files)
