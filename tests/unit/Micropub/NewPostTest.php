@@ -30,4 +30,14 @@ class NewPostTest extends UnitTest
         $this->assertEquals(JSON_ERROR_NONE, json_last_error());
         $this->assertEquals($result, $post->asJson());
     }
+
+    /**
+     * @test
+     */
+    public function it_removes_access_token_from_properties()
+    {
+        $post = new NewPost(["access_token" => "test"]);
+        $result = json_decode(json_encode($post), true);
+        $this->assertFalse(isset($result["access_token"]));
+    }
 }

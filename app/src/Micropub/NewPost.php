@@ -14,12 +14,13 @@ class NewPost implements \JsonSerializable
     protected $properties;
 
     public function __construct(
-        $config,
+        array $config,
         $files = []
     ) {
         $config['published'] = $this->validateDate($config);
         $this->properties = $config;
         $this->properties['uid'] = (new DateTimeImmutable())->format("YmdHis")."_".uniqid("", true);
+        unset($this->properties['access_token']);
 
         foreach ($files as $file_key => $uploadedFile) {
             $this->properties['files'][$file_key] = $this->getFilePath().".".$uploadedFile['original_ext'];
