@@ -13,8 +13,10 @@ class NewPost implements \JsonSerializable
 {
     protected $properties;
 
-    public function __construct($config, $files = [])
-    {
+    public function __construct(
+        $config,
+        $files = []
+    ) {
         $config['published'] = $this->validateDate($config);
         $this->properties = $config;
         $this->properties['uid'] = (new DateTimeImmutable())->format("YmdHis")."_".uniqid("", true);
@@ -45,7 +47,7 @@ class NewPost implements \JsonSerializable
         );
     }
 
-    protected function validateDate($config)
+    private function validateDate($config)
     {
         try {
             $published = (isset($config['published']))
@@ -57,7 +59,7 @@ class NewPost implements \JsonSerializable
         }
     }
 
-    protected function getUid()
+    private function getUid()
     {
         return $this->properties['uid'];
     }
