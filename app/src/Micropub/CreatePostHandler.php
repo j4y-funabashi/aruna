@@ -29,7 +29,7 @@ class CreatePostHandler
             return new Unauthorized(["message" => $message]);
         }
         try {
-            $post = new Post($command->getEntry(), $command->getFiles());
+            $post = new NewPost($command->getEntry(), $command->getFiles());
             $this->postRepository->save($post, $command->getFiles());
         } catch (\Exception $e) {
             $message = sprintf("Failed to save new post [%s]", $e->getMessage());

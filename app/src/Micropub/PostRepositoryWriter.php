@@ -16,7 +16,7 @@ class PostRepositoryWriter
         $this->filesystem = $filesystem;
     }
 
-    public function save(Post $entry, $files)
+    public function save(NewPost $entry, $files)
     {
         foreach ($files as $uploadedFile) {
             try {

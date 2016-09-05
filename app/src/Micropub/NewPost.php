@@ -6,10 +6,10 @@ use DateTimeImmutable;
 use RuntimeException;
 
 /**
- * Class Post
+ * Class NewPost
  * @author yourname
  */
-class Post implements \JsonSerializable
+class NewPost implements \JsonSerializable
 {
     protected $properties;
 
@@ -45,11 +45,6 @@ class Post implements \JsonSerializable
         );
     }
 
-    public function getPostId()
-    {
-        return $this->getUid();
-    }
-
     protected function validateDate($config)
     {
         try {
@@ -60,11 +55,6 @@ class Post implements \JsonSerializable
         } catch (\Exception $e) {
             throw new RuntimeException($config['published'] . ' is not a valid date');
         }
-    }
-
-    protected function getYear()
-    {
-        return $this->properties['published']->format("Y");
     }
 
     protected function getUid()
