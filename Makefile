@@ -8,6 +8,9 @@ test_ci:
 docker-build-dev:
 	docker-compose -f resources/docker/docker-compose-dev.yml build
 
+composer-install:
+	docker-compose -f resources/docker/docker-compose-dev.yml run build composer install
+
 run:
 	docker-compose -f resources/docker/docker-compose-dev.yml up
 
