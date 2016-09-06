@@ -34,6 +34,17 @@ class NewPostTest extends UnitTest
     /**
      * @test
      */
+    public function it_adds_h_property_if_it_does_not_exist()
+    {
+        $post = new NewPost([]);
+        $result = json_decode(json_encode($post), true);
+        $this->assertArrayHasKey("h", $result);
+        $this->assertEquals("entry", $result["h"]);
+    }
+
+    /**
+     * @test
+     */
     public function it_removes_access_token_from_properties()
     {
         $post = new NewPost(["access_token" => "test"]);

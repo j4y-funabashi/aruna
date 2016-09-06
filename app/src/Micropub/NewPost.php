@@ -21,6 +21,9 @@ class NewPost implements \JsonSerializable
         $this->properties = $config;
         $this->properties['uid'] = (new DateTimeImmutable())->format("YmdHis")."_".uniqid("", true);
         unset($this->properties['access_token']);
+        if (!isset($this->properties["h"])) {
+            $this->properties["h"] = "entry";
+        }
 
         foreach ($files as $file_key => $uploadedFile) {
             $this->properties['files'][$file_key] = $this->getFilePath().".".$uploadedFile['original_ext'];
