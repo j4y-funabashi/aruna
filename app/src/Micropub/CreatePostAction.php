@@ -39,8 +39,12 @@ class CreatePostAction
 
     private function getAccessToken($request)
     {
+        $body_token = $request->request->get('access_token');
+        if ($request->getContentType() == "json") {
+            $body_token = json_decode($request->getContent(), true)["access_token"];
+        }
         return (null == $request->headers->get('Authorization'))
-            ? $request->request->get('access_token')
+            ? $body_token
             : $request->headers->get('Authorization');
     }
 
@@ -50,6 +54,11 @@ class CreatePostAction
         foreach ($request->request->all() as $key => $value) {
             $entry[$key] = $value;
         }
+
+        if ($request->getContentType() == "json") {
+            return json_decode($request->getContent(), true);
+        }
+
         return $entry;
     }
 

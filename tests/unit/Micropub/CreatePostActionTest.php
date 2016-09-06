@@ -126,4 +126,37 @@ class CreatePostActionTest extends UnitTest
 
         $response = $this->SUT->__invoke($request);
     }
+
+    /**
+     * @test
+     */
+    public function it_passes_valid_json_post_through_to_handler_inside_a_command()
+    {
+        $request = new Request(
+            $query = array(),
+            $post_request = array(),
+            $attributes = array(),
+            $cookies = array(),
+            $files = array(),
+            $server = array("CONTENT_TYPE" => "application/json"),
+            $content = '{"h": "entry", "access_token": 123}'
+        );
+        $handler_response = new Found([]);
+
+        $this->handler->handle(
+            new \Aruna\Micropub\CreatePostCommand(
+                json_decode($content, true),
+                array(),
+                123
+            )
+        )->shouldBeCalled()
+        ->willReturn($handler_response);
+
+        $this->responder->setPayload($handler_response)
+            ->shouldBeCalled();
+        $this->responder->__invoke()
+            ->shouldBeCalled();
+
+        $response = $this->SUT->__invoke($request);
+    }
 }
