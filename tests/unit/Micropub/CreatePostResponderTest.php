@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Aruna\Response\OK;
 use Aruna\Response\Unauthorized;
 use Aruna\Response\ServerError;
+use Aruna\Micropub\NewPost;
 
 class CreatePostResponderTest extends UnitTest
 {
@@ -28,9 +29,9 @@ class CreatePostResponderTest extends UnitTest
      */
     public function it_returns_ok()
     {
-        $this->SUT->setPayload(new OK([]));
+        $this->SUT->setPayload(new OK(["items" => [new NewPost([])]]));
         $result = $this->SUT->__invoke();
-        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertEquals(202, $result->getStatusCode());
     }
 
     /**

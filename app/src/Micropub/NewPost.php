@@ -63,7 +63,7 @@ class NewPost implements \JsonSerializable
         }
     }
 
-    private function getUid()
+    public function getUid()
     {
         return $this->properties['uid'];
     }
