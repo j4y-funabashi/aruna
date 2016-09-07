@@ -37,10 +37,11 @@ class ProcessCacheHandler
         );
 
         foreach ($posts as $post) {
-
+            $event_type = $this->getEventType($post);
             $m = sprintf(
-                "Processing Post [%s]",
-                $post->get("url")
+                "Processing Event [%s][%s]",
+                $event_type,
+                $post_data["uid"]
             );
             $this->log->debug($m);
 
@@ -49,11 +50,16 @@ class ProcessCacheHandler
             } catch (\Exception $e) {
                 $m = sprintf(
                     "Could not process post %s [%s]",
-                    $post->get("url"),
+                    $post["uid"],
                     $e->getMessage() . " " . $e->getTraceAsString()
                 );
                 $this->log->critical($m);
             }
         }
+    }
+
+    private function getEventType($event)
+    {
+        return "CreatePost";
     }
 }

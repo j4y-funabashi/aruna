@@ -17,7 +17,7 @@ class ProcessCacheCommand extends Command
             ->setName('cache')
             ->setDescription('Generate read cache')
             ->addOption('forever', null, InputOption::VALUE_NONE, 'Run the queue continuously')
-            ->addOption('sleep', null, InputOption::VALUE_REQUIRED, 'Sleep this many seconds between queue runs', 60);
+            ->addOption('sleep', null, InputOption::VALUE_REQUIRED, 'Sleep this many seconds between queue runs', 10);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

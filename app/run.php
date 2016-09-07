@@ -39,8 +39,16 @@ $app['image_resizer'] = $app->share(function () use ($app) {
     );
 });
 $app['event_store'] = $app->share(function () use ($app) {
-    $adapter = new League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
-    $filesystem = new League\Flysystem\Filesystem($adapter);
+    $client = \Aws\S3\S3Client::factory([
+        'credentials' => [
+            'key'    => getenv("S3_KEY"),
+            'secret' => getenv("S3_SECRET"),
+        ],
+        'region' => 'eu-west-1',
+        'version' => '2006-03-01',
+    ]);
+    $adapter = new \League\Flysystem\AwsS3v3\AwsS3Adapter($client, getenv("S3_BUCKET"));
+    $filesystem = new \League\Flysystem\Filesystem($adapter);
     return new Aruna\EventStore($filesystem);
 });
 $app['db_cache'] = $app->share(function () use ($app) {

@@ -113,8 +113,8 @@ class PostRepositoryReader
         if ($post === false) {
             return 0;
         }
-        $out = new \Aruna\PostViewModel(json_decode($post['post'], true));
-        return basename($out->get("url"));
+        $out = json_decode($post['post'], true);
+        return $out["uid"];
     }
 
     public function listMonths()
