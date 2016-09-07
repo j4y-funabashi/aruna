@@ -4,11 +4,8 @@ namespace Aruna;
 
 class ShowPhotosResponder extends Responder
 {
-    protected $payload_method = [
-        "Aruna\Found" => "feed"
-    ];
 
-    public function feed()
+    public function found()
     {
         $posts = $this->renderPosts();
         $out = $this->view->render(
