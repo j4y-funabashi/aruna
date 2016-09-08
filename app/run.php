@@ -65,16 +65,16 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
 
     $processPostsPipeline = (new League\Pipeline\Pipeline())
         ->pipe(
-            new Aruna\Pipeline\ParseCategories()
+            new Aruna\Micropub\ParseCategories()
         )
         ->pipe(
-            new Aruna\Action\CacheToSql(
+            new Aruna\Micropub\CacheToSql(
                 $app['monolog'],
                 $app['db_cache']
             )
         )
         ->pipe(
-            new Aruna\SendWebmention(
+            new Aruna\Micropub\SendWebmention(
                 $app['http_client'],
                 new Aruna\DiscoverEndpoints(),
                 new Aruna\FindUrls(),
