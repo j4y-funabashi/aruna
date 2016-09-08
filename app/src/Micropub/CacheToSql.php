@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna\Action;
+namespace Aruna\Micropub;
 
 /**
  * Class CacheToSql

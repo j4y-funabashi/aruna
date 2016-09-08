@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna\Pipeline;
+namespace Aruna\Micropub;
 
 /**
  * Class ParseCategories
