@@ -1,9 +1,9 @@
-app_daemon:
-    build: app
-    env_file: .env
-    volumes:
-        - ../..:/srv/aruna
-        - /media/jayr/aruna:/media/jayr/aruna
+#app_daemon:
+    #build: app
+    #env_file: .env
+    #volumes:
+        #- ../..:/srv/aruna
+        #- /media/jayr/aruna:/media/jayr/aruna
 
 webserver:
     build: webserver
