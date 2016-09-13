@@ -2,8 +2,6 @@
 
 namespace Aruna;
 
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
 /**
  * Class PostViewModel
  * @author yourname

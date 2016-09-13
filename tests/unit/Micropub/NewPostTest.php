@@ -25,7 +25,7 @@ class NewPostTest extends UnitTest
      */
     public function it_can_be_json_encoded_when_valid()
     {
-        $post = new NewPost([]);
+        $post = new NewPost([], ["photo" => ["original_ext" => "jpg"]]);
         $result = json_encode($post);
         $this->assertEquals(JSON_ERROR_NONE, json_last_error());
         $this->assertEquals($result, $post->asJson());
@@ -50,5 +50,15 @@ class NewPostTest extends UnitTest
         $post = new NewPost(["access_token" => "test"]);
         $result = json_decode(json_encode($post), true);
         $this->assertFalse(isset($result["access_token"]));
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_a_filepath_from_the_posts_uid()
+    {
+        $post = new NewPost([]);
+        $result = $post->getFilePath();
+        $this->assertRegExp("/\d{4}\/\d{14}_\w{13}/", $result);
     }
 }
