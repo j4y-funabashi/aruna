@@ -12,7 +12,6 @@ class MicropubServiceProvider implements ServiceProviderInterface
     {
         $app['action.create_post'] = $app->share(function () use ($app) {
             return new CreatePostAction(
-                $app["monolog"],
                 $app["create_post.handler"],
                 new CreatePostResponder(
                     $app['response'],
