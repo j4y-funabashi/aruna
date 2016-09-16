@@ -20,7 +20,6 @@ class NewPost implements \JsonSerializable
         $config['published'] = $this->validateDate($config);
         $this->properties = $config;
         $this->properties['uid'] = (new DateTimeImmutable())->format("YmdHis")."_".uniqid();
-        unset($this->properties['access_token']);
         if (!isset($this->properties["h"])) {
             $this->properties["h"] = "entry";
         }

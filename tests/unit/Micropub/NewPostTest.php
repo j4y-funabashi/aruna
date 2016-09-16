@@ -3,6 +3,7 @@
 namespace Test;
 
 use Aruna\Micropub\NewPost;
+use Aruna\Micropub\UploadedFile;
 
 class NewPostTest extends UnitTest
 {
@@ -25,7 +26,16 @@ class NewPostTest extends UnitTest
      */
     public function it_can_be_json_encoded_when_valid()
     {
-        $post = new NewPost([], ["photo" => ["original_ext" => "jpg"]]);
+        $uploadedFile = new UploadedFile(
+            $real_path = '/tmp/test',
+            $original_ext = 'jpg',
+            $is_readable = true,
+            $is_valid = true
+        );
+        $post = new NewPost(
+            ["hello" => "test"],
+            [$uploadedFile]
+        );
         $result = json_encode($post);
         $this->assertEquals(JSON_ERROR_NONE, json_last_error());
         $this->assertEquals($result, $post->asJson());
@@ -40,16 +50,6 @@ class NewPostTest extends UnitTest
         $result = json_decode(json_encode($post), true);
         $this->assertArrayHasKey("h", $result);
         $this->assertEquals("entry", $result["h"]);
-    }
-
-    /**
-     * @test
-     */
-    public function it_removes_access_token_from_properties()
-    {
-        $post = new NewPost(["access_token" => "test"]);
-        $result = json_decode(json_encode($post), true);
-        $this->assertFalse(isset($result["access_token"]));
     }
 
     /**

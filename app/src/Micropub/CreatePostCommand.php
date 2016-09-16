@@ -14,6 +14,7 @@ class CreatePostCommand
         array $files,
         $access_token
     ) {
+        unset($entry["access_token"]);
         $this->entry = $entry;
         $this->files = $files;
         $this->access_token = $access_token;
