@@ -18,7 +18,7 @@ class CreatePostTest extends SystemTest
         $command = new CreatePostCommand(
             $post = [],
             $files = [],
-            $access_token = ""
+            $access_token = "Bearer xxx"
         );
         $result = $SUT->handle($command);
 
