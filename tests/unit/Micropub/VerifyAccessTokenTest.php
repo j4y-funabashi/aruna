@@ -57,7 +57,7 @@ class VerifyAccessTokenTest extends UnitTest
     /**
      * @test
      * @expectedException Exception
-     * @expectedExceptionMessage Token endpoint returned with status 400
+     * @expectedExceptionMessage Token endpoint returned with status [400]
      */
     public function it_throws_exception_token_endpoint_does_not_return_200()
     {

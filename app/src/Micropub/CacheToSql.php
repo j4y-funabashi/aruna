@@ -18,20 +18,18 @@ class CacheToSql
 
     public function __invoke(array $post)
     {
-        $post_data = new \Aruna\Micropub\PostData();
         $q = "REPLACE INTO posts (id, published, post)
             VALUES
             (:id, :published, :post)";
         $r = $this->db->prepare($q);
 
-        $data = [
-            ":id" => $post["uid"],
-            ":published" => $post['published'],
-            ":post" => json_encode($post_data->toMfArray($post))
-        ];
-
+        $post_data = new \Aruna\Micropub\PostData();
         $r->execute(
-            $data
+            [
+                ":id" => $post["uid"],
+                ":published" => $post['published'],
+                ":post" => json_encode($post_data->toMfArray($post))
+            ]
         );
 
         return $post;

@@ -41,10 +41,12 @@ class VerifyAccessToken
         parse_str($response->getBody(), $body);
 
         if ($response->getStatusCode() !== 200) {
-            throw new \Exception("Token endpoint returned with status ".$response->getStatusCode());
+            $message = sprintf("Token endpoint returned with status [%s]", $response->getStatusCode());
+            throw new \Exception($message);
         }
         if ($body['me'] !== $this->me) {
-            throw new \Exception("Me value [".$body['me']."] does not match ". $this->me);
+            $message = sprintf("Me value [%s] does not match %s", $body['me'], $this->me);
+            throw new \Exception($message);
         }
         if ($body['scope'] !== "post") {
             throw new \Exception("scope is not post");

@@ -25,4 +25,9 @@ class UploadedFile
     {
         return $this->original_ext;
     }
+
+    public function getRealPath()
+    {
+        return $this->real_path;
+    }
 }

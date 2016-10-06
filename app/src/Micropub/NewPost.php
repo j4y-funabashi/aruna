@@ -50,6 +50,11 @@ class NewPost implements \JsonSerializable
         );
     }
 
+    public function getUid()
+    {
+        return $this->properties['uid'];
+    }
+
     private function validateDate($config)
     {
         try {
@@ -60,10 +65,5 @@ class NewPost implements \JsonSerializable
         } catch (\Exception $e) {
             throw new RuntimeException($config['published'] . ' is not a valid date');
         }
-    }
-
-    public function getUid()
-    {
-        return $this->properties['uid'];
     }
 }

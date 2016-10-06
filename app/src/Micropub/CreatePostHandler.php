@@ -17,13 +17,14 @@ class CreatePostHandler
         $accessToken
     ) {
         $this->postRepository = $postRepository;
-        $this->accessToken = $accessToken;
+        $this->accessTokenRepository = $accessToken;
     }
 
     public function handle(CreatePostCommand $command)
     {
         try {
-            $this->accessToken->getTokenFromAuthCode($command->getAccessToken());
+            $response = $this->accessTokenRepository
+                ->getTokenFromAuthCode($command->getAccessToken());
         } catch (\Exception $e) {
             $message = sprintf("Invalid access token [%s]", $command->getAccessToken());
             return new Unauthorized(["message" => $message]);
