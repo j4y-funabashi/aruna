@@ -33,7 +33,9 @@ class ProcessCacheCommand extends Command
                 $m = sprintf("Failed to run app %s", $e->getMessage());
                 $app->getService('monolog')->critical($m);
             }
-            sleep($input->getOption("sleep"));
+            if ($foreverHandler->isForever()) {
+                sleep($input->getOption("sleep"));
+            }
         } while ($foreverHandler->isForever());
     }
 }

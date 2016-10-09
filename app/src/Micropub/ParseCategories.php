@@ -14,6 +14,9 @@ class ParseCategories
         if (!isset($post["category"])) {
             return $post;
         }
+        if (is_string($post['category'])) {
+            $post['category'] = explode(",", $post['category']);
+        }
         $new_categories = [];
         foreach ($post["category"] as $category) {
             $category = trim($category);

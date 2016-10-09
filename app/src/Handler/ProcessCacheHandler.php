@@ -28,7 +28,7 @@ class ProcessCacheHandler
     private function processPosts()
     {
         $initial_id = $this->postsRepositoryReader->findLatestId();
-        $rpp = 1000;
+        $rpp = 10;
 
         $posts = $this->eventStore->listFromId(
             "posts",
@@ -36,12 +36,13 @@ class ProcessCacheHandler
             $rpp
         );
 
+
         foreach ($posts as $post) {
             $event_type = $this->getEventType($post);
             $m = sprintf(
                 "Processing Event [%s][%s]",
                 $event_type,
-                $post_data["uid"]
+                $post["uid"]
             );
             $this->log->debug($m);
 
