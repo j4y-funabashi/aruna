@@ -26,5 +26,16 @@ reset_db () {
     chmod -Rv u+rwx /media/jayr/aruna
 }
 
-install_docker
-reset_db
+install_webstack () {
+    sudo apt-get update -q \
+    && sudo apt-get install -qy \
+        nginx \
+        php5-fpm
+
+    sudo cp nginx.conf /etc/nginx/conf.d/default.conf
+    sudo cp php5-fpm.conf /etc/php5/fpm/pool.d/aruna.conf
+}
+
+#install_docker
+#reset_db
+install_webstack
