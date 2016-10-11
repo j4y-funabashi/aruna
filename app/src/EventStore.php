@@ -77,12 +77,11 @@ class EventStore
         $extension = "json",
         $limit = 0
     ) {
-
         $files = array_values(
             array_filter(
                 $this->filesystem->listContents($root_dir, true),
                 function ($file_path) use ($extension) {
-                    return $file_path['extension'] == $extension;
+                    return $file_path['type'] == "file" && $file_path['extension'] == $extension;
                 }
             )
         );

@@ -20,6 +20,13 @@ class ProcessCacheCommand extends Command
             ->addOption('sleep', null, InputOption::VALUE_REQUIRED, 'Sleep this many seconds between queue runs', 10);
     }
 
+    protected function initialize()
+    {
+        $db = $this->getApplication()
+            ->getService("db_cache");
+        $db->init();
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
