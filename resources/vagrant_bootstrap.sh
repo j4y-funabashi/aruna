@@ -1,3 +1,5 @@
+MEDIA_DIR=/media/jayr/aruna
+
 install_docker () {
 
     locale-gen en_GB.UTF-8
@@ -27,13 +29,31 @@ reset_db () {
 }
 
 install_webstack () {
+
+    sudo mkdir -p $MEDIA_DIR
+    sudo chown $USER $MEDIA_DIR
+    sudo chgrp www-data $MEDIA_DIR
+    sudo chmod g+w $MEDIA_DIR
+
     sudo apt-get update -q \
     && sudo apt-get install -qy \
         nginx \
-        php5-fpm
+        php5-fpm \
+        php5-cli \
+        php5-sqlite \
+        supervisor \
+        sqlite3
 
-    sudo cp nginx.conf /etc/nginx/conf.d/default.conf
-    sudo cp php5-fpm.conf /etc/php5/fpm/pool.d/aruna.conf
+    sudo cp /srv/aruna/env.example /srv/aruna/.env
+
+    sudo cp /srv/aruna/resources/nginx.conf /etc/nginx/conf.d/default.conf
+    sudo cp /srv/aruna/resources/php5-fpm.conf /etc/php5/fpm/pool.d/aruna.conf
+    sudo cp /srv/aruna/resources/supervisord.conf /etc/supervisor/supervisord.conf
+    sudo cp /srv/aruna/resources/supervisor_app.conf /etc/supervisor/conf.d/aruna.conf
+
+    sudo service nginx restart
+    sudo service php5-fpm restart
+    sudo service supervisor restart
 }
 
 #install_docker
