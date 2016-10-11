@@ -4,11 +4,8 @@ namespace Aruna;
 
 class ShowPostResponder extends Responder
 {
-    protected $payload_method = [
-        "Aruna\Found" => "post"
-    ];
 
-    public function post()
+    public function found()
     {
         $posts = $this->renderPosts();
         $out = $this->view->render(

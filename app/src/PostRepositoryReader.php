@@ -101,20 +101,15 @@ class PostRepositoryReader
     public function findLatestId()
     {
         $q = "SELECT
-            id,
-            published,
-            post
-            FROM posts
-            ORDER BY id DESC
-            LIMIT 1;";
+            MAX(id) AS id
+            FROM posts";
         $r = $this->db->prepare($q);
         $r->execute();
         $post = $r->fetch();
         if ($post === false) {
             return 0;
         }
-        $out = new \Aruna\PostViewModel(json_decode($post['post'], true));
-        return basename($out->get("url"));
+        return $post["id"];
     }
 
     public function listMonths()

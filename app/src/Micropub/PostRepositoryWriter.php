@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Micropub;
 
 use League\Flysystem\FileExistsException;
 use RuntimeException;
@@ -11,23 +11,22 @@ use RuntimeException;
  */
 class PostRepositoryWriter
 {
-    public function __construct($filesystem, $view)
+    public function __construct($filesystem)
     {
         $this->filesystem = $filesystem;
-        $this->view = $view;
     }
 
-    public function save(Post $entry, $files)
+    public function save(NewPost $entry, $files)
     {
         foreach ($files as $uploadedFile) {
             try {
-                $stream = fopen($uploadedFile['real_path'], 'rb');
+                $stream = fopen($uploadedFile->getRealPath(), 'rb');
                 if (!$stream) {
-                    $m = "Could not open file ".$uploadedFile['real_path'];
+                    $m = "Could not open file ".$uploadedFile->getRealPath();
                     throw new \RuntimeException($m);
                 }
                 $this->filesystem->writeStream(
-                    $entry->getFilePath().".".$uploadedFile['original_ext'],
+                    $entry->getFilePath().".".$uploadedFile->getExtension(),
                     $stream
                 );
             } catch (FileExistsException $e) {
@@ -41,19 +40,6 @@ class PostRepositoryWriter
                 $entry->getFilePath().".json",
                 $entry->asJson()
             );
-
-            // html file
-            $postData = new PostData();
-            $view_model = new PostViewModel(
-                $postData->toMfArray(json_decode($entry->asJson(), true))
-            );
-            $renderPost = (new RenderPost($this->view));
-            $post_html = $renderPost->__invoke($view_model);
-            $this->filesystem->write(
-                $entry->getFilePath().".html",
-                $post_html
-            );
-
         } catch (FileExistsException $e) {
             throw new RuntimeException($e->getMessage());
         }

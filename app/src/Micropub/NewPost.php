@@ -1,26 +1,31 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Micropub;
 
 use DateTimeImmutable;
 use RuntimeException;
 
 /**
- * Class Post
+ * Class NewPost
  * @author yourname
  */
-class Post implements \JsonSerializable
+class NewPost implements \JsonSerializable
 {
     protected $properties;
 
-    public function __construct($config, $files = [])
-    {
+    public function __construct(
+        array $config,
+        $files = []
+    ) {
         $config['published'] = $this->validateDate($config);
         $this->properties = $config;
         $this->properties['uid'] = (new DateTimeImmutable())->format("YmdHis")."_".uniqid();
+        if (!isset($this->properties["h"])) {
+            $this->properties["h"] = "entry";
+        }
 
         foreach ($files as $file_key => $uploadedFile) {
-            $this->properties['files'][$file_key] = $this->getFilePath().".".$uploadedFile['original_ext'];
+            $this->properties['files'][$file_key] = $this->getFilePath().".".$uploadedFile->getExtension();
         }
     }
 
@@ -45,12 +50,12 @@ class Post implements \JsonSerializable
         );
     }
 
-    public function getPostId()
+    public function getUid()
     {
-        return $this->getUid();
+        return $this->properties['uid'];
     }
 
-    protected function validateDate($config)
+    private function validateDate($config)
     {
         try {
             $published = (isset($config['published']))
@@ -60,15 +65,5 @@ class Post implements \JsonSerializable
         } catch (\Exception $e) {
             throw new RuntimeException($config['published'] . ' is not a valid date');
         }
-    }
-
-    protected function getYear()
-    {
-        return $this->properties['published']->format("Y");
-    }
-
-    protected function getUid()
-    {
-        return $this->properties['uid'];
     }
 }

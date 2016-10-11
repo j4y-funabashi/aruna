@@ -8,11 +8,8 @@ namespace Aruna;
  */
 class ShowLatestPostsResponder extends Responder
 {
-    protected $payload_method = [
-        "Aruna\Found" => "feed"
-    ];
 
-    public function feed()
+    public function found()
     {
         $posts = $this->renderPosts();
 

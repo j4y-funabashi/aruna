@@ -1,14 +1,14 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Micropub;
 
 /**
- * Class AccessToken
+ * Class VerifyAccessToken
  * @author yourname
  */
-class AccessToken
+class VerifyAccessToken
 {
-    private $token_url = "https://tokens.indieauth.com/token";
+    private $token_url;
     private $me;
 
     public function __construct(
@@ -41,10 +41,12 @@ class AccessToken
         parse_str($response->getBody(), $body);
 
         if ($response->getStatusCode() !== 200) {
-            throw new \Exception("Token endpoint returned with status ".$response->getStatusCode());
+            $message = sprintf("Token endpoint returned with status [%s]", $response->getStatusCode());
+            throw new \Exception($message);
         }
         if ($body['me'] !== $this->me) {
-            throw new \Exception($body['me'] ." does not match ". $this->me);
+            $message = sprintf("Me value [%s] does not match %s", $body['me'], $this->me);
+            throw new \Exception($message);
         }
         if ($body['scope'] !== "post") {
             throw new \Exception("scope is not post");

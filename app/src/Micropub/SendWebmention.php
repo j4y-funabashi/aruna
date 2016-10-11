@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Micropub;
 
 class SendWebmention
 {
@@ -17,8 +17,9 @@ class SendWebmention
         $this->log = $log;
     }
 
-    public function __invoke($post)
+    public function __invoke(array $post)
     {
+        return $post;
         foreach ($this->findUrls->__invoke($post->toString()) as $url) {
 
             $this->log->info("Finding webmention endpoint [".$url."]");

@@ -65,8 +65,7 @@ class EventStore
             array_map(
                 function ($post_filepath) {
                     $file_contents = $this->filesystem->read($post_filepath['path']);
-                    $mf_array = \Mf2\parse($file_contents, "http://j4y.co");
-                    return new \Aruna\PostViewModel($mf_array);
+                    return json_decode($file_contents, true);
                 },
                 array_slice($all_paths, $key, $rpp)
             )
@@ -74,15 +73,15 @@ class EventStore
     }
 
     public function findByExtension(
-        $root_dir = 'posts',
-        $extension = "html",
+        $root_dir = null,
+        $extension = "json",
         $limit = 0
     ) {
         $files = array_values(
             array_filter(
                 $this->filesystem->listContents($root_dir, true),
                 function ($file_path) use ($extension) {
-                    return substr($file_path['path'], -strlen($extension)) == $extension;
+                    return $file_path['type'] == "file" && $file_path['extension'] == $extension;
                 }
             )
         );
@@ -98,6 +97,7 @@ class EventStore
                 $limit
             );
         }
+
         return $out;
     }
 

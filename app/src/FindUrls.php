@@ -10,7 +10,7 @@ class FindUrls
         preg_match_all($regex, $in, $matches);
         $out = array();
         foreach ($matches[0] as $match) {
-            $out[] = $match;
+            $out[] = trim($match);
         }
         return array_unique(array_filter($out));
     }

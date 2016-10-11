@@ -8,8 +8,15 @@ use Symfony\Component\HttpFoundation\Request;
  * Class ShowDateFeedAction
  * @author yourname
  */
-class ShowDateFeedAction extends Action
+class ShowDateFeedAction
 {
+    public function __construct(
+        Responder $responder,
+        Handler $handler
+    ) {
+        $this->responder = $responder;
+        $this->handler = $handler;
+    }
 
     public function __invoke(Request $request, $year, $month, $day)
     {

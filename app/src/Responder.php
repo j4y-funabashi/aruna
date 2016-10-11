@@ -27,10 +27,8 @@ abstract class Responder
 
     public function __invoke()
     {
-        $class = get_class($this->payload);
-        $method = isset($this->payload_method[$class])
-            ? $this->payload_method[$class]
-            : 'notRecognized';
+        $method = explode("\\", get_class($this->payload));
+        $method = strtolower(array_pop($method));
         $this->$method();
         return $this->response;
     }

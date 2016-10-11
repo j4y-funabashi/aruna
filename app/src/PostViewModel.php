@@ -2,8 +2,6 @@
 
 namespace Aruna;
 
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
 /**
  * Class PostViewModel
  * @author yourname
@@ -13,7 +11,9 @@ class PostViewModel
     private $mf_array;
     private $entry;
 
-    public function __construct(array $mf_array) {
+    public function __construct(
+        array $mf_array
+    ) {
         $this->mf_array = $mf_array;
         $this->entry = $this->findFirstEntry($mf_array);
     }

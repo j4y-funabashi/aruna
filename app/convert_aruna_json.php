@@ -12,7 +12,7 @@ function list_files($in_dir) {
 function main($in_dir, $out_dir) {
     require_once __DIR__ . "/app.php";
     $files_parsed = 0;
-    $postData = new Aruna\PostData();
+    $postData = new Aruna\Micropub\PostData();
 
     foreach (list_files($in_dir) as $file) {
 

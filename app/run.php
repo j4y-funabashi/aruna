@@ -39,12 +39,12 @@ $app['image_resizer'] = $app->share(function () use ($app) {
     );
 });
 $app['event_store'] = $app->share(function () use ($app) {
-    $adapter = new League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
-    $filesystem = new League\Flysystem\Filesystem($adapter);
+    $adapter = new \League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
+    $filesystem = new \League\Flysystem\Filesystem($adapter);
     return new Aruna\EventStore($filesystem);
 });
 $app['db_cache'] = $app->share(function () use ($app) {
-    $db = new \PDO("sqlite:".$app['db_file']);
+    $db = new Aruna\Db("sqlite:".$app['db_file']);
     $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     $db->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
     return $db;
@@ -53,20 +53,24 @@ $app['posts_repository_reader'] = $app->share(function () use ($app) {
     return new Aruna\PostRepositoryReader($app['db_cache']);
 });
 
-$app['process_cache_handler'] = $app->share(function () use ($app) {
 
+
+
+
+// processCacheProvider
+$app['process_cache_handler'] = $app->share(function () use ($app) {
     $processPostsPipeline = (new League\Pipeline\Pipeline())
         ->pipe(
-            new Aruna\Pipeline\ParseCategories()
+            new Aruna\Micropub\ParseCategories()
         )
         ->pipe(
-            new Aruna\Action\CacheToSql(
+            new Aruna\Micropub\CacheToSql(
                 $app['monolog'],
                 $app['db_cache']
             )
         )
         ->pipe(
-            new Aruna\SendWebmention(
+            new Aruna\Micropub\SendWebmention(
                 $app['http_client'],
                 new Aruna\DiscoverEndpoints(),
                 new Aruna\FindUrls(),
@@ -74,7 +78,6 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
             )
         )
         ;
-
     return new Aruna\Handler\ProcessCacheHandler(
         $app['monolog'],
         $app['event_store'],

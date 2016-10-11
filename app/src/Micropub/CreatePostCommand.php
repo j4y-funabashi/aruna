@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Micropub;
 
 /**
  * Class CreatePostCommand
@@ -14,6 +14,7 @@ class CreatePostCommand
         array $files,
         $access_token
     ) {
+        unset($entry["access_token"]);
         $this->entry = $entry;
         $this->files = $files;
         $this->access_token = $access_token;
@@ -26,6 +27,16 @@ class CreatePostCommand
 
     public function getFiles()
     {
-        return $this->files;
+        return array_filter(
+            $this->files,
+            function ($uploadedFile) {
+                return $uploadedFile->isValid();
+            }
+        );
+    }
+
+    public function getAccessToken()
+    {
+        return $this->access_token;
     }
 }

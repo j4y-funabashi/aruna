@@ -17,7 +17,14 @@ class ProcessCacheCommand extends Command
             ->setName('cache')
             ->setDescription('Generate read cache')
             ->addOption('forever', null, InputOption::VALUE_NONE, 'Run the queue continuously')
-            ->addOption('sleep', null, InputOption::VALUE_REQUIRED, 'Sleep this many seconds between queue runs', 60);
+            ->addOption('sleep', null, InputOption::VALUE_REQUIRED, 'Sleep this many seconds between queue runs', 10);
+    }
+
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $db = $this->getApplication()
+            ->getService("db_cache");
+        $db->init();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -31,9 +38,11 @@ class ProcessCacheCommand extends Command
                 $handler->handle();
             } catch (\Exception $e) {
                 $m = sprintf("Failed to run app %s", $e->getMessage());
-                $app->getService('monolog')->critical($m);
+                $app->getService('monolog')->critical($m, $e->getTrace());
             }
-            sleep($input->getOption("sleep"));
+            if ($foreverHandler->isForever()) {
+                sleep($input->getOption("sleep"));
+            }
         } while ($foreverHandler->isForever());
     }
 }
