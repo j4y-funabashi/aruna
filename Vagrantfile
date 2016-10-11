@@ -9,7 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           v.memory = 1024
             v.cpus = 2
     end
-    config.vm.box = "ubuntu/trusty64"
+    config.vm.box = "ubuntu/xenial64"
     config.vm.network "forwarded_port", guest: 80, host: 4567
     config.vm.provision :shell, path: "resources/vagrant_bootstrap.sh"
     config.vm.synced_folder ".", "/srv/aruna"
