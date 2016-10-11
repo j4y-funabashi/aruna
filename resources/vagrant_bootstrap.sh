@@ -51,8 +51,8 @@ install_webstack () {
 
     sudo cp /srv/aruna/resources/nginx.conf /etc/nginx/conf.d/default.conf
     sudo cp /srv/aruna/resources/php5-fpm.conf /etc/php/7.0/fpm/pool.d/aruna.conf
-    #sudo cp /srv/aruna/resources/supervisord.conf /etc/supervisor/supervisord.conf
-    #sudo cp /srv/aruna/resources/supervisor_app.conf /etc/supervisor/conf.d/aruna.conf
+    sudo cp /srv/aruna/resources/supervisord.conf /etc/supervisor/supervisord.conf
+    sudo cp /srv/aruna/resources/supervisor_app.conf /etc/supervisor/conf.d/aruna.conf
 
     sudo service nginx restart
     sudo service php7.0-fpm restart
