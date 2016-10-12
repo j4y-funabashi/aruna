@@ -34,7 +34,7 @@ class MicropubServiceProvider implements ServiceProviderInterface
             );
         });
         $app['posts_repository_writer'] = $app->share(function () use ($app) {
-            $adapter = new \League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
+            $adapter = new \League\Flysystem\Adapter\Local($app['posts_root']);
             $filesystem = new \League\Flysystem\Filesystem($adapter);
             return new PostRepositoryWriter($filesystem);
         });
