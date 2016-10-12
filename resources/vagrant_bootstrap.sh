@@ -44,6 +44,7 @@ install_webstack () {
         php7.0-curl \
         php7.0-dom \
         php7.0-zip \
+        php-imagick \
         supervisor \
         sqlite3
 
