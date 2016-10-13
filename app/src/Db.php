@@ -16,6 +16,12 @@ class Db extends \PDO
             );";
         $r = $this->exec($q);
 
+        $q = "CREATE TABLE IF NOT EXISTS seen_ids (
+                id
+                PRIMARY KEY (id)
+            );";
+        $r = $this->exec($q);
+
         $q = "CREATE TABLE IF NOT EXISTS mentions (
             id,
             published,
