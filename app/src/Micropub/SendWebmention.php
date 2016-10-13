@@ -2,6 +2,8 @@
 
 namespace Aruna\Micropub;
 
+use Aruna\PostViewModel;
+
 class SendWebmention
 {
 
@@ -17,7 +19,7 @@ class SendWebmention
         $this->log = $log;
     }
 
-    public function __invoke(array $post)
+    public function __invoke(PostViewModel $post)
     {
         return $post;
         foreach ($this->findUrls->__invoke($post->toString()) as $url) {
