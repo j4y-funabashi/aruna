@@ -35,6 +35,7 @@ class PostRepositoryReader
             FROM posts
             WHERE strftime('%Y', published) = :year
             ".implode("\n", $where)."
+            AND date_deleted IS NULL
             ORDER BY published DESC, id DESC
             ";
         $r = $this->db->prepare($q);
