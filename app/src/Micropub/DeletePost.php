@@ -12,6 +12,9 @@ class DeletePost
 
     public function __invoke($event)
     {
-        $this->postsRepository->delete(basename($event["url"]));
+        $this->postsRepository->delete(
+            basename($event["url"]),
+            $event['published']
+        );
     }
 }

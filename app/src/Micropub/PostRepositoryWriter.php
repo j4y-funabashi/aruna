@@ -48,15 +48,17 @@ class PostRepositoryWriter
         }
     }
 
-    public function delete($post_id)
-    {
+    public function delete(
+        $post_id,
+        $date_deleted
+    ) {
         $q = "UPDATE posts
             SET date_deleted = :date_deleted
             WHERE id = :post_id";
         $r = $this->db->prepare($q);
         $data = [
             ":post_id" => $post_id,
-            ":date_deleted" => (new \DateTimeImmutable())->format("c")
+            ":date_deleted" => $date_deleted
         ];
         $r->execute($data);
     }
