@@ -65,36 +65,12 @@ $app['posts_repository_writer'] = $app->share(function () use ($app) {
 
 // processCacheProvider
 $app['process_cache_handler'] = $app->share(function () use ($app) {
-    $deletePostsPipeline = (new League\Pipeline\Pipeline())
-        ->pipe(
-            new Aruna\Micropub\DeletePost(
-                $app['posts_repository_writer']
-            )
-        );
-    $processPostsPipeline = (new League\Pipeline\Pipeline())
-        ->pipe(
-            new Aruna\Micropub\ParseCategories()
-        )
-        ->pipe(
-            new Aruna\Micropub\CacheToSql(
-                $app['monolog'],
-                $app['db_cache']
-            )
-        )
-        ->pipe(
-            new Aruna\Micropub\SendWebmention(
-                $app['http_client'],
-                new Aruna\DiscoverEndpoints(),
-                new Aruna\FindUrls(),
-                $app['monolog']
-            )
-        );
+    $pipelineFactory = new Aruna\Micropub\ProcessingPipelineFactory($app);
     return new Aruna\Handler\ProcessCacheHandler(
         $app['monolog'],
         $app['event_store'],
-        $processPostsPipeline,
         $app['posts_repository_reader'],
-        $deletePostsPipeline
+        $pipelineFactory
     );
 });
 

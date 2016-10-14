@@ -11,21 +11,19 @@ class ProcessCacheHandler
     public function __construct(
         $log,
         $eventStore,
-        $processPostsPipeline,
         $postsRepositoryReader,
-        $deletePostsPipeline
+        $pipelineFactory
     ) {
         $this->log = $log;
         $this->eventStore = $eventStore;
-        $this->processPostsPipeline = $processPostsPipeline;
         $this->postsRepositoryReader = $postsRepositoryReader;
-        $this->deletePostsPipeline = $deletePostsPipeline;
+        $this->pipelineFactory = $pipelineFactory;
     }
 
     public function handle()
     {
         $initial_id = $this->postsRepositoryReader->findLatestId();
-        $rpp = 10;
+        $rpp = 1000;
         $posts = $this->eventStore->listFromId(
             "posts",
             $initial_id,
@@ -38,6 +36,7 @@ class ProcessCacheHandler
     {
         foreach ($posts as $post) {
             $event_type = $this->getEventType($post);
+            $pipeline = $this->pipelineFactory->build($event_type);
             $m = sprintf(
                 "Processing Event [%s][%s]",
                 $event_type,
@@ -45,21 +44,15 @@ class ProcessCacheHandler
             );
             $this->log->debug($m);
 
-            if ($event_type == "DeletePost") {
-                $post = $this->deletePostsPipeline->process($post);
-            }
-
-            if ($event_type == "CreatePost") {
-                try {
-                    $post = $this->processPostsPipeline->process($post);
-                } catch (\Exception $e) {
-                    $m = sprintf(
-                        "Could not process post %s [%s]",
-                        $post["uid"],
-                        $e->getMessage() . " " . $e->getTraceAsString()
-                    );
-                    $this->log->critical($m);
-                }
+            try {
+                $post = $pipeline->process($post);
+            } catch (\Exception $e) {
+                $m = sprintf(
+                    "Could not process post %s [%s]",
+                    $post["uid"],
+                    $e->getMessage() . " " . $e->getTraceAsString()
+                );
+                $this->log->critical($m);
             }
         }
     }
