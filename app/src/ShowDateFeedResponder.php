@@ -3,10 +3,10 @@
 namespace Aruna;
 
 /**
- * Class ShowLatestPostsResponder
+ * Class ShowDateFeedResponder
  * @author yourname
  */
-class ShowLatestPostsResponder extends Responder
+class ShowDateFeedResponder extends Responder
 {
 
     public function found()

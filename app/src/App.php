@@ -66,7 +66,7 @@ class App
 
         $app['action.show_date_feed'] = $app->share(function () use ($app) {
             return new ShowDateFeedAction(
-                new ShowLatestPostsResponder(
+                new ShowDateFeedResponder(
                     $app['response'],
                     $app['twig'],
                     new RenderPost($app['twig'])
