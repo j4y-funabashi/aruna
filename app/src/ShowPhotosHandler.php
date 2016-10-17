@@ -2,6 +2,8 @@
 
 namespace Aruna;
 
+use Aruna\Response\Found;
+
 class ShowPhotosHandler implements Handler
 {
     public function __construct(

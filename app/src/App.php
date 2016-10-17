@@ -44,44 +44,18 @@ class App
             return new PostRepositoryReader($app['db_cache']);
         });
 
-
-
         $app['response'] = $app->share(function () {
             return new \Symfony\Component\HttpFoundation\Response();
         });
 
-        $app['webmention.controller'] = $app->share(function () use ($app) {
-            $adapter = new \League\Flysystem\Adapter\Local($app['webmentions_root']);
-            $filesystem = new \League\Flysystem\Filesystem($adapter);
-            $eventWriter = new EventWriter($filesystem);
-            $eventReader = new EventReader($filesystem);
-            return new Controller\WebmentionController(
-                $app["monolog"],
-                new WebMention\WebMentionHandler(
-                    $eventWriter,
-                    $eventReader
-                )
-            );
-        });
-
         $app['action.show_date_feed'] = $app->share(function () use ($app) {
             return new ShowDateFeedAction(
-                new ShowLatestPostsResponder(
+                new ShowDateFeedResponder(
                     $app['response'],
                     $app['twig'],
                     new RenderPost($app['twig'])
                 ),
-                new CommandBus($app)
-            );
-        });
-        $app['action.show_latest_posts'] = $app->share(function () use ($app) {
-            return new ShowLatestPostsAction(
-                new ShowLatestPostsResponder(
-                    $app['response'],
-                    $app['twig'],
-                    new RenderPost($app['twig'])
-                ),
-                new CommandBus($app)
+                $app['handler.showdatefeed']
             );
         });
 
@@ -108,7 +82,7 @@ class App
         });
 
         $app['auth.controller'] = $app->share(function () use ($app) {
-            return new Controller\AuthController(
+            return new AuthController(
                 $app['http_client'],
                 $app['monolog']
             );

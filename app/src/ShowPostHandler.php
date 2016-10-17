@@ -3,6 +3,7 @@
 namespace Aruna;
 
 use Aruna\Response\Gone;
+use Aruna\Response\Found;
 
 class ShowPostHandler implements Handler
 {
