@@ -82,7 +82,7 @@ class App
         });
 
         $app['auth.controller'] = $app->share(function () use ($app) {
-            return new Controller\AuthController(
+            return new AuthController(
                 $app['http_client'],
                 $app['monolog']
             );

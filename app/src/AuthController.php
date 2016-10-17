@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna\Controller;
+namespace Aruna;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
