@@ -44,24 +44,8 @@ class App
             return new PostRepositoryReader($app['db_cache']);
         });
 
-
-
         $app['response'] = $app->share(function () {
             return new \Symfony\Component\HttpFoundation\Response();
-        });
-
-        $app['webmention.controller'] = $app->share(function () use ($app) {
-            $adapter = new \League\Flysystem\Adapter\Local($app['webmentions_root']);
-            $filesystem = new \League\Flysystem\Filesystem($adapter);
-            $eventWriter = new EventWriter($filesystem);
-            $eventReader = new EventReader($filesystem);
-            return new Controller\WebmentionController(
-                $app["monolog"],
-                new WebMention\WebMentionHandler(
-                    $eventWriter,
-                    $eventReader
-                )
-            );
         });
 
         $app['action.show_date_feed'] = $app->share(function () use ($app) {
