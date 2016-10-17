@@ -11,10 +11,8 @@ use Aruna\PostViewModel;
 class CacheToSql
 {
     public function __construct(
-        $log,
         $db
     ) {
-        $this->log = $log;
         $this->db = $db;
     }
 

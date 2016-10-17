@@ -81,7 +81,7 @@ class RenderPostTest extends UnitTest
     <a class="author-name" href="http://j4y.co" class="p-name">Jay Robinson</a>
 </div>
 
-    <img class="u-photo post-photo" alt="jpg photo" src="2016/20160525153645_5745b87d52719.jpg" />
+    <img class="u-photo post-photo" alt="jpg photo" src="/2016/20160525153645_5745b87d52719.jpg" />
 
         <div class="e-content post-content">
         Go Ape, Newcastle
@@ -197,7 +197,7 @@ class RenderPostTest extends UnitTest
     <a class="author-name" href="http://j4y.co" class="p-name">Jay Robinson</a>
 </div>
 
-    <img class="u-photo post-photo" alt="jpg photo" src="2016/20160525153645_5745b87d52719.jpg" />
+    <img class="u-photo post-photo" alt="jpg photo" src="/2016/20160525153645_5745b87d52719.jpg" />
 
         <div class="e-content post-content">
         Go Ape, Newcastle

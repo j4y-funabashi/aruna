@@ -11,9 +11,12 @@ use RuntimeException;
  */
 class PostRepositoryWriter
 {
-    public function __construct($filesystem)
-    {
+    public function __construct(
+        $filesystem,
+        $db
+    ) {
         $this->filesystem = $filesystem;
+        $this->db = $db;
     }
 
     public function save(NewPost $entry, $files)
@@ -43,5 +46,20 @@ class PostRepositoryWriter
         } catch (FileExistsException $e) {
             throw new RuntimeException($e->getMessage());
         }
+    }
+
+    public function delete(
+        $post_id,
+        $date_deleted
+    ) {
+        $q = "UPDATE posts
+            SET date_deleted = :date_deleted
+            WHERE id = :post_id";
+        $r = $this->db->prepare($q);
+        $data = [
+            ":post_id" => $post_id,
+            ":date_deleted" => $date_deleted
+        ];
+        $r->execute($data);
     }
 }

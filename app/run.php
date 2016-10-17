@@ -57,32 +57,20 @@ $app['posts_repository_reader'] = $app->share(function () use ($app) {
 
 
 
+$app['posts_repository_writer'] = $app->share(function () use ($app) {
+    $adapter = new \League\Flysystem\Adapter\Local($app['posts_root']);
+    $filesystem = new \League\Flysystem\Filesystem($adapter);
+    return new \Aruna\Micropub\PostRepositoryWriter($filesystem, $app['db_cache']);
+});
+
 // processCacheProvider
 $app['process_cache_handler'] = $app->share(function () use ($app) {
-    $processPostsPipeline = (new League\Pipeline\Pipeline())
-        ->pipe(
-            new Aruna\Micropub\ParseCategories()
-        )
-        ->pipe(
-            new Aruna\Micropub\CacheToSql(
-                $app['monolog'],
-                $app['db_cache']
-            )
-        )
-        ->pipe(
-            new Aruna\Micropub\SendWebmention(
-                $app['http_client'],
-                new Aruna\DiscoverEndpoints(),
-                new Aruna\FindUrls(),
-                $app['monolog']
-            )
-        )
-        ;
+    $pipelineFactory = new Aruna\Micropub\ProcessingPipelineFactory($app);
     return new Aruna\Handler\ProcessCacheHandler(
         $app['monolog'],
         $app['event_store'],
-        $processPostsPipeline,
-        $app['posts_repository_reader']
+        $app['posts_repository_reader'],
+        $pipelineFactory
     );
 });
 

@@ -2,6 +2,8 @@
 
 namespace Aruna;
 
+use Aruna\Response\Gone;
+
 class ShowPostHandler implements Handler
 {
     public function __construct(
@@ -14,10 +16,16 @@ class ShowPostHandler implements Handler
 
     public function handle($command)
     {
+        $post = $this->postsRepository->findById(
+            $command->get("post_id")
+        );
         $payload = array(
-            "items" => $this->postsRepository->findById($command->get("post_id"))
+            "items" => $post
         );
 
+        if ($post[0]->isDeleted()) {
+            return new Gone($payload);
+        }
         return new Found($payload);
     }
 }

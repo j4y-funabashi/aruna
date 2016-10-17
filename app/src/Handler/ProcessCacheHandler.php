@@ -11,34 +11,32 @@ class ProcessCacheHandler
     public function __construct(
         $log,
         $eventStore,
-        $processPostsPipeline,
-        $postsRepositoryReader
+        $postsRepositoryReader,
+        $pipelineFactory
     ) {
         $this->log = $log;
         $this->eventStore = $eventStore;
-        $this->processPostsPipeline = $processPostsPipeline;
         $this->postsRepositoryReader = $postsRepositoryReader;
+        $this->pipelineFactory = $pipelineFactory;
     }
 
     public function handle()
     {
-        $this->processPosts();
-    }
-
-    private function processPosts()
-    {
         $initial_id = $this->postsRepositoryReader->findLatestId();
-        $rpp = 10;
-
+        $rpp = 1000;
         $posts = $this->eventStore->listFromId(
             "posts",
             $initial_id,
             $rpp
         );
+        $this->processPosts($posts);
+    }
 
-
+    private function processPosts($posts)
+    {
         foreach ($posts as $post) {
             $event_type = $this->getEventType($post);
+            $pipeline = $this->pipelineFactory->build($event_type);
             $m = sprintf(
                 "Processing Event [%s][%s]",
                 $event_type,
@@ -47,7 +45,7 @@ class ProcessCacheHandler
             $this->log->debug($m);
 
             try {
-                $post = $this->processPostsPipeline->process($post);
+                $post = $pipeline->process($post);
             } catch (\Exception $e) {
                 $m = sprintf(
                     "Could not process post %s [%s]",
@@ -61,6 +59,13 @@ class ProcessCacheHandler
 
     private function getEventType($event)
     {
+        if (
+            isset($event["action"])
+            && $event["action"] == "delete"
+        ) {
+            return "DeletePost";
+        }
+
         return "CreatePost";
     }
 }

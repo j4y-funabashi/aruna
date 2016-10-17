@@ -10,17 +10,25 @@ class PostViewModel
 {
     private $mf_array;
     private $entry;
+    private $date_deleted;
 
     public function __construct(
-        array $mf_array
+        array $mf_array,
+        $date_deleted = null
     ) {
         $this->mf_array = $mf_array;
         $this->entry = $this->findFirstEntry($mf_array);
+        $this->date_deleted = $date_deleted;
     }
 
     public function toJson()
     {
         return json_encode($this->mf_array);
+    }
+
+    public function isDeleted()
+    {
+        return $this->date_deleted;
     }
 
     public function toString()
@@ -138,6 +146,12 @@ class PostViewModel
 
     public function type()
     {
+        if (null !== ($this->date_deleted)) {
+            return "tombstone";
+        }
+        if ("delete" == ($this->get('action'))) {
+            return "delete";
+        }
         if (null !== ($this->get('photo'))) {
             return "photo";
         }
@@ -153,6 +167,11 @@ class PostViewModel
         return "note";
     }
 
+    public function deleted()
+    {
+        return $this->date_deleted;
+    }
+
     private function findFirstEntry($mf_array)
     {
         if (!isset($mf_array['items'])) {
@@ -164,7 +183,7 @@ class PostViewModel
                 function ($item) {
                     return (isset($item['type']) && is_array($item['type']) && in_array("h-entry", $item['type']));
                 }
-        )
+            )
         );
         if (isset($entries[0])) {
             return $entries[0];

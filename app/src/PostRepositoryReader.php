@@ -34,7 +34,9 @@ class PostRepositoryReader
             post
             FROM posts
             WHERE strftime('%Y', published) = :year
+            AND date_deleted IS NULL
             ".implode("\n", $where)."
+            AND date_deleted IS NULL
             ORDER BY published DESC, id DESC
             ";
         $r = $this->db->prepare($q);
@@ -55,6 +57,7 @@ class PostRepositoryReader
         $q = "SELECT
             id,
             published,
+            date_deleted,
             post
             FROM posts
             WHERE id = :id";
@@ -64,7 +67,10 @@ class PostRepositoryReader
         if ($post === false) {
             return array();
         }
-        $post = new \Aruna\PostViewModel(json_decode($post['post'], true));
+        $post = new \Aruna\PostViewModel(
+            json_decode($post['post'], true),
+            $post['date_deleted']
+        );
         foreach ($this->findMentionsByPostId($post_id) as $mention) {
             if ($mention->type() == "reply") {
                 $post->setComment($mention);
@@ -167,6 +173,7 @@ class PostRepositoryReader
             post
             FROM posts
             WHERE type = :post_type
+            AND date_deleted IS NULL
             ORDER BY published DESC
             LIMIT :offset,:limit";
         $r = $this->db->prepare($q);
