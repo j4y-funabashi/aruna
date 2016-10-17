@@ -4,17 +4,8 @@ namespace Aruna;
 
 class ReceiveWebmentionResponder extends Responder
 {
-    protected $payload_method = [
-        "Aruna\Found" => "render",
-        "Aruna\BadRequest" => "bad_request",
-        "Aruna\Accepted" => "accepted"
-    ];
 
-    public function render()
-    {
-    }
-
-    public function bad_request()
+    public function badrequest()
     {
         $this->response->setStatusCode(400);
     }

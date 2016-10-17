@@ -2,6 +2,9 @@
 
 namespace Aruna;
 
+use Aruna\Response\BadRequest;
+use Aruna\Response\Accepted;
+
 class ReceiveWebmentionHandler implements Handler
 {
     public function __construct(
