@@ -71,17 +71,7 @@ class App
                     $app['twig'],
                     new RenderPost($app['twig'])
                 ),
-                new CommandBus($app)
-            );
-        });
-        $app['action.show_latest_posts'] = $app->share(function () use ($app) {
-            return new ShowLatestPostsAction(
-                new ShowLatestPostsResponder(
-                    $app['response'],
-                    $app['twig'],
-                    new RenderPost($app['twig'])
-                ),
-                new CommandBus($app)
+                $app['handler.showdatefeed']
             );
         });
 

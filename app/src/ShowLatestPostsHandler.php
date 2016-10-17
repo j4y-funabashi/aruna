@@ -2,6 +2,8 @@
 
 namespace Aruna;
 
+use Aruna\Response\Found;
+
 /**
  * Class ShowLatestPostsHandler
  * @author yourname
