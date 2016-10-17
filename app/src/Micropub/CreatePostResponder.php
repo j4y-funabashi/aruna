@@ -23,14 +23,16 @@ class CreatePostResponder extends Responder
     public function unauthorized()
     {
         $this->response->setContent($this->payload->get("message"));
-        $this->response->setStatusCode(401);
+        $this->response->setStatusCode($this->response::HTTP_UNAUTHORIZED);
         return $this->response;
     }
 
     public function servererror()
     {
         $this->response->setContent($this->payload->get("message"));
-        $this->response->setStatusCode(500);
+        $this->response->setStatusCode(
+            $this->response::HTTP_INTERNAL_SERVER_ERROR
+        );
         return $this->response;
     }
 }

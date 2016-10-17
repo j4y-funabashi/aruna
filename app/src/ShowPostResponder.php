@@ -28,7 +28,9 @@ class ShowPostResponder extends Responder
                 "body" => implode("\n", $posts)
             )
         );
-        $this->response->setStatusCode(410);
+        $this->response->setStatusCode(
+            $this->response::HTTP_GONE
+        );
         $this->response->setContent($out);
     }
 
