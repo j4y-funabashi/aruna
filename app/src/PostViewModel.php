@@ -149,6 +149,9 @@ class PostViewModel
         if (null !== ($this->date_deleted)) {
             return "tombstone";
         }
+        if ("delete" == ($this->get('action'))) {
+            return "delete";
+        }
         if (null !== ($this->get('photo'))) {
             return "photo";
         }
@@ -180,7 +183,7 @@ class PostViewModel
                 function ($item) {
                     return (isset($item['type']) && is_array($item['type']) && in_array("h-entry", $item['type']));
                 }
-        )
+            )
         );
         if (isset($entries[0])) {
             return $entries[0];

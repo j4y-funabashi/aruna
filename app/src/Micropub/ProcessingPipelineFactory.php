@@ -23,7 +23,6 @@ class ProcessingPipelineFactory
                     )
                     ->pipe(
                         new CacheToSql(
-                            $this->app['monolog'],
                             $this->app['db_cache']
                         )
                     )
@@ -41,6 +40,11 @@ class ProcessingPipelineFactory
                     ->pipe(
                         new DeletePost(
                             $this->app['posts_repository_writer']
+                        )
+                    )
+                    ->pipe(
+                        new CacheToSql(
+                            $this->app['db_cache']
                         )
                     );
                 break;

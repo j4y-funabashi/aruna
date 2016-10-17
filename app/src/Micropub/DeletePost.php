@@ -16,5 +16,6 @@ class DeletePost
             basename($event["url"]),
             $event['published']
         );
+        return $event;
     }
 }
