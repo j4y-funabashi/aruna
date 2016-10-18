@@ -45,6 +45,7 @@ install_webstack () {
         php7.0-dom \
         php7.0-zip \
         php-imagick \
+        php-xdebug \
         supervisor \
         sqlite3
 
