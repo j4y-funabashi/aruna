@@ -2,6 +2,8 @@
 
 namespace Aruna;
 
+use Aruna\Webmention\VerifyWebmention;
+
 class ProcessWebmentionsHandler
 {
     public function __construct(
