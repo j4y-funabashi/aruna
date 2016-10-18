@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna\Handler;
+namespace Aruna\Micropub;
 
 /**
  * Class ProcessCacheHandler
