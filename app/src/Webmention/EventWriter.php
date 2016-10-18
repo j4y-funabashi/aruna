@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Webmention;
 
 use RuntimeException;
 

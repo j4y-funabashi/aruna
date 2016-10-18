@@ -13,7 +13,6 @@ class App
             ? getenv("DEBUG")
             : false;
         $app['posts_root'] = getenv("ROOT_DIR")."/posts";
-        $app['webmentions_root'] = getenv("ROOT_DIR")."/webmentions";
         $app['rpp'] = 9;
         $app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
         $app['token_endpoint'] = "https://tokens.indieauth.com/token";
@@ -27,6 +26,7 @@ class App
         ));
         $app->register(new \Silex\Provider\SessionServiceProvider());
         $app->register(new Micropub\MicropubServiceProvider());
+        $app->register(new Webmention\WebmentionServiceProvider());
 
         // SERVICES
         $app['monolog'] = $app->share(function () use ($app) {
@@ -134,24 +134,6 @@ class App
             );
         });
 
-        $app['action.receive_webmention'] = $app->share(function () use ($app) {
-            $adapter = new \League\Flysystem\Adapter\Local($app['webmentions_root']);
-            $filesystem = new \League\Flysystem\Filesystem($adapter);
-            $eventWriter = new EventWriter($filesystem);
-
-            return new ReceiveWebmentionAction(
-                new ReceiveWebmentionResponder(
-                    $app['response'],
-                    $app['twig'],
-                    new RenderPost($app['twig'])
-                ),
-                new ReceiveWebmentionHandler(
-                    new VerifyWebmentionRequest(),
-                    $eventWriter
-                )
-            );
-        });
-
         // ROUTES
         $app->get("/", 'action.show.photos:__invoke')
             ->bind('root');
@@ -167,10 +149,6 @@ class App
 
         $app->get("/auth", 'auth.controller:auth')
             ->bind('auth');
-
-        $app->post('/micropub', 'action.create_post:__invoke');
-
-        $app->post('/webmention', 'action.receive_webmention:__invoke');
 
         $app->get("/{year}/{month}/{day}", 'action.show_date_feed:__invoke')
             ->value('month', '*')

@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Webmention;
 
 use DateTimeImmutable;
 
@@ -37,7 +37,7 @@ class Event implements \JsonSerializable
                 ? new DateTimeImmutable($config['published'])
                 : new DateTimeImmutable();
         } catch (\Exception $e) {
-            throw new RuntimeException($config['published'] . ' is not a valid date');
+            throw new \RuntimeException($config['published'] . ' is not a valid date');
         }
     }
 }

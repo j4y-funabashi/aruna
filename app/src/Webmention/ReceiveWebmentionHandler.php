@@ -1,11 +1,11 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Webmention;
 
 use Aruna\Response\BadRequest;
 use Aruna\Response\Accepted;
 
-class ReceiveWebmentionHandler implements Handler
+class ReceiveWebmentionHandler
 {
     public function __construct(
         $verifyWebmentionRequest,

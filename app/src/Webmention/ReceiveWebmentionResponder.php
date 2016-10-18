@@ -1,6 +1,8 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Webmention;
+
+use Aruna\Responder;
 
 class ReceiveWebmentionResponder extends Responder
 {
