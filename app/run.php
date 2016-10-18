@@ -32,7 +32,7 @@ $app['mentions_repository_writer'] = $app->share(function () use ($app) {
 });
 
 $app['image_resizer'] = $app->share(function () use ($app) {
-    return new Aruna\Action\ImageResizer(
+    return new Aruna\Micropub\ImageResizer(
         $app['monolog'],
         getenv("ROOT_DIR"),
         $app['thumbnails_root']

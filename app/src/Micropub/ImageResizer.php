@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna\Action;
+namespace Aruna\Micropub;
 
 use Intervention\Image\ImageManagerStatic as Image;
 
