@@ -4,6 +4,7 @@ namespace Aruna\Micropub;
 
 use Silex\Application;
 use Silex\ServiceProviderInterface;
+use Aruna\RenderPost;
 
 class MicropubServiceProvider implements ServiceProviderInterface
 {
@@ -16,7 +17,7 @@ class MicropubServiceProvider implements ServiceProviderInterface
                 new CreatePostResponder(
                     $app['response'],
                     $app['twig'],
-                    new \Aruna\RenderPost($app['twig'])
+                    new RenderPost($app['twig'])
                 )
             );
         });
