@@ -118,21 +118,6 @@ class App
                 $app['handler.process_webmentions']
             );
         });
-        $app['handler.process_webmentions'] = $app->share(function () use ($app) {
-            return new ProcessWebmentionsHandler(
-                $app['monolog'],
-                $app['event_store'],
-                $app['http_client'],
-                $app['mentions_repository_writer'],
-                $app['posts_repository_reader'],
-                new WebmentionNotification()
-            );
-        });
-        $app['mentions_repository_writer'] = $app->share(function () use ($app) {
-            return new MentionsRepositoryWriter(
-                $app['db_cache']
-            );
-        });
 
         // ROUTES
         $app->get("/", 'action.show.photos:__invoke')
