@@ -2,7 +2,7 @@
 
 namespace Test;
 
-use \Aruna\DiscoverEndpoints;
+use \Aruna\Webmention\DiscoverEndpoints;
 use GuzzleHttp\Psr7\Response;
 
 class DiscoverEndpointsTest extends UnitTest

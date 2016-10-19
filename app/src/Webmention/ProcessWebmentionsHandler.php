@@ -1,8 +1,6 @@
 <?php
 
-namespace Aruna;
-
-use Aruna\Webmention\VerifyWebmention;
+namespace Aruna\Webmention;
 
 class ProcessWebmentionsHandler
 {

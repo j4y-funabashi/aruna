@@ -2,7 +2,7 @@
 
 namespace Test;
 
-use Aruna\VerifyWebmention;
+use Aruna\Webmention\VerifyWebmention;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;

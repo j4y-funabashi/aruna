@@ -2,7 +2,7 @@
 
 namespace Test;
 
-use Aruna\FindUrls;
+use Aruna\Webmention\FindUrls;
 
 class FindUrlsTest extends UnitTest
 {

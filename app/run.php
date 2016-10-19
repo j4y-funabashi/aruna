@@ -26,7 +26,7 @@ $app['http_client'] = $app->share(function () {
     );
 });
 $app['mentions_repository_writer'] = $app->share(function () use ($app) {
-    return new Aruna\MentionsRepositoryWriter(
+    return new Aruna\Webmention\MentionsRepositoryWriter(
         $app['db_cache']
     );
 });
@@ -75,7 +75,7 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
 });
 
 $app['action.resize_photos'] = $app->share(function () use ($app) {
-    return new Aruna\ResizePhotosAction(
+    return new Aruna\Micropub\ResizePhotosAction(
         $app['monolog'],
         $app['event_store'],
         $app['image_resizer']
@@ -83,20 +83,20 @@ $app['action.resize_photos'] = $app->share(function () use ($app) {
 });
 
 $app['action.process_webmentions'] = $app->share(function () use ($app) {
-    return new Aruna\ProcessWebmentionsAction(
+    return new Aruna\Webmention\ProcessWebmentionsAction(
         $app['monolog'],
         $app['event_store'],
         $app['handler.process_webmentions']
     );
 });
 $app['handler.process_webmentions'] = $app->share(function () use ($app) {
-    return new Aruna\ProcessWebmentionsHandler(
+    return new Aruna\Webmention\ProcessWebmentionsHandler(
         $app['monolog'],
         $app['event_store'],
         $app['http_client'],
         $app['mentions_repository_writer'],
         $app['posts_repository_reader'],
-        new Aruna\WebmentionNotification(),
+        new Aruna\Webmention\WebmentionNotification(),
         new Aruna\NotifyService(
             $app['http_client'],
             $app['monolog'],

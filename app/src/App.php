@@ -106,19 +106,6 @@ class App
             );
         });
 
-        $app['event_store'] = $app->share(function () use ($app) {
-            $adapter = new \League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
-            $filesystem = new \League\Flysystem\Filesystem($adapter);
-            return new EventStore($filesystem);
-        });
-        $app['action.process_webmentions'] = $app->share(function () use ($app) {
-            return new ProcessWebmentionsAction(
-                $app['monolog'],
-                $app['event_store'],
-                $app['handler.process_webmentions']
-            );
-        });
-
         // ROUTES
         $app->get("/", 'action.show.photos:__invoke')
             ->bind('root');
