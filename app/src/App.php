@@ -13,7 +13,6 @@ class App
             ? getenv("DEBUG")
             : false;
         $app['posts_root'] = getenv("ROOT_DIR")."/posts";
-        $app['webmentions_root'] = getenv("ROOT_DIR")."/webmentions";
         $app['rpp'] = 9;
         $app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
         $app['token_endpoint'] = "https://tokens.indieauth.com/token";
@@ -27,6 +26,7 @@ class App
         ));
         $app->register(new \Silex\Provider\SessionServiceProvider());
         $app->register(new Micropub\MicropubServiceProvider());
+        $app->register(new Webmention\WebmentionServiceProvider());
 
         // SERVICES
         $app['monolog'] = $app->share(function () use ($app) {
@@ -106,52 +106,6 @@ class App
             );
         });
 
-        $app['event_store'] = $app->share(function () use ($app) {
-            $adapter = new \League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
-            $filesystem = new \League\Flysystem\Filesystem($adapter);
-            return new EventStore($filesystem);
-        });
-        $app['action.process_webmentions'] = $app->share(function () use ($app) {
-            return new ProcessWebmentionsAction(
-                $app['monolog'],
-                $app['event_store'],
-                $app['handler.process_webmentions']
-            );
-        });
-        $app['handler.process_webmentions'] = $app->share(function () use ($app) {
-            return new ProcessWebmentionsHandler(
-                $app['monolog'],
-                $app['event_store'],
-                $app['http_client'],
-                $app['mentions_repository_writer'],
-                $app['posts_repository_reader'],
-                new WebmentionNotification()
-            );
-        });
-        $app['mentions_repository_writer'] = $app->share(function () use ($app) {
-            return new MentionsRepositoryWriter(
-                $app['db_cache']
-            );
-        });
-
-        $app['action.receive_webmention'] = $app->share(function () use ($app) {
-            $adapter = new \League\Flysystem\Adapter\Local($app['webmentions_root']);
-            $filesystem = new \League\Flysystem\Filesystem($adapter);
-            $eventWriter = new EventWriter($filesystem);
-
-            return new ReceiveWebmentionAction(
-                new ReceiveWebmentionResponder(
-                    $app['response'],
-                    $app['twig'],
-                    new RenderPost($app['twig'])
-                ),
-                new ReceiveWebmentionHandler(
-                    new VerifyWebmentionRequest(),
-                    $eventWriter
-                )
-            );
-        });
-
         // ROUTES
         $app->get("/", 'action.show.photos:__invoke')
             ->bind('root');
@@ -167,10 +121,6 @@ class App
 
         $app->get("/auth", 'auth.controller:auth')
             ->bind('auth');
-
-        $app->post('/micropub', 'action.create_post:__invoke');
-
-        $app->post('/webmention', 'action.receive_webmention:__invoke');
 
         $app->get("/{year}/{month}/{day}", 'action.show_date_feed:__invoke')
             ->value('month', '*')

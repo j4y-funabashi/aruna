@@ -28,10 +28,19 @@ class ResizePhotoCommand extends Command
     {
         $foreverHandler = new ForeverHandler($input->getOption('forever'));
         do {
-            $handler = $this->getApplication()
-                ->getService("action.resize_photos");
-            $handler->__invoke();
-            sleep($input->getOption("sleep"));
+
+            try {
+                $handler = $this->getApplication()
+                    ->getService("action.resize_photos");
+                $handler->__invoke();
+            } catch (\Exception $e) {
+                $m = sprintf("Failed to run app %s", $e->getMessage());
+                $app->getService('monolog')->critical($m, $e->getTrace());
+            }
+
+            if ($foreverHandler->isForever()) {
+                sleep($input->getOption("sleep"));
+            }
         } while ($foreverHandler->isForever());
     }
 }

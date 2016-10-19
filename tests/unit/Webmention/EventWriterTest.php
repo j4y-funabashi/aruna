@@ -2,8 +2,8 @@
 
 namespace Test;
 
-use Aruna\Event;
-use Aruna\EventWriter;
+use Aruna\Webmention\Event;
+use Aruna\Webmention\EventWriter;
 
 /**
  * Class EventWriterTest

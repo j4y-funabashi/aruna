@@ -1,18 +1,14 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Webmention;
 
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Class Action
- * @author yourname
- */
-abstract class Action
+class ReceiveWebmentionAction
 {
     public function __construct(
-        Responder $responder,
-        Handler $handler
+        $responder,
+        $handler
     ) {
         $this->responder = $responder;
         $this->handler = $handler;
@@ -28,5 +24,15 @@ abstract class Action
         );
 
         return $this->responder->__invoke();
+    }
+
+    public function getCommand($request)
+    {
+        return new ReceiveWebmentionCommand(
+            array(
+                "source" => $request->get("source"),
+                "target" => $request->get("target")
+            )
+        );
     }
 }

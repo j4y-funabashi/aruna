@@ -39,6 +39,8 @@ class MicropubServiceProvider implements ServiceProviderInterface
             $filesystem = new \League\Flysystem\Filesystem($adapter);
             return new PostRepositoryWriter($filesystem, $app['db_cache']);
         });
+
+        $app->post('/micropub', 'action.create_post:__invoke');
     }
 
     public function boot(Application $app)

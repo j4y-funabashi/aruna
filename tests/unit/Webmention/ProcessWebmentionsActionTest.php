@@ -3,7 +3,7 @@
 namespace Test;
 
 use Prophecy\Argument;
-use Aruna\ProcessWebmentionsAction;
+use Aruna\Webmention\ProcessWebmentionsAction;
 
 class ProcessWebmentionsActionTest extends UnitTest
 {
@@ -11,7 +11,7 @@ class ProcessWebmentionsActionTest extends UnitTest
     {
         $this->log = $this->prophesize("\Monolog\Logger");
         $this->eventStore = $this->prophesize("\Aruna\EventStore");
-        $this->handler = $this->prophesize("\Aruna\ProcessWebmentionsHandler");
+        $this->handler = $this->prophesize("\Aruna\Webmention\ProcessWebmentionsHandler");
         $this->SUT = new ProcessWebmentionsAction(
             $this->log->reveal(),
             $this->eventStore->reveal(),

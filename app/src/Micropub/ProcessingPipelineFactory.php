@@ -3,8 +3,8 @@
 namespace Aruna\Micropub;
 
 use League\Pipeline\Pipeline;
-use Aruna\DiscoverEndpoints;
-use Aruna\FindUrls;
+use Aruna\Webmention\DiscoverEndpoints;
+use Aruna\Webmention\FindUrls;
 
 class ProcessingPipelineFactory
 {

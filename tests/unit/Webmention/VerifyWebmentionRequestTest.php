@@ -2,7 +2,7 @@
 
 namespace Test;
 
-use Aruna\VerifyWebmentionRequest;
+use Aruna\Webmention\VerifyWebmentionRequest;
 
 /**
  * Class VerifyWebmentionRequestTest

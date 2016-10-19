@@ -2,7 +2,7 @@
 
 namespace Test;
 
-use Aruna\WebmentionNotification;
+use Aruna\Webmention\WebmentionNotification;
 use Aruna\PostViewModel;
 
 class WebmentionNotificationTest extends UnitTest
