@@ -87,7 +87,7 @@ class EventStore
         );
         $out = [];
         foreach ($files as $file) {
-            $out[$file['path']] = $file;
+            $out[$file['filename']] = $file;
         }
         ksort($out);
         if ($limit > 0) {
