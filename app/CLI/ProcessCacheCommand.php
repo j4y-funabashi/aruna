@@ -28,7 +28,15 @@ class ProcessCacheCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'Sleep this many seconds between queue runs',
                 10
-            );
+            )
+            ->addOption(
+                'rpp',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'number of entries to process per run',
+                1
+            )
+            ;
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -46,7 +54,9 @@ class ProcessCacheCommand extends Command
             $app = $this->getApplication();
             try {
                 $handler = $app->getService("process_cache_handler");
-                $handler->handle();
+                $handler->handle(
+                    $input->getOption('rpp')
+                );
             } catch (\Exception $e) {
                 $m = sprintf("Failed to run app %s", $e->getMessage());
                 $app->getService('monolog')->critical($m, $e->getTrace());

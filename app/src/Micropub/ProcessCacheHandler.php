@@ -20,13 +20,11 @@ class ProcessCacheHandler
         $this->pipelineFactory = $pipelineFactory;
     }
 
-    public function handle()
+    public function handle($rpp)
     {
-        $initial_id = $this->postsRepositoryReader->findLatestId();
-        $rpp = 1000;
         $posts = $this->eventStore->listFromId(
             "posts",
-            $initial_id,
+            $this->postsRepositoryReader->findLatestId(),
             $rpp
         );
         $this->processPosts($posts);
@@ -43,7 +41,6 @@ class ProcessCacheHandler
                 $post["uid"]
             );
             $this->log->debug($m);
-
             try {
                 $post = $pipeline->process($post);
             } catch (\Exception $e) {
