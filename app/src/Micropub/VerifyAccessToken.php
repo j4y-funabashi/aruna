@@ -10,7 +10,7 @@ class VerifyAccessToken
 {
     private $token_url;
     private $me;
-    private $allowed_scopes = ["post"];
+    private $allowed_scopes = ["post", "create"];
 
     public function __construct(
         $http,
