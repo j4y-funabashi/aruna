@@ -49,7 +49,7 @@ class VerifyAccessToken
             $message = sprintf("Me value [%s] does not match %s", $body['me'], $this->me);
             throw new \Exception($message);
         }
-        if (array_intersect(explode(" ", $body['scope']), $this->allowed_scopes)) {
+        if (empty(array_intersect(explode(" ", $body['scope']), $this->allowed_scopes))) {
             $m = sprintf(
                 "[%s] does not contain [%s]",
                 $body["scope"],
