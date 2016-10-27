@@ -10,6 +10,7 @@ class VerifyAccessToken
 {
     private $token_url;
     private $me;
+    private $allowed_scopes = ["post"];
 
     public function __construct(
         $http,
@@ -48,8 +49,13 @@ class VerifyAccessToken
             $message = sprintf("Me value [%s] does not match %s", $body['me'], $this->me);
             throw new \Exception($message);
         }
-        if ($body['scope'] !== "post") {
-            throw new \Exception(sprintf("%s does not contain post", $body["scope"]));
+        if (array_intersect(explode(" ", $body['scope']), $this->allowed_scopes)) {
+            $m = sprintf(
+                "[%s] does not contain [%s]",
+                $body["scope"],
+                implode(", ", $this->allowed_scopes)
+            );
+            throw new \Exception($m);
         }
 
         return $body;
