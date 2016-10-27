@@ -49,7 +49,7 @@ class VerifyAccessToken
             throw new \Exception($message);
         }
         if ($body['scope'] !== "post") {
-            throw new \Exception("scope is not post");
+            throw new \Exception(sprintf("%s does not contain post", $body["scope"]));
         }
 
         return $body;
