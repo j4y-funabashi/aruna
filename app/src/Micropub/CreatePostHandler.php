@@ -26,7 +26,7 @@ class CreatePostHandler
             $response = $this->accessTokenRepository
                 ->getTokenFromAuthCode($command->getAccessToken());
         } catch (\Exception $e) {
-            $message = sprintf("Invalid access token [%s]", $command->getAccessToken());
+            $message = sprintf("Invalid access token [%s]", $e->getMessage());
             return new Unauthorized(["message" => $message]);
         }
         try {
