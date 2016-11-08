@@ -1,31 +1,36 @@
-app_daemon:
-    build: app
-    env_file: .env
-    volumes:
-        - ../..:/srv/aruna
-        - /media/jayr/aruna:/media/jayr/aruna
+version: '2'
 
-webserver:
-    build: webserver
-    links:
-        - app_server
-    ports:
-        - "4567:80"
-    environment:
-        - NGINX_PORT=80
-    volumes:
-        - ../..:/srv/aruna
-        - /media/jayr/aruna:/media/jayr/aruna
+services:
 
-app_server:
-    build: app_server
-    env_file: .env
-    volumes:
-        - ../..:/srv/aruna
-        - /media/jayr/aruna:/media/jayr/aruna
+    micropub_daemon:
+        build: micropub_daemon
+        command: php app/run.php cache --forever --rpp 1000
+        env_file: ./.env
+        volumes:
+            - ../..:/srv/aruna
+            - /media/jayr/aruna:/media/jayr/aruna
 
-build:
-    build: build
-    env_file: .env
-    volumes:
-        - ../..:/srv/aruna
+    webserver:
+        build: webserver
+        links:
+            - app_server
+        ports:
+            - "4567:80"
+        environment:
+            - NGINX_PORT=80
+        volumes:
+            - ../..:/srv/aruna
+            - /media/jayr/aruna:/media/jayr/aruna
+
+    app_server:
+        build: app_server
+        env_file: .env
+        volumes:
+            - ../..:/srv/aruna
+            - /media/jayr/aruna:/media/jayr/aruna
+
+    build:
+        build: build
+        env_file: .env
+        volumes:
+            - ../..:/srv/aruna
