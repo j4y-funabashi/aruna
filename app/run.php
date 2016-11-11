@@ -53,10 +53,6 @@ $app['posts_repository_reader'] = $app->share(function () use ($app) {
     return new Aruna\PostRepositoryReader($app['db_cache']);
 });
 
-
-
-
-
 $app['posts_repository_writer'] = $app->share(function () use ($app) {
     $adapter = new \League\Flysystem\Adapter\Local($app['posts_root']);
     $filesystem = new \League\Flysystem\Filesystem($adapter);
@@ -71,6 +67,30 @@ $app['process_cache_handler'] = $app->share(function () use ($app) {
         $app['event_store'],
         $app['posts_repository_reader'],
         $pipelineFactory
+    );
+});
+
+$app['remote_data_store'] = $app->share(function () use ($app) {
+    $client = Aws\S3\S3Client::factory([
+        'credentials' => [
+            'key'    => getenv("S3_KEY"),
+            'secret' => getenv("S3_SECRET"),
+        ],
+        'region' => 'eu-west-1',
+        'version' => 'latest',
+    ]);
+    $adapter = new League\Flysystem\AwsS3v3\AwsS3Adapter(
+        $client,
+        getenv("S3_BUCKET")
+    );
+    $filesystem = new \League\Flysystem\Filesystem($adapter);
+    return new Aruna\EventStore($filesystem);
+});
+
+$app['convert_data_handler'] = $app->share(function () use ($app) {
+    return new Aruna\ConvertDataHandler(
+        $app['monolog'],
+        $app['remote_data_store']
     );
 });
 
@@ -108,6 +128,7 @@ $app['handler.process_webmentions'] = $app->share(function () use ($app) {
 
 $app->command(new CLI\ProcessCacheCommand());
 $app->command(new CLI\ResizePhotoCommand());
+$app->command(new CLI\ConvertJsonToMf2());
 $app->command(new CLI\ProcessWebmentionsCommand());
 
 $app->run();
