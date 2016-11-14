@@ -88,7 +88,7 @@ class VerifyAccessTokenTest extends UnitTest
     /**
      * @test
      * @expectedException Exception
-     * @expectedExceptionMessage scope is not post
+     * @expectedExceptionMessage [test] does not contain [post, create]
      */
     public function it_throws_exception_if_token_scope_is_not_post()
     {
