@@ -12,11 +12,11 @@ class CreatePostResponder extends Responder
 {
     public function ok()
     {
-        $post_url = $this->payload->get("items")[0]->getUid();
+        $post_uid = $this->payload->get("post_uid");
         $this->response = $this->response::create(
             "",
             202,
-            array("Location" => "http://j4y.co/p/".$post_url)
+            array("Location" => "http://j4y.co/p/".$post_uid)
         );
     }
 

@@ -32,7 +32,7 @@ class CreatePostHandler
         try {
             $post = new NewPost($command->getEntry(), $command->getFiles());
             $this->postRepository->save($post, $command->getFiles());
-            return new OK(["items" => [$post]]);
+            return new OK(["post_uid" => $post->getUid()]);
         } catch (\Exception $e) {
             $message = sprintf("Failed to save new post [%s]", $e->getMessage());
             return new ServerError(["message" => $message]);
