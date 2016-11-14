@@ -16,6 +16,10 @@ class CreatePostTest extends SystemTest
      */
     public function it_returns_unauthorized_when_token_is_invalid()
     {
+        $fake_token = $this->prophesize("\Aruna\Micropub\VerifyAccessToken");
+        $fake_token->getTokenFromAuthCode("Bearer xxx")
+            ->willThrow(new \Exception());
+        $this->app['access_token'] = $fake_token->reveal();
         $SUT = $this->app['create_post.handler'];
 
         $command = new CreatePostCommand(
@@ -25,8 +29,6 @@ class CreatePostTest extends SystemTest
         );
         $result = $SUT->handle($command);
 
-        $expected = sprintf("Invalid access token [%s]", $access_token);
-        $this->assertEquals($expected, $result->get("message"));
         $this->assertInstanceOf(Unauthorized::class, $result);
     }
 
@@ -40,7 +42,7 @@ class CreatePostTest extends SystemTest
         $SUT = $this->app['create_post.handler'];
 
         $command = new CreatePostCommand(
-            $post = ["test" => 1],
+            $post = ["content" => "this is a test", "category" => array("test1", "test2")],
             $files = [
                 new UploadedFile(
                     __DIR__."/test.jpg",
@@ -53,6 +55,5 @@ class CreatePostTest extends SystemTest
         );
         $result = $SUT->handle($command);
         $this->assertInstanceOf(OK::class, $result);
-        $this->assertInstanceOf(NewPost::class, $result->get("items")[0]);
     }
 }
