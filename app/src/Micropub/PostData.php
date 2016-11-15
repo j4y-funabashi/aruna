@@ -10,7 +10,7 @@ class PostData
         $properties = array();
         $me = "http://j4y.co";
 
-        $properties['url'] = array($me."/p/".$post_data['uid']);
+        $properties['url'] = array("/p/".$post_data['uid']);
 
         $properties['author'][] = array(
             "type" => array("h-card"),
