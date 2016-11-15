@@ -17,7 +17,7 @@ class NewPost implements \JsonSerializable
         array $config,
         $files = []
     ) {
-        unset($entry["access_token"]);
+        unset($config["access_token"]);
         $config['published'] = $this->validateDate($config);
         $this->properties = $config;
         $this->properties['uid'] = (new DateTimeImmutable())->format("YmdHis")."_".uniqid();
