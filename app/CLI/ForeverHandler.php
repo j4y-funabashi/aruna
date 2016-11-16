@@ -14,6 +14,9 @@ class ForeverHandler
         pcntl_signal(SIGTERM, function ($signo) {
             $this->forever = false;
         });
+        pcntl_signal(SIGINT, function ($signo) {
+            $this->forever = false;
+        });
     }
 
     public function isForever()
