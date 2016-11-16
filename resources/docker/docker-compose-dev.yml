@@ -10,6 +10,14 @@ services:
             - ../..:/srv/aruna
             - /media/jayr/aruna:/media/jayr/aruna
 
+    resize_daemon:
+        build: micropub_daemon
+        command: php app/run.php resize_photos --forever
+        env_file: ./.env
+        volumes:
+            - ../..:/srv/aruna
+            - /media/jayr/aruna:/media/jayr/aruna
+
     webserver:
         build: webserver
         links:

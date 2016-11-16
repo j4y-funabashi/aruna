@@ -7,4 +7,12 @@ RUN apt-get update \
         && docker-php-ext-install pdo_sqlite \
         && docker-php-ext-install pcntl
 
+RUN apt-get update \
+    && apt-get -y install \
+    libmagickwand-dev \
+    --no-install-recommends \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
+    && rm -r /var/lib/apt/lists/*
+
 WORKDIR /srv/aruna
