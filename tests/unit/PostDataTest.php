@@ -14,13 +14,14 @@ class PostDataTest extends UnitTest
                     "properties" => [
                         "uid" => [1],
                         "url" => ["/p/1"],
+                        "photo" => ["/2016/test.jpg"],
                         "author" => [
                             [
                                 "type" => ["h-card"],
                                 "properties" => [
                                     "name" => ["Jay Robinson"],
                                     "photo" => ["/profile_pic.jpeg"],
-                                    "url" => ["http://j4y.co"]
+                                    "url" => ["https://j4y.co"]
                                 ]
                             ]
                         ]
@@ -35,7 +36,7 @@ class PostDataTest extends UnitTest
      */
     public function it_removes_access_token()
     {
-        $post_data = ["uid" => 1, "access_token" => 1];
+        $post_data = ["uid" => 1, "access_token" => 1, "photo" => "2016/test.jpg"];
         $result = $this->SUT->toMfArray($post_data);
         $this->assertEquals($this->expected, $result);
     }

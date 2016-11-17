@@ -61,6 +61,8 @@ class PostData
             unset($post_data['category']);
         }
 
+        $post_data = $this->convertPhoto($post_data);
+
         // all other properties
         foreach ($post_data as $k => $v) {
             $properties[$k] = array($v);
@@ -76,5 +78,17 @@ class PostData
         );
 
         return $out;
+    }
+
+    private function convertPhoto($post_data)
+    {
+        if (!isset($post_data["photo"])) {
+            return $post_data;
+        }
+        $photo_url = parse_url($post_data["photo"]);
+        if (!isset($photo_url["host"])) {
+            $post_data["photo"] = "/".$post_data["photo"];
+        }
+        return $post_data;
     }
 }

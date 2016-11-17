@@ -2,7 +2,7 @@
 
     {% include 'post_author.html' %}
 
-    <img class="u-photo post-photo" alt="jpg photo" src="/{{ post.get('photo') }}" />
+    <img class="u-photo post-photo" alt="jpg photo" src="{{ post.get('photo') }}" />
 
     {% if post.get('content')['html'] is defined %}
     <div class="e-content post-content">
