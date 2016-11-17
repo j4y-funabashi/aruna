@@ -8,7 +8,7 @@ class PostData
     {
         unset($post_data['access_token']);
         $properties = array();
-        $me = "http://j4y.co";
+        $me = "https://j4y.co";
 
         $properties['url'] = array("/p/".$post_data['uid']);
 

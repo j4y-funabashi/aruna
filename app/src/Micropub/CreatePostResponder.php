@@ -16,7 +16,7 @@ class CreatePostResponder extends Responder
         $this->response = $this->response::create(
             "",
             202,
-            array("Location" => "http://j4y.co/p/".$post_uid)
+            array("Location" => "https://j4y.co/p/".$post_uid)
         );
     }
 
