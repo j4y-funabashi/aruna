@@ -13,7 +13,7 @@ class PostDataTest extends UnitTest
                     "type" => ["h-entry"],
                     "properties" => [
                         "uid" => [1],
-                        "url" => ["http://j4y.co/p/1"],
+                        "url" => ["/p/1"],
                         "author" => [
                             [
                                 "type" => ["h-card"],
