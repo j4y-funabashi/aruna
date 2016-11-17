@@ -36,7 +36,7 @@ class PostDataTest extends UnitTest
      */
     public function it_removes_access_token()
     {
-        $post_data = ["uid" => 1, "access_token" => 1, "photo" => "2016/test.jpg"];
+        $post_data = ["uid" => 1, "access_token" => 1, "files" => ["photo" => "2016/test.jpg"]];
         $result = $this->SUT->toMfArray($post_data);
         $this->assertEquals($this->expected, $result);
     }

@@ -21,7 +21,6 @@ class PostData
             )
         );
 
-
         // h
         $h = (isset($post_data['h']))
             ? $post_data['h']
@@ -31,7 +30,7 @@ class PostData
         // files
         if (isset($post_data['files'])) {
             foreach ($post_data['files'] as $file_key => $file_path) {
-                $properties[$file_key] = array($file_path);
+                $properties[$file_key] = array("/".$file_path);
             }
             unset($post_data['files']);
         }
