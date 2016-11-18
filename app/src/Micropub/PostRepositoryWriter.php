@@ -4,6 +4,7 @@ namespace Aruna\Micropub;
 
 use League\Flysystem\FileExistsException;
 use RuntimeException;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Class PostRepositoryWriter
@@ -19,26 +20,42 @@ class PostRepositoryWriter
         $this->db = $db;
     }
 
-    public function save(NewPost $entry, $files)
+    public function saveMediaFiles(array $files)
     {
-        foreach ($files as $uploadedFile) {
-            try {
-                $stream = fopen($uploadedFile->getRealPath(), 'rb');
-                if (!$stream) {
-                    $m = "Could not open file ".$uploadedFile->getRealPath();
-                    throw new \RuntimeException($m);
-                }
-                $this->filesystem->writeStream(
-                    $entry->getFilePath().".".$uploadedFile->getExtension(),
-                    $stream
-                );
-            } catch (FileExistsException $e) {
-                throw new RuntimeException($e->getMessage());
-            }
+        $out = [];
+        foreach ($files as $file_key => $uploadedFile) {
+            $out_path = sprintf(
+                "%s/%s.%s",
+                (new \DateTimeImmutable())->format("Y"),
+                Uuid::uuid4()->toString(),
+                $uploadedFile->getExtension()
+            );
+            $this->saveMediaFile($uploadedFile, $out_path);
+            $out[$file_key] = $out_path;
         }
+        return $out;
+    }
 
+    private function saveMediaFile($uploadedFile, $out_path)
+    {
         try {
-            // json file
+            $stream = fopen($uploadedFile->getRealPath(), 'rb');
+            if (!$stream) {
+                $m = "Could not open file ".$uploadedFile->getRealPath();
+                throw new \RuntimeException($m);
+            }
+            $this->filesystem->writeStream(
+                $out_path,
+                $stream
+            );
+        } catch (FileExistsException $e) {
+            throw new RuntimeException($e->getMessage());
+        }
+    }
+
+    public function savePost(NewPost $entry)
+    {
+        try {
             $this->filesystem->write(
                 $entry->getFilePath().".json",
                 $entry->asJson()

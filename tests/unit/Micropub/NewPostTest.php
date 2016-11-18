@@ -42,8 +42,10 @@ class NewPostTest extends UnitTest
     public function it_can_be_json_encoded_when_valid()
     {
         $post = new NewPost(
-            $this->config,
-            ["photo" => $this->uploadedFile]
+            array_merge(
+                $this->config,
+                ["photo" => "2016/test123.jpg"]
+            )
         );
         $this->assertJsonStringEqualsJsonFile(
             "tests/fixtures/new_post_with_file.json",

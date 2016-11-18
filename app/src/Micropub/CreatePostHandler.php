@@ -30,8 +30,9 @@ class CreatePostHandler
             return new Unauthorized(["message" => $message]);
         }
         try {
-            $post = new NewPost($command->getEntry(), $command->getFiles());
-            $this->postRepository->save($post, $command->getFiles());
+            $files = $this->postRepository->saveMediaFiles($command->getFiles());
+            $post = new NewPost(array_merge($command->getEntry(), $files));
+            $this->postRepository->savePost($post);
             return new OK(["post_uid" => $post->getUid(), "post_data" => $post->asJson()]);
         } catch (\Exception $e) {
             $message = sprintf("Failed to save new post [%s]", $e->getMessage());
