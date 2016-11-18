@@ -42,7 +42,12 @@ class CreatePostTest extends SystemTest
         $SUT = $this->app['create_post.handler'];
 
         $command = new CreatePostCommand(
-            $post = ["content" => "this is a test", "category" => array("test1", "test2")],
+            $post = [
+                "uid" => "test123",
+                "content" => "this is a test",
+                "category" => array("test1", "test2"),
+                "published" => "2016-01-28T15:00:02+00:00"
+            ],
             $files = [
                 "photo" => new UploadedFile(
                     __DIR__."/test.jpg",
@@ -55,5 +60,6 @@ class CreatePostTest extends SystemTest
         );
         $result = $SUT->handle($command);
         $this->assertInstanceOf(OK::class, $result);
+        $this->assertJsonStringEqualsJsonFile("tests/fixtures/new_post_with_file.json", $result->get("post_data"));
     }
 }

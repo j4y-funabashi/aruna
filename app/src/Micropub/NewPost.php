@@ -56,7 +56,9 @@ class NewPost implements \JsonSerializable
 
     private function addUid($config)
     {
-        $config['uid'] = (new DateTimeImmutable())->format("YmdHis")."_".uniqid();
+        if (!isset($config["uid"])) {
+            $config['uid'] = (new DateTimeImmutable())->format("YmdHis")."_".uniqid();
+        }
         return $config;
     }
 
