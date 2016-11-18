@@ -44,7 +44,7 @@ class CreatePostTest extends SystemTest
         $command = new CreatePostCommand(
             $post = ["content" => "this is a test", "category" => array("test1", "test2")],
             $files = [
-                new UploadedFile(
+                "photo" => new UploadedFile(
                     __DIR__."/test.jpg",
                     "jpg",
                     true,

@@ -33,12 +33,16 @@ class NewPostTest extends UnitTest
             $is_valid = true
         );
         $post = new NewPost(
-            ["hello" => "test"],
+            ["hello" => "test", "published" => "2016-01-28 10:00:00"],
             [$uploadedFile]
         );
         $result = json_encode($post);
         $this->assertEquals(JSON_ERROR_NONE, json_last_error());
         $this->assertEquals($result, $post->asJson());
+        $this->assertEquals(
+            "2016-01-28T10:00:00+00:00",
+            json_decode($result, true)["published"]
+        );
     }
 
     /**
@@ -50,6 +54,16 @@ class NewPostTest extends UnitTest
         $result = json_decode(json_encode($post), true);
         $this->assertArrayHasKey("h", $result);
         $this->assertEquals("entry", $result["h"]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_removes_access_token()
+    {
+        $post = new NewPost(["access_token" => "test"]);
+        $result = json_decode(json_encode($post), true);
+        $this->assertFalse(isset($result["access_token"]));
     }
 
     /**

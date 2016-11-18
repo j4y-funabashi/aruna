@@ -17,13 +17,11 @@ class NewPost implements \JsonSerializable
         array $config,
         $files = []
     ) {
-        unset($config["access_token"]);
-        $config['published'] = $this->validateDate($config);
+        $config = $this->removeAccessToken($config);
+        $config = $this->addHIfNotExists($config);
+        $config = $this->addUid($config);
+        $config = $this->validateDate($config);
         $this->properties = $config;
-        $this->properties['uid'] = (new DateTimeImmutable())->format("YmdHis")."_".uniqid();
-        if (!isset($this->properties["h"])) {
-            $this->properties["h"] = "entry";
-        }
 
         foreach ($files as $file_key => $uploadedFile) {
             $this->properties[$file_key] = $this->getFilePath().".".$uploadedFile->getExtension();
@@ -56,15 +54,35 @@ class NewPost implements \JsonSerializable
         return $this->properties['uid'];
     }
 
+    private function addUid($config)
+    {
+        $config['uid'] = (new DateTimeImmutable())->format("YmdHis")."_".uniqid();
+        return $config;
+    }
+
     private function validateDate($config)
     {
         try {
-            $published = (isset($config['published']))
+            $config["published"] = (isset($config['published']))
                 ? new DateTimeImmutable($config['published'])
                 : new DateTimeImmutable();
-            return $published;
+            return $config;
         } catch (\Exception $e) {
             throw new RuntimeException($config['published'] . ' is not a valid date');
         }
+    }
+
+    private function addHIfNotExists($config)
+    {
+        if (!isset($config["h"])) {
+            $config["h"] = "entry";
+        }
+        return $config;
+    }
+
+    private function removeAccessToken($config)
+    {
+        unset($config["access_token"]);
+        return $config;
     }
 }
