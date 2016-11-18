@@ -7,6 +7,21 @@ use Aruna\Micropub\UploadedFile;
 
 class NewPostTest extends UnitTest
 {
+    public function setUp()
+    {
+        $this->config = [
+            "uid" => "test123",
+            "content" => "this is a test",
+            "category" => ["test1", "test2"],
+            "published" => "2016-01-28 15:00:02"
+        ];
+        $this->uploadedFile = new UploadedFile(
+            $real_path = '/tmp/test',
+            $original_ext = 'jpg',
+            $is_readable = true,
+            $is_valid = true
+        );
+    }
 
     /**
      * @test
@@ -17,7 +32,7 @@ class NewPostTest extends UnitTest
     {
         $post = [
             "published" => "test"
-            ];
+        ];
         $result = new NewPost($post);
     }
 
@@ -26,22 +41,13 @@ class NewPostTest extends UnitTest
      */
     public function it_can_be_json_encoded_when_valid()
     {
-        $uploadedFile = new UploadedFile(
-            $real_path = '/tmp/test',
-            $original_ext = 'jpg',
-            $is_readable = true,
-            $is_valid = true
-        );
         $post = new NewPost(
-            ["hello" => "test", "published" => "2016-01-28 10:00:00"],
-            [$uploadedFile]
+            $this->config,
+            ["photo" => $this->uploadedFile]
         );
-        $result = json_encode($post);
-        $this->assertEquals(JSON_ERROR_NONE, json_last_error());
-        $this->assertEquals($result, $post->asJson());
-        $this->assertEquals(
-            "2016-01-28T10:00:00+00:00",
-            json_decode($result, true)["published"]
+        $this->assertJsonStringEqualsJsonFile(
+            "tests/fixtures/new_post_with_file.json",
+            $post->asJson()
         );
     }
 
@@ -69,10 +75,11 @@ class NewPostTest extends UnitTest
     /**
      * @test
      */
-    public function it_creates_a_filepath_from_the_posts_uid()
+    public function it_creates_a_filepath()
     {
-        $post = new NewPost([]);
+        $post = new NewPost($this->config);
         $result = $post->getFilePath();
-        $this->assertRegExp("/\d{4}\/\d{14}_\w{13}/", $result);
+        $expected = "2016/test123";
+        $this->assertEquals($expected, $result);
     }
 }

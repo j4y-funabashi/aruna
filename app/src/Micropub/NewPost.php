@@ -44,7 +44,7 @@ class NewPost implements \JsonSerializable
     {
         return sprintf(
             "%s/%s",
-            substr($this->getUid(), 0, 4),
+            $this->properties['published']->format("Y"),
             $this->getUid()
         );
     }
