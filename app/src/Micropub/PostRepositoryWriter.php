@@ -28,7 +28,7 @@ class PostRepositoryWriter
                 "%s/%s.%s",
                 (new \DateTimeImmutable())->format("Y"),
                 Uuid::uuid4()->toString(),
-                $uploadedFile->getExtension()
+                strtolower($uploadedFile->getExtension())
             );
             $this->saveMediaFile($uploadedFile, $out_path);
             $out[$file_key] = $out_path;
