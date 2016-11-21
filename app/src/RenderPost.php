@@ -19,7 +19,7 @@ class RenderPost
         $comments = $this->renderComments($post->comments());
         $likes = $this->renderLikes($post->likes());
         return $this->view->render(
-            "post_".$post->type().".html",
+            "post_wrapper.html",
             array(
                 "post" => $post,
                 "category" => $category,

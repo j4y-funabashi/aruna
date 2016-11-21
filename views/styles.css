@@ -2,6 +2,9 @@
     color: #181818;
 }
 
+nav {
+    text-align: center;
+}
 .navbar {
     background-color: #282828;
     padding: 10px;
@@ -104,6 +107,15 @@ article img {
 }
 .post-content, .post-meta, .post-author {
     padding: 8px;
+}
+
+.post-author li {
+    list-style: none;
+}
+.post-author-photo {
+    width: 60px;
+    vertical-align: middle;
+    border-radius: 50%;
 }
 
 .post-comment {
