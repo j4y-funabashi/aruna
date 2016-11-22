@@ -27,7 +27,7 @@ class CacheToSql
             [
                 ":id" => $post->get("uid"),
                 ":published" => $post->get("published"),
-                ":post" => json_encode($post),
+                ":post" => $post->toJson(),
                 ":type" => $post->type()
             ]
         );
