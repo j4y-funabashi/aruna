@@ -21,12 +21,14 @@ class CacheToSql
             (:id, :published, :post, :type)";
         $r = $this->db->prepare($q);
 
+        $post = new \Aruna\PostViewModel($post);
+
         $r->execute(
             [
-                ":id" => $post["properties"]["uid"][0],
-                ":published" => $post["properties"]["published"][0],
+                ":id" => $post->get("uid"),
+                ":published" => $post->get("published"),
                 ":post" => json_encode($post),
-                ":type" => "note"
+                ":type" => $post->type()
             ]
         );
 
