@@ -1,1 +1,2 @@
-{"uid":"test123","content":"this is a test","category":["test1","test2"],"published":"2016-01-28T15:00:02+00:00","h":"entry","photo":"2016\/test123.jpg"}
+{"eventType": "PostCreated","eventVersion": "1453993202","eventID": "test123","eventData": {"type": ["h-entry"], "properties": {"uid":["test123"],"content":["this is a test"],"category":["test1","test2"],"published":["2016-01-28T15:00:02+00:00"],"h":["entry"],"photo":["2016\/test123.jpg"]}}}
+

@@ -22,11 +22,29 @@ class RenderPost
             "post_wrapper.html",
             array(
                 "post" => $post,
+                "url" => $this->renderUrl($post),
+                "content" => $this->renderContent($post),
                 "category" => $category,
                 "comments" => $comments,
                 "likes" => $likes
             )
         );
+    }
+
+    private function renderUrl($post)
+    {
+        return "/p/".$post->get('uid');
+    }
+
+    private function renderContent($post)
+    {
+        if ($post->get("content")) {
+            $markdown = new \cebe\markdown\GithubMarkdown();
+            return sprintf(
+                '<div class="e-content">%s</div>',
+                $markdown->parse($post->get("content"))
+            );
+        }
     }
 
     private function renderLikes($comments)

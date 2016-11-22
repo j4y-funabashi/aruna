@@ -59,9 +59,8 @@ class NewPostTest extends UnitTest
     public function it_adds_h_property_if_it_does_not_exist()
     {
         $post = new NewPost([]);
-        $result = json_decode(json_encode($post), true);
-        $this->assertArrayHasKey("h", $result);
-        $this->assertEquals("entry", $result["h"]);
+        $result = json_decode(json_encode($post), true)["eventData"];
+        $this->assertEquals("h-entry", $result["type"][0]);
     }
 
     /**
@@ -70,7 +69,7 @@ class NewPostTest extends UnitTest
     public function it_removes_access_token()
     {
         $post = new NewPost(["access_token" => "test"]);
-        $result = json_decode(json_encode($post), true);
+        $result = json_decode(json_encode($post), true)["eventData"];
         $this->assertFalse(isset($result["access_token"]));
     }
 

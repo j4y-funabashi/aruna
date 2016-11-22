@@ -25,8 +25,22 @@ class NewPost implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        $out = $this->properties;
-        $out['published'] = $this->properties['published']->format("c");
+        $eventData = $this->properties;
+        $eventData['published'] = $this->properties['published']->format("c");
+        foreach ($eventData as $k => $v) {
+            if (!is_array($v)) {
+                $eventData[$k] = array($v);
+            }
+        }
+        $out = [
+            "eventType" => $this->getEventType(),
+            "eventVersion" => $this->properties['published']->format("U"),
+            "eventID" => $this->getUid(),
+            "eventData" => [
+                "type" => ["h-".$this->properties["h"]],
+                "properties" => $eventData
+            ]
+        ];
         return $out;
     }
 
@@ -81,5 +95,10 @@ class NewPost implements \JsonSerializable
     {
         unset($config["access_token"]);
         return $config;
+    }
+
+    private function getEventType()
+    {
+        return "PostCreated";
     }
 }

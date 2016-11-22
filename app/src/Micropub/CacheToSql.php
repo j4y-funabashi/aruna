@@ -2,8 +2,6 @@
 
 namespace Aruna\Micropub;
 
-use Aruna\PostViewModel;
-
 /**
  * Class CacheToSql
  * @author yourname
@@ -18,9 +16,6 @@ class CacheToSql
 
     public function __invoke(array $post)
     {
-        $post_data = new \Aruna\Micropub\PostData();
-        $post = new PostViewModel($post_data->toMfArray($post));
-
         $q = "REPLACE INTO posts (id, published, post, type)
             VALUES
             (:id, :published, :post, :type)";
@@ -28,10 +23,10 @@ class CacheToSql
 
         $r->execute(
             [
-                ":id" => $post->get("uid"),
-                ":published" => $post->published(),
-                ":post" => $post->toJson(),
-                ":type" => $post->type()
+                ":id" => $post["properties"]["uid"][0],
+                ":published" => $post["properties"]["published"][0],
+                ":post" => json_encode($post),
+                ":type" => "note"
             ]
         );
 
