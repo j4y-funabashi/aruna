@@ -11,27 +11,19 @@ class ParseCategories
 
     public function __invoke(array $post)
     {
-        if (!isset($post["category"])) {
+        if (!isset($post["properties"]["category"])) {
             return $post;
         }
-        if (is_string($post['category'])) {
-            $post['category'] = explode(",", $post['category']);
+        $out = [];
+        foreach ($post["properties"]["category"] as $cat) {
+            $cat = array_map(
+                "trim",
+                explode(",", $cat)
+            );
+            $out = array_merge($out, $cat);
         }
-        $new_categories = [];
-        foreach ($post["category"] as $category) {
-            $category = trim($category);
-            if (is_string($category) && substr($category, 0, 1) == "@") {
-                $category = array(
-                    "type" => ["h-card"],
-                    "properties" => [
-                        "name" => [$category],
-                        "url" => [substr($category, 1)]
-                    ]
-                );
-            }
-            $new_categories[] = $category;
-        }
-        $post["category"] = $new_categories;
+        $post["properties"]["category"] = array_values(array_unique($out));
+
         return $post;
     }
 }

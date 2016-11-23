@@ -29,31 +29,10 @@ class ParseCategoriesTest extends UnitTest
     /**
     * @test
     */
-    public function it_does_nothing_if_post_has__categories_but_no_person_tags()
+    public function it_splits_tags_by_comma()
     {
-        $post = array("category" => ["test"]);
-        $result = $this->SUT->__invoke($post);
-        $this->assertEquals($post, $result);
-    }
-
-    /**
-    * @test
-    */
-    public function it_replaces_person_tag_with_hcard()
-    {
-        $post = array("category" => ["@test"]);
-        $expected = array(
-            "category" => array(
-                [
-                    "type" => ["h-card"],
-                    "properties" => [
-                        "name" => ["@test"],
-                        "url" => ["test"]
-                    ]
-                ]
-        )
-        );
-
+        $post = array("properties" => ["category" => ["test ,test2","test3", "test,test5"]]);
+        $expected = array("properties" => ["category" => ["test","test2","test3","test5"]]);
         $result = $this->SUT->__invoke($post);
         $this->assertEquals($expected, $result);
     }
