@@ -38,15 +38,15 @@ class ProcessCacheHandler
             $m = sprintf(
                 "Processing Event [%s][%s]",
                 $event_type,
-                $post["uid"]
+                $post["eventID"]
             );
             $this->log->debug($m);
             try {
-                $post = $pipeline->process($post);
+                $post = $pipeline->process($post["eventData"]);
             } catch (\Exception $e) {
                 $m = sprintf(
                     "Could not process post %s [%s]",
-                    $post["uid"],
+                    $post["eventID"],
                     $e->getMessage() . " " . $e->getTraceAsString()
                 );
                 $this->log->critical($m);
@@ -56,13 +56,6 @@ class ProcessCacheHandler
 
     private function getEventType($event)
     {
-        if (
-            isset($event["action"])
-            && $event["action"] == "delete"
-        ) {
-            return "DeletePost";
-        }
-
-        return "CreatePost";
+        return $event["eventType"];
     }
 }

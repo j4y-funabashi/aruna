@@ -15,23 +15,36 @@ class NewPost implements \JsonSerializable
 
     public function __construct(
         array $config,
-        $files = []
+        $now = null
     ) {
         $config = $this->removeAccessToken($config);
         $config = $this->addHIfNotExists($config);
         $config = $this->addUid($config);
         $config = $this->validateDate($config);
         $this->properties = $config;
-
-        foreach ($files as $file_key => $uploadedFile) {
-            $this->properties[$file_key] = $this->getFilePath().".".$uploadedFile->getExtension();
-        }
+        $this->now = (null === $now)
+            ? new DateTimeImmutable()
+            : $now;
     }
 
     public function jsonSerialize()
     {
-        $out = $this->properties;
-        $out['published'] = $this->properties['published']->format("c");
+        $eventData = $this->properties;
+        $eventData['published'] = $this->properties['published']->format("c");
+        foreach ($eventData as $k => $v) {
+            if (!is_array($v)) {
+                $eventData[$k] = array($v);
+            }
+        }
+        $out = [
+            "eventType" => $this->getEventType(),
+            "eventVersion" => $this->now->format("YmdHis"),
+            "eventID" => $this->getUid(),
+            "eventData" => [
+                "type" => ["h-".$this->properties["h"]],
+                "properties" => $eventData
+            ]
+        ];
         return $out;
     }
 
@@ -44,7 +57,7 @@ class NewPost implements \JsonSerializable
     {
         return sprintf(
             "%s/%s",
-            $this->properties['published']->format("Y"),
+            $this->now->format("Y"),
             $this->getUid()
         );
     }
@@ -86,5 +99,10 @@ class NewPost implements \JsonSerializable
     {
         unset($config["access_token"]);
         return $config;
+    }
+
+    private function getEventType()
+    {
+        return "PostCreated";
     }
 }

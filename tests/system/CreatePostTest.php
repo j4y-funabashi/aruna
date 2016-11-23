@@ -60,6 +60,5 @@ class CreatePostTest extends SystemTest
         );
         $result = $SUT->handle($command);
         $this->assertInstanceOf(OK::class, $result);
-        $this->assertJsonStringEqualsJsonFile("tests/fixtures/new_post_with_file.json", $result->get("post_data"));
     }
 }

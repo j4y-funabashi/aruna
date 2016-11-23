@@ -16,7 +16,7 @@ class ProcessingPipelineFactory
     public function build($type)
     {
         switch ($type) {
-            case 'CreatePost':
+            case 'PostCreated':
                 return (new Pipeline())
                     ->pipe(
                         new ParseCategories()
@@ -35,7 +35,7 @@ class ProcessingPipelineFactory
                         )
                     );
                 break;
-            case 'DeletePost':
+            case 'PostDeleted':
                 return (new Pipeline())
                     ->pipe(
                         new DeletePost(

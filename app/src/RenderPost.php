@@ -15,80 +15,40 @@ class RenderPost
 
     public function __invoke($post)
     {
-        $category = $this->renderCategory($post->category());
-        $comments = $this->renderComments($post->comments());
-        $likes = $this->renderLikes($post->likes());
+        if ($post->type() == "tombstone") {
+            return $this->view->render(
+                "post_tombstone.html",
+                array(
+                    "post" => $post,
+                )
+            );
+        }
+
         return $this->view->render(
-            "post_".$post->type().".html",
+            "post_wrapper.html",
             array(
                 "post" => $post,
-                "category" => $category,
-                "comments" => $comments,
-                "likes" => $likes
+                "url" => $this->renderUrl($post),
+                "content" => $this->renderContent($post),
+                "category" => $this->renderCategory($post->category()),
             )
         );
     }
 
-    private function renderLikes($comments)
+    private function renderUrl($post)
     {
-        if (empty($comments)) {
-            return "";
-        }
-
-        $out = array('<div class="post-meta">');
-        foreach ($comments as $comment) {
-            $out[] = '<span class="p-like h-cite">';
-
-            // author
-            $out[] = sprintf(
-                '<a class="u-author h-card" href="%s"><img src="%s" class="author-photo" /></a>',
-                $comment['properties']['author'][0]['properties']['url'],
-                $comment['properties']['author'][0]['properties']['photo']
-            );
-            $out[] = '</span>';
-        }
-        $out[] = '</div>';
-
-        return implode("", $out);
+        return "/p/".$post->get('uid');
     }
 
-    private function renderComments($comments)
+    private function renderContent($post)
     {
-        if (empty($comments)) {
-            return "";
+        if ($post->get("content")) {
+            $markdown = new \cebe\markdown\GithubMarkdown();
+            return sprintf(
+                '<div class="e-content">%s</div>',
+                $markdown->parse($post->get("content"))
+            );
         }
-
-        $out = array('<div class="post-meta">');
-        foreach ($comments as $comment) {
-            $out[] = '<div class="u-comment h-cite">';
-
-            $out[] = '<div class="post-comment">';
-            // author
-            $out[] = sprintf(
-                '<a class="u-author h-card" href="%s"><img src="%s" class="author-photo" /></a>',
-                $comment['properties']['author'][0]['properties']['url'],
-                $comment['properties']['author'][0]['properties']['photo']
-            );
-            // content
-            $out[] = sprintf(
-                '<span class="p-content p-name">%s</span>',
-                $comment['properties']['content'][0]['value']
-            );
-            $out[] = sprintf(
-                '<a class="u-url" href="%s">
-                    <time class="dt-published">%s</time>
-                </a>',
-                $comment['properties']['url'][0],
-                $comment['properties']['published'][0]
-            );
-            $out[] = "</div>";
-
-
-            $out[] = '</div>';
-        }
-        $out[] = '</div>';
-
-        return implode("", $out);
     }
 
     private function renderCategory($category)

@@ -42,8 +42,11 @@ class NewPostTest extends UnitTest
     public function it_can_be_json_encoded_when_valid()
     {
         $post = new NewPost(
-            $this->config,
-            ["photo" => $this->uploadedFile]
+            array_merge(
+                $this->config,
+                ["photo" => "2016/test123.jpg"]
+            ),
+            new \DateTimeImmutable("2016-01-28 10:00:00")
         );
         $this->assertJsonStringEqualsJsonFile(
             "tests/fixtures/new_post_with_file.json",
@@ -57,9 +60,8 @@ class NewPostTest extends UnitTest
     public function it_adds_h_property_if_it_does_not_exist()
     {
         $post = new NewPost([]);
-        $result = json_decode(json_encode($post), true);
-        $this->assertArrayHasKey("h", $result);
-        $this->assertEquals("entry", $result["h"]);
+        $result = json_decode(json_encode($post), true)["eventData"];
+        $this->assertEquals("h-entry", $result["type"][0]);
     }
 
     /**
@@ -68,7 +70,7 @@ class NewPostTest extends UnitTest
     public function it_removes_access_token()
     {
         $post = new NewPost(["access_token" => "test"]);
-        $result = json_decode(json_encode($post), true);
+        $result = json_decode(json_encode($post), true)["eventData"];
         $this->assertFalse(isset($result["access_token"]));
     }
 

@@ -19,7 +19,7 @@ class SendWebmention
         $this->log = $log;
     }
 
-    public function __invoke(PostViewModel $post)
+    public function __invoke($post)
     {
         return $post;
         foreach ($this->findUrls->__invoke($post->toString()) as $url) {

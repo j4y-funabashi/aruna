@@ -1,0 +1,44 @@
+<article class="h-entry">
+
+    {% if post.get('photo') is not null %}
+    <img class="u-photo post-photo" alt="jpg photo" src="{{ post.get('photo') }}" />
+    {% endif %}
+
+    <div class="post-content">
+
+        {% if post.get('summary') is not null %}
+        <p>{{ post.get('summary') }} </p>
+        {% endif %}
+
+        {% if post.get('in-reply-to') is not null %}
+        <a class="u-in-reply-to" href="{{ post.get('in-reply-to') }}">{{ post.get('in-reply-to') }}</a>
+        {% endif %}
+
+        {% if post.get('like-of') is not null %}
+        <div class="post-content">
+            likes <a class="u-like-of" href="{{ post.get('like-of') }}">{{ post.get('like-of') }}</a>
+        </div>
+        {% endif %}
+
+        {% if post.get('bookmark-of') is not null %}
+        <div class="post-content">
+            <a class="u-bookmark-of" href="{{ post.get('bookmark-of') }}">{{ post.get('bookmark-of') }}</a>
+        </div>
+        {% endif %}
+
+        {{ content|raw }}
+    </div>
+
+    <div class="post-meta">
+
+        {{ category|raw }}
+
+        <a class="u-url post-url" href="{{ url }}">
+            <time class="dt-published" datetime="{{ post.get('published') }}">{{ post.get('published') }}</time>
+        </a>
+
+        <a href="https://brid.gy/publish/facebook"></a>
+
+    </div>
+
+</article>

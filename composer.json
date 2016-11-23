@@ -28,7 +28,8 @@
         "mf2/mf2": "^0.2.12",
         "cebe/markdown": "^1.1",
         "kasp3r/link-preview": "^1.2",
-        "league/flysystem-aws-s3-v3": "^1.0"
+        "league/flysystem-aws-s3-v3": "^1.0",
+        "ramsey/uuid": "^3.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8"
