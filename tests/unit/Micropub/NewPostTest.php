@@ -45,7 +45,8 @@ class NewPostTest extends UnitTest
             array_merge(
                 $this->config,
                 ["photo" => "2016/test123.jpg"]
-            )
+            ),
+            new \DateTimeImmutable("2016-01-28 10:00:00")
         );
         $this->assertJsonStringEqualsJsonFile(
             "tests/fixtures/new_post_with_file.json",

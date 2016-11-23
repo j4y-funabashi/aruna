@@ -14,13 +14,17 @@ class NewPost implements \JsonSerializable
     protected $properties;
 
     public function __construct(
-        array $config
+        array $config,
+        $now = null
     ) {
         $config = $this->removeAccessToken($config);
         $config = $this->addHIfNotExists($config);
         $config = $this->addUid($config);
         $config = $this->validateDate($config);
         $this->properties = $config;
+        $this->now = (null === $now)
+            ? new DateTimeImmutable()
+            : $now;
     }
 
     public function jsonSerialize()
@@ -34,7 +38,7 @@ class NewPost implements \JsonSerializable
         }
         $out = [
             "eventType" => $this->getEventType(),
-            "eventVersion" => $this->properties['published']->format("U"),
+            "eventVersion" => $this->now->format("YmdHis"),
             "eventID" => $this->getUid(),
             "eventData" => [
                 "type" => ["h-".$this->properties["h"]],
