@@ -31,8 +31,30 @@ class RenderPost
                 "url" => $this->renderUrl($post),
                 "content" => $this->renderContent($post),
                 "category" => $this->renderCategory($post->category()),
+                "photo" => $this->renderPhoto($post)
             )
         );
+    }
+
+    private function renderPhoto($post)
+    {
+        if (null === $post->get("photo")) {
+            return null;
+        }
+
+        return sprintf(
+            '<img class="u-photo post-photo" alt="photo" src="%s" />',
+            $this->getPhoto($post)
+        );
+    }
+
+    private function getPhoto($post)
+    {
+        $photo_url = parse_url($post->get("photo"));
+        if (!isset($photo_url["host"])) {
+            return "/".$post->get("photo");
+        }
+        return $post->get("photo");
     }
 
     private function renderUrl($post)

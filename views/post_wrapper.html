@@ -1,8 +1,6 @@
 <article class="h-entry">
 
-    {% if post.get('photo') is not null %}
-    <img class="u-photo post-photo" alt="jpg photo" src="{{ post.get('photo') }}" />
-    {% endif %}
+    {{ photo|raw }}
 
     <div class="post-content">
 
