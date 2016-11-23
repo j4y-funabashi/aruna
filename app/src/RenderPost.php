@@ -15,14 +15,22 @@ class RenderPost
 
     public function __invoke($post)
     {
-        $category = $this->renderCategory($post->category());
+        if ($post->type() == "tombstone") {
+            return $this->view->render(
+                "post_tombstone.html",
+                array(
+                    "post" => $post,
+                )
+            );
+        }
+
         return $this->view->render(
             "post_wrapper.html",
             array(
                 "post" => $post,
                 "url" => $this->renderUrl($post),
                 "content" => $this->renderContent($post),
-                "category" => $category,
+                "category" => $this->renderCategory($post->category()),
             )
         );
     }
