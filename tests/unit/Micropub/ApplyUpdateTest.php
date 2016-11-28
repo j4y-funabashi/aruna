@@ -56,4 +56,32 @@ class ApplyUpdateTest extends UnitTest
         $result = $this->SUT->__invoke($this->post, $update);
         $this->assertEquals($expected, $result);
     }
+
+    /**
+     * @test
+     */
+    public function it_removes_properties()
+    {
+        $update = ["delete" => ["category"]];
+        $expected = [
+            "type" => "h-entry",
+            "properties" => ["content" => ["test"]]
+        ];
+        $result = $this->SUT->__invoke($this->post, $update);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function it_removes_values_of_properties()
+    {
+        $update = ["delete" => ["category" => ["test2"]]];
+        $expected = [
+            "type" => "h-entry",
+            "properties" => ["content" => ["test"], "category" => ["test"]]
+        ];
+        $result = $this->SUT->__invoke($this->post, $update);
+        $this->assertEquals($expected, $result);
+    }
 }
