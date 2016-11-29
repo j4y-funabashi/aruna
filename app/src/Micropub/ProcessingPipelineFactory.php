@@ -39,7 +39,9 @@ class ProcessingPipelineFactory
                 return (new Pipeline())
                     ->pipe(
                         new UpdatePost(
-                            $this->app['posts_repository_writer']
+                            $this->app["posts_repository_reader"],
+                            $this->app['posts_repository_writer'],
+                            new ApplyUpdate()
                         )
                     )
                     ->pipe(

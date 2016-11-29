@@ -80,22 +80,7 @@ class PostRepositoryWriter
         $r->execute($data);
     }
 
-    public function updateReplace(
-        $post_id,
-        $properties
-    ) {
-        $post = $this->fetchPostByID($post_id);
-        $post["properties"] = array_merge(
-            $post["properties"],
-            $properties
-        );
-        $this->updatePost(
-            $post_id,
-            json_encode($post)
-        );
-    }
-
-    private function updatePost(
+    public function updatePostData(
         $post_id,
         $post_data
     ) {
@@ -105,7 +90,7 @@ class PostRepositoryWriter
         $r = $this->db->prepare($q);
         $data = [
             ":post_id" => $post_id,
-            ":post_data" => $post_data
+            ":post_data" => json_encode($post_data)
         ];
         $r->execute($data);
     }

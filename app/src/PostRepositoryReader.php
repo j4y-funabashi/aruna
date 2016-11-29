@@ -178,4 +178,16 @@ class PostRepositoryReader
         }
         return $out;
     }
+
+    public function fetchDataById($post_id)
+    {
+        $q = "SELECT post FROM posts WHERE id = :id";
+        $r = $this->db->prepare($q);
+        $r->execute([":id" => $post_id]);
+        $post = $r->fetch();
+        if ($post === false) {
+            return array();
+        }
+        return json_decode($post['post'], true);
+    }
 }
