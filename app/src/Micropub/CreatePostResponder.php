@@ -12,6 +12,11 @@ class CreatePostResponder extends Responder
 {
     public function ok()
     {
+        $this->response = $this->response::create("", 200);
+    }
+
+    public function accepted()
+    {
         $post_uid = $this->payload->get("post_uid");
         $this->response = $this->response::create(
             "",

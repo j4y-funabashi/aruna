@@ -5,6 +5,7 @@ namespace Aruna\Micropub;
 use Aruna\Response\Unauthorized;
 use Aruna\Response\ServerError;
 use Aruna\Response\OK;
+use Aruna\Response\Accepted;
 
 /**
  * Class CreatePostHandler
@@ -33,7 +34,12 @@ class CreatePostHandler
             $files = $this->postRepository->saveMediaFiles($command->getFiles());
             $post = new NewPost(array_merge($command->getEntry(), $files));
             $this->postRepository->savePost($post);
-            return new OK(["post_uid" => $post->getUid(), "post_data" => $post->asJson()]);
+
+            if (isset($command->getEntry()["action"])) {
+                return new OK([]);
+            }
+            return new Accepted(["post_uid" => $post->getUid(), "post_data" => $post->asJson()]);
+
         } catch (\Exception $e) {
             $message = sprintf("Failed to save new post [%s]", $e->getMessage());
             return new ServerError(["message" => $message]);
