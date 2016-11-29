@@ -65,10 +65,14 @@ class RenderPost
     private function renderContent($post)
     {
         if ($post->get("content")) {
+            $content = $post->get("content");
+            if (isset($content["html"])) {
+                $content = $content["html"];
+            }
             $markdown = new \cebe\markdown\GithubMarkdown();
             return sprintf(
                 '<div class="e-content">%s</div>',
-                $markdown->parse($post->get("content"))
+                $markdown->parse($content)
             );
         }
     }
