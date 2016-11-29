@@ -103,6 +103,12 @@ class NewPost implements \JsonSerializable
 
     private function getEventType()
     {
+        if (
+            isset($this->properties["action"])
+            && $this->properties["action"] == "update"
+        ) {
+            return "PostUpdated";
+        }
         return "PostCreated";
     }
 }

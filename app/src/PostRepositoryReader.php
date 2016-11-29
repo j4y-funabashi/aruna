@@ -52,8 +52,6 @@ class PostRepositoryReader
 
     public function findById($post_id)
     {
-
-        // current
         $q = "SELECT
             id,
             published,
@@ -71,19 +69,8 @@ class PostRepositoryReader
             json_decode($post['post'], true),
             $post['date_deleted']
         );
-        foreach ($this->findMentionsByPostId($post_id) as $mention) {
-            if ($mention->type() == "reply") {
-                $post->setComment($mention);
-            }
-        }
-        foreach ($this->findMentionsByPostId($post_id) as $mention) {
-            if ($mention->type() == "like") {
-                $post->setLike($mention);
-            }
-        }
-        $out = array($post);
 
-        return $out;
+        return array($post);
     }
 
     private function findMentionsByPostId($post_id)
@@ -190,5 +177,17 @@ class PostRepositoryReader
             $out[] = new \Aruna\PostViewModel(json_decode($post['post'], true));
         }
         return $out;
+    }
+
+    public function fetchDataById($post_id)
+    {
+        $q = "SELECT post FROM posts WHERE id = :id";
+        $r = $this->db->prepare($q);
+        $r->execute([":id" => $post_id]);
+        $post = $r->fetch();
+        if ($post === false) {
+            return array();
+        }
+        return json_decode($post['post'], true);
     }
 }

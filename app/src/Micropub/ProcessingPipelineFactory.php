@@ -35,6 +35,21 @@ class ProcessingPipelineFactory
                         )
                     );
                 break;
+            case 'PostUpdated':
+                return (new Pipeline())
+                    ->pipe(
+                        new UpdatePost(
+                            $this->app["posts_repository_reader"],
+                            $this->app['posts_repository_writer'],
+                            new ApplyUpdate()
+                        )
+                    )
+                    ->pipe(
+                        new CacheToSql(
+                            $this->app['db_cache']
+                        )
+                    );
+                break;
             case 'PostDeleted':
                 return (new Pipeline())
                     ->pipe(

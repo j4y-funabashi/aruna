@@ -28,8 +28,12 @@ class CreatePostAction
 
     private function getCommand($request)
     {
+        $entry = $request->request->all();
+        if ($request->getContentType() == "json") {
+            $entry = json_decode($request->getContent(), true);
+        }
         return new CreatePostCommand(
-            $entry = $request->request->all(),
+            $entry,
             $files = $this->buildFilesArray($request),
             $access_token = $this->getAccessToken($request)
         );

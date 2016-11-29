@@ -79,4 +79,31 @@ class PostRepositoryWriter
         ];
         $r->execute($data);
     }
+
+    public function updatePostData(
+        $post_id,
+        $post_data
+    ) {
+        $q = "UPDATE posts
+            SET post = :post_data
+            WHERE id = :post_id";
+        $r = $this->db->prepare($q);
+        $data = [
+            ":post_id" => $post_id,
+            ":post_data" => json_encode($post_data)
+        ];
+        $r->execute($data);
+    }
+
+    private function fetchPostByID($post_id)
+    {
+        $q = "SELECT post FROM posts WHERE id = :post_id";
+        $r = $this->db->prepare($q);
+        $data = [
+            ":post_id" => $post_id,
+        ];
+        $r->execute($data);
+        $post = $r->fetch();
+        return json_decode($post["post"], true);
+    }
 }
