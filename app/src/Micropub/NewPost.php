@@ -17,8 +17,14 @@ class NewPost implements \JsonSerializable
         array $config,
         $now = null
     ) {
+        if (isset($config["properties"])) {
+            if (isset($config["type"])) {
+                $config["properties"]["h"] = trim($config["type"][0], "h-");
+            }
+            $config = $config["properties"];
+        }
         $config = $this->removeAccessToken($config);
-        $config = $this->addHIfNotExists($config);
+        $config = $this->addhIfNotExists($config);
         $config = $this->addUid($config);
         $config = $this->validateDate($config);
         $this->properties = $config;

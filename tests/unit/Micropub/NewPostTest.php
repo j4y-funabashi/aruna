@@ -25,6 +25,32 @@ class NewPostTest extends UnitTest
 
     /**
      * @test
+     */
+    public function it_converts_microformats_formatted_posts()
+    {
+        $this->config = [
+            "type" => ["h-event"],
+            "properties" => [
+                "uid" => "test123",
+                "content" => "this is a test",
+                "category" => ["test1", "test2"],
+                "published" => "2016-01-28 15:00:02",
+                "photo" => "2016/test123.jpg"
+            ]
+        ];
+
+        $post = new NewPost(
+            $this->config,
+            new \DateTimeImmutable("2016-01-28 10:00:00")
+        );
+        $this->assertJsonStringEqualsJsonString(
+            '{"eventType": "PostCreated","eventVersion": "20160128100000","eventID": "test123","eventData": {"type": ["h-event"], "properties": {"uid":["test123"],"content":["this is a test"],"category":["test1","test2"],"published":["2016-01-28T15:00:02+00:00"],"h":["event"],"photo":["2016\/test123.jpg"]}}}',
+            $post->asJson()
+        );
+    }
+
+    /**
+     * @test
      * @expectedException RuntimeException
      * @expectedExceptionMessage test is not a valid date
      */
