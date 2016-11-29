@@ -115,6 +115,12 @@ class NewPost implements \JsonSerializable
         ) {
             return "PostUpdated";
         }
+        if (
+            isset($this->properties["action"])
+            && $this->properties["action"] == "delete"
+        ) {
+            return "PostDeleted";
+        }
         return "PostCreated";
     }
 }
