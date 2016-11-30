@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Reader;
 
 use Symfony\Component\HttpFoundation\Request;
 

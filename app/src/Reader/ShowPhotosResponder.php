@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Reader;
 
 class ShowPhotosResponder extends Responder
 {

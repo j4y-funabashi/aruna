@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Reader;
 
 use Aruna\Response\Gone;
 use Aruna\Response\Found;
