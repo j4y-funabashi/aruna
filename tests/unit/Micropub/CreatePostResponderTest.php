@@ -31,7 +31,7 @@ class CreatePostResponderTest extends UnitTest
     {
         $this->SUT->setPayload(new OK(["items" => [new NewPost([])]]));
         $result = $this->SUT->__invoke();
-        $this->assertEquals(202, $result->getStatusCode());
+        $this->assertEquals(200, $result->getStatusCode());
     }
 
     /**

@@ -82,6 +82,24 @@ class NewPostTest extends UnitTest
 
     /**
      * @test
+     * @expectedException InvalidArgumentException
+     */
+    public function it_rejects_update_events_with_no_action()
+    {
+        $post = new NewPost(["action" => "update"]);
+    }
+
+    /**
+     * @test
+     * @expectedException InvalidArgumentException
+     */
+    public function it_rejects_update_events_where_action_is_not_an_array()
+    {
+        $post = new NewPost(["action" => "update", "replace" => "1"]);
+    }
+
+    /**
+     * @test
      */
     public function it_adds_h_property_if_it_does_not_exist()
     {

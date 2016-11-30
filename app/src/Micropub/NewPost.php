@@ -12,6 +12,7 @@ use RuntimeException;
 class NewPost implements \JsonSerializable
 {
     protected $properties;
+    protected $event_type;
 
     public function __construct(
         array $config,
@@ -28,6 +29,7 @@ class NewPost implements \JsonSerializable
         $config = $this->addUid($config);
         $config = $this->validateDate($config);
         $this->properties = $config;
+        $this->event_type = $this->getEventType();
         $this->now = (null === $now)
             ? new DateTimeImmutable()
             : $now;
@@ -43,7 +45,7 @@ class NewPost implements \JsonSerializable
             }
         }
         $out = [
-            "eventType" => $this->getEventType(),
+            "eventType" => $this->event_type,
             "eventVersion" => $this->now->format("YmdHis"),
             "eventID" => $this->getUid(),
             "eventData" => [
@@ -113,6 +115,7 @@ class NewPost implements \JsonSerializable
             isset($this->properties["action"])
             && $this->properties["action"] == "update"
         ) {
+            $this->validateUpdate($this->properties);
             return "PostUpdated";
         }
         if (
@@ -122,5 +125,23 @@ class NewPost implements \JsonSerializable
             return "PostDeleted";
         }
         return "PostCreated";
+    }
+
+    private function validateUpdate($update)
+    {
+        $update_actions = [
+            "replace",
+            "add",
+            "delete"
+        ];
+        $actions = array_intersect($update_actions, array_keys($update));
+        if (empty($actions)) {
+            throw new \InvalidArgumentException("Update does not contain any actions");
+        }
+        foreach ($actions as $action) {
+            if (!is_array($update[$action])) {
+                throw new \InvalidArgumentException("All update actions need to be arrays");
+            }
+        }
     }
 }

@@ -32,6 +32,14 @@ class CreatePostResponder extends Responder
         return $this->response;
     }
 
+    public function badrequest()
+    {
+        $this->response->setStatusCode(
+            $this->response::HTTP_BAD_REQUEST
+        );
+        return $this->response;
+    }
+
     public function servererror()
     {
         $this->response->setContent($this->payload->get("message"));

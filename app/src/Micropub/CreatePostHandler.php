@@ -6,6 +6,7 @@ use Aruna\Response\Unauthorized;
 use Aruna\Response\ServerError;
 use Aruna\Response\OK;
 use Aruna\Response\Accepted;
+use Aruna\Response\BadRequest;
 
 /**
  * Class CreatePostHandler
@@ -39,7 +40,8 @@ class CreatePostHandler
                 return new OK([]);
             }
             return new Accepted(["post_uid" => $post->getUid(), "post_data" => $post->asJson()]);
-
+        } catch (\InvalidArgumentException $e) {
+            return new BadRequest([]);
         } catch (\Exception $e) {
             $message = sprintf("Failed to save new post [%s]", $e->getMessage());
             return new ServerError(["message" => $message]);
