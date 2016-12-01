@@ -53,9 +53,4 @@ class PublishPostsHandler
             }
         }
     }
-
-    private function getEventType($event)
-    {
-        return $event["eventType"];
-    }
 }

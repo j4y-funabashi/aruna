@@ -2,8 +2,7 @@
 
 namespace Test;
 
-use Aruna\Micropub\ParseCategories;
-use Aruna\PostViewModel;
+use Aruna\Publish\ParseCategories;
 
 /**
  * Class ParseCategoriesTest

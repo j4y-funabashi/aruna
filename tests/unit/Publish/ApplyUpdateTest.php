@@ -2,7 +2,7 @@
 
 namespace Test;
 
-use Aruna\Micropub\ApplyUpdate;
+use Aruna\Publish\ApplyUpdate;
 
 class ApplyUpdateTest extends UnitTest
 {
