@@ -2,6 +2,8 @@
 
 namespace Aruna\Reader;
 
+use Aruna\Responder;
+
 class ShowPhotosResponder extends Responder
 {
 

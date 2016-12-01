@@ -3,6 +3,7 @@
 namespace Aruna\Reader;
 
 use Aruna\Response\Found;
+use Aruna\Handler;
 
 /**
  * Class ShowDateFeedHandler
