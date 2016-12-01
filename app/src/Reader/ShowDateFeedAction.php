@@ -1,8 +1,10 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Reader;
 
 use Symfony\Component\HttpFoundation\Request;
+use Aruna\Responder;
+use Aruna\Handler;
 
 /**
  * Class ShowDateFeedAction

@@ -1,6 +1,8 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Reader;
+
+use Aruna\Responder;
 
 /**
  * Class ShowDateFeedResponder

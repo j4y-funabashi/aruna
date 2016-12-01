@@ -1,8 +1,9 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Reader;
 
 use Aruna\Response\Found;
+use Aruna\Handler;
 
 class ShowPhotosHandler implements Handler
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Aruna;
+namespace Aruna\Reader;
 
 use Symfony\Component\HttpFoundation\Request;
 use Silex\Application;
 
-class ShowPhotosAction
+class ShowPostAction
 {
     public function __construct(
         $handler,
@@ -15,15 +15,13 @@ class ShowPhotosAction
         $this->responder = $responder;
     }
 
-    public function __invoke(Application $app, Request $request)
+    public function __invoke(Application $app, Request $request, $post_id)
     {
-        $rpp = $app['rpp'];
         $this->responder->setPayload(
             $this->handler->handle(
-                new ShowPhotosCommand(
+                new ShowPostCommand(
                     array(
-                        "rpp" => $rpp,
-                        "page" => $request->query->get("page")
+                        "post_id" => $post_id
                     )
                 )
             )

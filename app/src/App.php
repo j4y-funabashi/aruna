@@ -27,6 +27,7 @@ class App
         $app->register(new \Silex\Provider\SessionServiceProvider());
         $app->register(new Micropub\MicropubServiceProvider());
         $app->register(new Webmention\WebmentionServiceProvider());
+        $app->register(new Reader\ReaderServiceProvider());
 
         // SERVICES
         $app['monolog'] = $app->share(function () use ($app) {
@@ -48,39 +49,6 @@ class App
             return new \Symfony\Component\HttpFoundation\Response();
         });
 
-        $app['action.show_date_feed'] = $app->share(function () use ($app) {
-            return new ShowDateFeedAction(
-                new ShowDateFeedResponder(
-                    $app['response'],
-                    $app['twig'],
-                    new RenderPost($app['twig'])
-                ),
-                $app['handler.showdatefeed']
-            );
-        });
-
-        $app['handler.showdatefeed'] = $app->share(function () use ($app) {
-            return new ShowDateFeedHandler(
-                $app['posts_repository_reader'],
-                $app['url_generator']
-            );
-        });
-
-        $app['action.show_post'] = $app->share(function () use ($app) {
-            $handler = new ShowPostHandler(
-                $app['posts_repository_reader'],
-                $app['url_generator']
-            );
-            return new ShowPostAction(
-                $handler,
-                new ShowPostResponder(
-                    $app['response'],
-                    $app['twig'],
-                    new RenderPost($app['twig'])
-                )
-            );
-        });
-
         $app['auth.controller'] = $app->share(function () use ($app) {
             return new AuthController(
                 $app['http_client'],
@@ -91,41 +59,12 @@ class App
             return new \GuzzleHttp\Client();
         });
 
-        $app['action.show.photos'] = $app->share(function () use ($app) {
-            $handler = new ShowPhotosHandler(
-                $app['posts_repository_reader'],
-                $app['url_generator']
-            );
-            return new ShowPhotosAction(
-                $handler,
-                new ShowPhotosResponder(
-                    $app['response'],
-                    $app['twig'],
-                    new RenderPost($app['twig'])
-                )
-            );
-        });
-
         // ROUTES
-        $app->get("/", 'action.show.photos:__invoke')
-            ->bind('root');
-
-        $app->get("/p/{post_id}", 'action.show_post:__invoke')
-            ->bind('post');
-
-        $app->get("/photos", "action.show.photos:__invoke")
-            ->bind("photos");
-
         $app->get("/login", 'auth.controller:login')
             ->bind('login');
 
         $app->get("/auth", 'auth.controller:auth')
             ->bind('auth');
-
-        $app->get("/{year}/{month}/{day}", 'action.show_date_feed:__invoke')
-            ->value('month', '*')
-            ->value('day', '*')
-            ->bind('date_feed');
 
         return $app;
     }
