@@ -1,12 +1,12 @@
 <?php
 
-namespace Aruna\Micropub;
+namespace Aruna\Publish;
 
 /**
- * Class ProcessCacheHandler
+ * Class PublishPostsHandler
  * @author yourname
  */
-class ProcessCacheHandler
+class PublishPostsHandler
 {
     public function __construct(
         $log,
