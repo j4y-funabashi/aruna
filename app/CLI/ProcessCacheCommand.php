@@ -53,7 +53,7 @@ class ProcessCacheCommand extends Command
         do {
             $app = $this->getApplication();
             try {
-                $handler = $app->getService("process_cache_handler");
+                $handler = $app->getService("publish_posts_handler");
                 $handler->handle(
                     $input->getOption('rpp')
                 );

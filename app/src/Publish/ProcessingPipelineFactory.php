@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna\Micropub;
+namespace Aruna\Publish;
 
 use League\Pipeline\Pipeline;
 use Aruna\Webmention\DiscoverEndpoints;

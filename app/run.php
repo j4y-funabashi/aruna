@@ -60,9 +60,9 @@ $app['posts_repository_writer'] = $app->share(function () use ($app) {
 });
 
 // processCacheProvider
-$app['process_cache_handler'] = $app->share(function () use ($app) {
-    $pipelineFactory = new Aruna\Micropub\ProcessingPipelineFactory($app);
-    return new Aruna\Micropub\ProcessCacheHandler(
+$app['publish_posts_handler'] = $app->share(function () use ($app) {
+    $pipelineFactory = new Aruna\Publish\ProcessingPipelineFactory($app);
+    return new Aruna\Publish\PublishPostsHandler(
         $app['monolog'],
         $app['event_store'],
         $app['posts_repository_reader'],
