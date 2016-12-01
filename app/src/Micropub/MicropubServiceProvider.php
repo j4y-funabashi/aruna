@@ -30,6 +30,7 @@ class MicropubServiceProvider implements ServiceProviderInterface
         });
         $app['create_post.handler'] = $app->share(function () use ($app) {
             return new CreatePostHandler(
+                $app["monolog"],
                 $app['posts_repository_writer'],
                 $app['access_token']
             );

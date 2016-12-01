@@ -15,9 +15,11 @@ use Aruna\Response\BadRequest;
 class CreatePostHandler
 {
     public function __construct(
+        $log,
         PostRepositoryWriter $postRepository,
         $accessToken
     ) {
+        $this->log = $log;
         $this->postRepository = $postRepository;
         $this->accessTokenRepository = $accessToken;
     }
@@ -36,6 +38,8 @@ class CreatePostHandler
             $post = new NewPost(array_merge($command->getEntry(), $files));
             $this->postRepository->savePost($post);
 
+            $m = sprintf("Created new event %s", $post->asJson());
+            $this->log->info($m);
             if (isset($command->getEntry()["action"])) {
                 return new OK([]);
             }
