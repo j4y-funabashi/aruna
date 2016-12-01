@@ -25,13 +25,21 @@ class AuthController
 
     public function login(Application $app, Request $request)
     {
-        return $app['twig']->render(
+        $form = $app['twig']->render(
             'login.html',
             [
                 'client_id' => $this->getClientId($app),
                 'redirect_uri' => $this->getRedirectUri($app),
                 'auth_url' => $this->auth_url
             ]
+        );
+
+        return $app["twig"]->render(
+            "page_wrapper.html",
+            array(
+                "page_title" => "login",
+                "body" => $form
+            )
         );
     }
 

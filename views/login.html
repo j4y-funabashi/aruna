@@ -1,16 +1,8 @@
-{% include 'head.html' %}
-
-<div class="container">
-
-    <form action="{{ auth_url }}" method="get">
-        <label for="indie_auth_url">Web Address:</label>
-        <input id="indie_auth_url" type="text" name="me" placeholder="yourdomain.com" />
-        <p><button type="submit">Sign In</button></p>
-        <input type="hidden" name="client_id" value="{{ client_id }}" />
-        <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}" />
-        <input type="hidden" name="scope" value="post" />
-    </form>
-
-</div>
-
-{% include 'tail.html' %}
+<form action="{{ auth_url }}" method="get">
+    <label for="indie_auth_url">Web Address:</label>
+    <input id="indie_auth_url" type="text" name="me" placeholder="yourdomain.com" />
+    <p><button type="submit">Sign In</button></p>
+    <input type="hidden" name="client_id" value="{{ client_id }}" />
+    <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}" />
+    <input type="hidden" name="scope" value="post" />
+</form>

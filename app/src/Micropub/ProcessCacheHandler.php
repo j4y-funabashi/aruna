@@ -33,7 +33,7 @@ class ProcessCacheHandler
     private function processPosts($posts)
     {
         foreach ($posts as $post) {
-            $event_type = $this->getEventType($post);
+            $event_type = $post["eventType"];
             $pipeline = $this->pipelineFactory->build($event_type);
             $m = sprintf(
                 "Processing Event [%s][%s]",
