@@ -27,8 +27,10 @@ class QueryHandler
     {
         return [
             "syndicate-to" => [
-                "uid" => "https://media.j4y.co://brid.gy/publish/facebook",
-                "name" => "Facebook (via brid.gy)"
+                [
+                    "uid" => "https://media.j4y.co://brid.gy/publish/facebook",
+                    "name" => "Facebook (via brid.gy)"
+                ]
             ]
         ];
     }
