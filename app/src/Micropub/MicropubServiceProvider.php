@@ -5,6 +5,7 @@ namespace Aruna\Micropub;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Aruna\RenderPost;
+use Aruna\PostRepositoryReader;
 
 class MicropubServiceProvider implements ServiceProviderInterface
 {

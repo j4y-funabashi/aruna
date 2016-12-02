@@ -5,6 +5,7 @@ namespace Aruna\Reader;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Aruna\RenderPost;
+use Aruna\PostRepositoryReader;
 
 class ReaderServiceProvider implements ServiceProviderInterface
 {
