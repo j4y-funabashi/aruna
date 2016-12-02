@@ -14,6 +14,9 @@ class QueryHandler
             case 'config':
                 $out = $this->getConfig();
                 break;
+            case 'syndicate-to':
+                $out = $this->getConfig();
+                break;
             default:
                 break;
         }
