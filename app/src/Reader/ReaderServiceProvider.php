@@ -15,6 +15,12 @@ class ReaderServiceProvider implements ServiceProviderInterface
 
     public function boot(Application $app)
     {
+        $app['posts_repository_reader'] = $app->share(function () use ($app) {
+            return new PostRepositoryReader($app['db_cache']);
+        });
+        $app['response'] = $app->share(function () {
+            return new \Symfony\Component\HttpFoundation\Response();
+        });
         $app['action.show.photos'] = $app->share(function () use ($app) {
             $handler = new ShowPhotosHandler(
                 $app['posts_repository_reader'],

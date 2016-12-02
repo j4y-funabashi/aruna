@@ -14,6 +14,9 @@ class WebmentionServiceProvider implements ServiceProviderInterface
 
     public function register(Application $app)
     {
+        $app['response'] = $app->share(function () {
+            return new \Symfony\Component\HttpFoundation\Response();
+        });
 
         $app['webmentions_root'] = getenv("ROOT_DIR")."/webmentions";
 

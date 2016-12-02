@@ -41,13 +41,6 @@ class App
             $db->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             return $db;
         });
-        $app['posts_repository_reader'] = $app->share(function () use ($app) {
-            return new PostRepositoryReader($app['db_cache']);
-        });
-
-        $app['response'] = $app->share(function () {
-            return new \Symfony\Component\HttpFoundation\Response();
-        });
 
         $app['auth.controller'] = $app->share(function () use ($app) {
             return new AuthController(
