@@ -23,7 +23,10 @@ class QueryHandler
                 $out = $this->getConfig();
                 break;
             case 'source':
-                $out = $this->getPostSource(basename($command->get("url")));
+                $out = $this->getPostSource(
+                    basename($command->get("url")),
+                    $command->get("properties")
+                );
                 break;
             default:
                 break;
@@ -43,8 +46,12 @@ class QueryHandler
         ];
     }
 
-    private function getPostSource($post_id)
+    private function getPostSource($post_id, $properties)
     {
-        return $this->postRepository->fetchDataById($post_id);
+        $post = $this->postRepository->fetchDataById($post_id);
+        if (is_array($properties)) {
+            $post = ["properties" => array_intersect_key($post["properties"], array_flip($properties))];
+        }
+        return $post;
     }
 }
