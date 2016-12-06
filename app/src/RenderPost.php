@@ -42,19 +42,25 @@ class RenderPost
             return null;
         }
 
-        return sprintf(
-            '<img class="u-photo post-photo" alt="photo" src="%s" />',
-            $this->getPhoto($post)
+        $out = array_map(
+            function ($photo) {
+                return sprintf(
+                    '<img class="u-photo post-photo" alt="photo" src="%s" />',
+                    $this->getPhoto($photo)
+                );
+            },
+            $post->photo()
         );
+        return implode('', $out);
     }
 
-    private function getPhoto($post)
+    private function getPhoto($photo)
     {
-        $photo_url = parse_url($post->get("photo"));
+        $photo_url = parse_url($photo);
         if (!isset($photo_url["host"])) {
-            return "/".$post->get("photo");
+            return "/".$photo;
         }
-        return $post->get("photo");
+        return $photo;
     }
 
     private function renderUrl($post)

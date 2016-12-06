@@ -60,6 +60,14 @@ class PostViewModel
         return array();
     }
 
+    public function photo()
+    {
+        if (isset($this->entry['properties']['photo'])) {
+            return $this->entry['properties']['photo'];
+        }
+        return array();
+    }
+
     public function author()
     {
         if (isset($this->entry['properties']['author'][0]['properties'])) {
