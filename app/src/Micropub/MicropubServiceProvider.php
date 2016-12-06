@@ -18,9 +18,9 @@ class MicropubServiceProvider implements ServiceProviderInterface
         $app['response'] = $app->share(function () {
             return new \Symfony\Component\HttpFoundation\Response();
         });
-        $app['action.create_post'] = $app->share(function () use ($app) {
+        $app['action_create_post'] = $app->share(function () use ($app) {
             return new CreatePostAction(
-                $app["create_post.handler"],
+                $app["create_post_handler"],
                 new CreatePostResponder(
                     $app['response'],
                     $app['twig'],
@@ -45,7 +45,7 @@ class MicropubServiceProvider implements ServiceProviderInterface
                 $app['me_endpoint']
             );
         });
-        $app['create_post.handler'] = $app->share(function () use ($app) {
+        $app['create_post_handler'] = $app->share(function () use ($app) {
             return new CreatePostHandler(
                 $app["monolog"],
                 $app['posts_repository_writer'],
@@ -58,7 +58,7 @@ class MicropubServiceProvider implements ServiceProviderInterface
             return new PostRepositoryWriter($filesystem, $app['db_cache']);
         });
 
-        $app->post('/micropub', 'action.create_post:__invoke');
+        $app->post('/micropub', 'action_create_post:__invoke');
         $app->get("/micropub", "action_micropub_query:__invoke");
     }
 

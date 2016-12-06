@@ -4,7 +4,7 @@ namespace Test;
 
 use Aruna\Micropub\CreatePostCommand;
 use Aruna\Response\Unauthorized;
-use Aruna\Response\OK;
+use Aruna\Response\Accepted;
 use Aruna\Micropub\UploadedFile;
 use Aruna\Micropub\NewPost;
 
@@ -20,7 +20,7 @@ class CreatePostTest extends SystemTest
         $fake_token->getTokenFromAuthCode("Bearer xxx")
             ->willThrow(new \Exception());
         $this->app['access_token'] = $fake_token->reveal();
-        $SUT = $this->app['create_post.handler'];
+        $SUT = $this->app['create_post_handler'];
 
         $command = new CreatePostCommand(
             $post = [],
@@ -39,7 +39,7 @@ class CreatePostTest extends SystemTest
     {
         $fake_token = $this->prophesize("\Aruna\Micropub\VerifyAccessToken");
         $this->app['access_token'] = $fake_token->reveal();
-        $SUT = $this->app['create_post.handler'];
+        $SUT = $this->app['create_post_handler'];
 
         $command = new CreatePostCommand(
             $post = [
@@ -59,6 +59,6 @@ class CreatePostTest extends SystemTest
             $access_token = "Bearer xxx"
         );
         $result = $SUT->handle($command);
-        $this->assertInstanceOf(OK::class, $result);
+        $this->assertInstanceOf(Accepted::class, $result);
     }
 }
