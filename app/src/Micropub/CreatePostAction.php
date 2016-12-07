@@ -48,15 +48,28 @@ class CreatePostAction
 
     private function buildFilesArray($request)
     {
-        $files = [];
-        foreach ($request->files as $file_key => $uploadedFile) {
-            $files[$file_key] = new UploadedFile(
-                $uploadedFile->getRealPath(),
-                $uploadedFile->getClientOriginalExtension(),
-                $uploadedFile->isReadable(),
-                $uploadedFile->isValid()
+        $f = array_map(
+            function ($files) {
+                if (is_array($files)) {
+                    return $files;
+                }
+                return [$files];
+            },
+            $request->files->all()
+        );
+        foreach ($f as $file_key => $uploadedFiles) {
+            array_walk_recursive(
+                $uploadedFiles,
+                function ($uploadedFile) use (&$out, $file_key) {
+                    $out[$file_key][] = new UploadedFile(
+                        $uploadedFile->getRealPath(),
+                        $uploadedFile->getClientOriginalExtension(),
+                        $uploadedFile->isReadable(),
+                        $uploadedFile->isValid()
+                    );
+                }
             );
         }
-        return $files;
+        return $out;
     }
 }

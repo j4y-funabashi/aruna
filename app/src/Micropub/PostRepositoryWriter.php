@@ -23,15 +23,17 @@ class PostRepositoryWriter
     public function saveMediaFiles(array $files)
     {
         $out = [];
-        foreach ($files as $file_key => $uploadedFile) {
-            $out_path = sprintf(
-                "%s/%s.%s",
-                (new \DateTimeImmutable())->format("Y"),
-                Uuid::uuid4()->toString(),
-                strtolower($uploadedFile->getExtension())
-            );
-            $this->saveMediaFile($uploadedFile, $out_path);
-            $out[$file_key] = $out_path;
+        foreach ($files as $file_key => $uploadedFiles) {
+            foreach ($uploadedFiles as $uploadedFile) {
+                $out_path = sprintf(
+                    "%s/%s.%s",
+                    (new \DateTimeImmutable())->format("Y"),
+                    Uuid::uuid4()->toString(),
+                    strtolower($uploadedFile->getExtension())
+                );
+                $this->saveMediaFile($uploadedFile, $out_path);
+                $out[$file_key][] = $out_path;
+            }
         }
         return $out;
     }

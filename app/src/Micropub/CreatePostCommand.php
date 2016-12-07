@@ -27,12 +27,7 @@ class CreatePostCommand
 
     public function getFiles()
     {
-        return array_filter(
-            $this->files,
-            function ($uploadedFile) {
-                return $uploadedFile->isValid();
-            }
-        );
+        return $this->files;
     }
 
     public function getAccessToken()
