@@ -124,6 +124,12 @@ class NewPost implements \JsonSerializable
         ) {
             return "PostDeleted";
         }
+        if (
+            isset($this->properties["action"])
+            && $this->properties["action"] == "undelete"
+        ) {
+            return "PostUndeleted";
+        }
         return "PostCreated";
     }
 

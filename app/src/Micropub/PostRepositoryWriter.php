@@ -80,6 +80,19 @@ class PostRepositoryWriter
         $r->execute($data);
     }
 
+    public function undelete(
+        $post_id
+    ) {
+        $q = "UPDATE posts
+            SET date_deleted = null
+            WHERE id = :post_id";
+        $r = $this->db->prepare($q);
+        $data = [
+            ":post_id" => $post_id
+        ];
+        $r->execute($data);
+    }
+
     public function updatePostData(
         $post_id,
         $post_data

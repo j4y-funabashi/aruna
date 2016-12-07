@@ -63,6 +63,19 @@ class ProcessingPipelineFactory
                         )
                     );
                 break;
+            case 'PostUndeleted':
+                return (new Pipeline())
+                    ->pipe(
+                        new UndeletePost(
+                            $this->app['posts_repository_writer']
+                        )
+                    )
+                    ->pipe(
+                        new CacheToSql(
+                            $this->app['db_cache']
+                        )
+                    );
+                break;
         }
     }
 }
