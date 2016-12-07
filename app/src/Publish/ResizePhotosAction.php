@@ -1,6 +1,6 @@
 <?php
 
-namespace Aruna\Micropub;
+namespace Aruna\Publish;
 
 /**
  * Class ResizePhotosAction

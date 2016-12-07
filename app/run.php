@@ -10,8 +10,6 @@ $app['thumbnails_root'] = getenv("ROOT_DIR")."/thumbnails";
 $app['pushover_user_token'] = getenv("PUSHOVER_USER_TOKEN");
 $app['pushover_api_token'] = getenv("PUSHOVER_API_TOKEN");
 
-// PROVIDERS
-
 // SERVICES
 $app['monolog'] = $app->share(function () use ($app) {
     $log = new Monolog\Logger("aruna");
@@ -32,7 +30,7 @@ $app['mentions_repository_writer'] = $app->share(function () use ($app) {
 });
 
 $app['image_resizer'] = $app->share(function () use ($app) {
-    return new Aruna\Micropub\ImageResizer(
+    return new Aruna\Publish\ImageResizer(
         $app['monolog'],
         getenv("ROOT_DIR"),
         $app['thumbnails_root']
@@ -95,7 +93,7 @@ $app['convert_data_handler'] = $app->share(function () use ($app) {
 });
 
 $app['action.resize_photos'] = $app->share(function () use ($app) {
-    return new Aruna\Micropub\ResizePhotosAction(
+    return new Aruna\Publish\ResizePhotosAction(
         $app['monolog'],
         $app['event_store'],
         $app['image_resizer']

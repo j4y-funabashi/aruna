@@ -1,13 +1,9 @@
 <?php
 
-namespace Aruna\Micropub;
+namespace Aruna\Publish;
 
 use Intervention\Image\ImageManagerStatic as Image;
 
-/**
- * Class ImageResizer
- * @author yourname
- */
 class ImageResizer
 {
 
