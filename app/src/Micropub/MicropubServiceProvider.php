@@ -31,7 +31,8 @@ class MicropubServiceProvider implements ServiceProviderInterface
         $app['action_micropub_query'] = $app->share(function () use ($app) {
             return new QueryAction(
                 new QueryHandler(
-                    $app["posts_repository_reader"]
+                    $app["posts_repository_reader"],
+                    new FilterPostProperties()
                 ),
                 new QueryResponder(
                     $app['response'],

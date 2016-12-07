@@ -7,9 +7,11 @@ use Aruna\Response\OK;
 class QueryHandler
 {
     public function __construct(
-        $postRepository
+        $postRepository,
+        $filterProperties
     ) {
         $this->postRepository = $postRepository;
+        $this->filterProperties = $filterProperties;
     }
 
     public function handle($command)
@@ -25,7 +27,7 @@ class QueryHandler
             case 'source':
                 $out = $this->getPostSource(
                     basename($command->get("url")),
-                    $command->get("properties")
+                    (array) $command->get("properties")
                 );
                 break;
             default:
@@ -48,10 +50,9 @@ class QueryHandler
 
     private function getPostSource($post_id, $properties)
     {
-        $post = $this->postRepository->fetchDataById($post_id);
-        if (is_array($properties)) {
-            $post = ["properties" => array_intersect_key($post["properties"], array_flip($properties))];
-        }
-        return $post;
+        return $this->filterProperties->__invoke(
+            $this->postRepository->fetchDataById($post_id),
+            $properties
+        );
     }
 }
