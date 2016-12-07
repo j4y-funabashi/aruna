@@ -48,6 +48,7 @@ class CreatePostAction
 
     private function buildFilesArray($request)
     {
+        $out = [];
         $f = array_map(
             function ($files) {
                 if (is_array($files)) {
