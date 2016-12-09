@@ -13,7 +13,7 @@ class ShowPostResponder extends Responder
         $out = $this->view->render(
             "page_wrapper.html",
             array(
-                "page_title" => "photos",
+                "page_title" => $this->payload->get("items")[0]->name(),
                 "body" => implode("\n", $posts)
             )
         );

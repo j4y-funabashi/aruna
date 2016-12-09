@@ -73,24 +73,6 @@ class PostRepositoryReader
         return array($post);
     }
 
-    private function findMentionsByPostId($post_id)
-    {
-        $out = [];
-        // current
-        $q = "SELECT
-            *
-            FROM mentions
-            WHERE post_id = :id
-            ORDER BY published ASC";
-        $r = $this->db->prepare($q);
-        $r->execute([":id" => $post_id]);
-        while ($mention = $r->fetch()) {
-            $mention = new \Aruna\PostViewModel(json_decode($mention['mention'], true));
-            $out[] = $mention;
-        }
-        return $out;
-    }
-
     public function findLatestId()
     {
         $q = "SELECT

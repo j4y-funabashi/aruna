@@ -70,11 +70,8 @@ class RenderPost
 
     private function renderContent($post)
     {
-        if ($post->get("content")) {
-            $content = $post->get("content");
-            if (isset($content["html"])) {
-                $content = $content["html"];
-            }
+        if ($post->content()) {
+            $content = $post->content();
             $markdown = new \cebe\markdown\GithubMarkdown();
             return sprintf(
                 '<div class="e-content">%s</div>',

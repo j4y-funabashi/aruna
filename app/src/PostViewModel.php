@@ -17,7 +17,7 @@ class PostViewModel
         $date_deleted = null
     ) {
         $this->mf_array = $mf_array;
-        $this->entry = $this->findFirstEntry($mf_array);
+        $this->entry = $mf_array;
         $this->date_deleted = $date_deleted;
     }
 
@@ -50,6 +50,31 @@ class PostViewModel
             return $this->get("published");
         }
         return date("c");
+    }
+
+    public function content()
+    {
+        if (null === $this->get("content")) {
+            return null;
+        }
+        $content = $this->get("content");
+        if (isset($content["html"])) {
+            $content = $content["html"];
+        }
+        return $content;
+    }
+
+    public function name()
+    {
+        $date = (new \DateTimeImmutable($this->get("published")))->format("Y-m-d");
+        $title = (null !== $this->content())
+            ? strip_tags($this->content())
+            : implode(" ", $this->category());
+        return sprintf(
+            " %s %s",
+            $date,
+            $title
+        );
     }
 
     public function category()
@@ -107,10 +132,5 @@ class PostViewModel
     public function deleted()
     {
         return $this->date_deleted;
-    }
-
-    private function findFirstEntry($mf_array)
-    {
-        return $mf_array;
     }
 }
