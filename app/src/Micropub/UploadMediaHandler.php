@@ -49,8 +49,9 @@ class UploadMediaHandler
     private function getFileMetadata($file)
     {
         $out = [];
-        if (isset($this->extractors[mime_content_type($file->getRealPath())])) {
-            $extractor = $this->extractors[mime_content_type($file->getRealPath())];
+        $mime_type = mime_content_type($file->getRealPath());
+        if (isset($this->extractors[$mime_type])) {
+            $extractor = $this->extractors[$mime_type];
             $out = $extractor->__invoke($file);
         }
         return $out;
