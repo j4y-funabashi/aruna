@@ -41,6 +41,22 @@ class MicropubServiceProvider implements ServiceProviderInterface
                 )
             );
         });
+        $app['action_upload_media'] = $app->share(function () use ($app) {
+            return new UploadMediaAction(
+                new UploadMediaHandler(
+                    $app["monolog"],
+                    $app['posts_repository_writer'],
+                    $app['access_token'],
+                    "https://media.j4y.co/",
+                    ["image/jpeg" => new ExtractJpgMetadata()]
+                ),
+                new UploadMediaResponder(
+                    $app['response'],
+                    $app['twig'],
+                    new RenderPost($app['twig'])
+                )
+            );
+        });
         $app['access_token'] = $app->share(function () use ($app) {
             return new VerifyAccessToken(
                 $app['http_client'],
@@ -56,13 +72,14 @@ class MicropubServiceProvider implements ServiceProviderInterface
             );
         });
         $app['posts_repository_writer'] = $app->share(function () use ($app) {
-            $adapter = new \League\Flysystem\Adapter\Local($app['posts_root']);
+            $adapter = new \League\Flysystem\Adapter\Local(getenv("ROOT_DIR")."/media");
             $filesystem = new \League\Flysystem\Filesystem($adapter);
             return new PostRepositoryWriter($filesystem, $app['db_cache']);
         });
 
         $app->post('/micropub', 'action_create_post:__invoke');
         $app->get("/micropub", "action_micropub_query:__invoke");
+        $app->post("/micropub/media", "action_upload_media:__invoke");
     }
 
     public function boot(Application $app)
