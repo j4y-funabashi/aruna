@@ -44,7 +44,8 @@ class QueryHandler
                     "uid" => "https://brid.gy/publish/facebook",
                     "name" => "Facebook (via brid.gy)"
                 ]
-            ]
+            ],
+            "media-endpoint" => "https://j4y.co/micropub/media"
         ];
     }
 
