@@ -47,7 +47,7 @@ class PostRepositoryWriter
                 throw new \RuntimeException($m);
             }
             $this->filesystem->writeStream(
-                $out_path,
+                "media/".$out_path,
                 $stream
             );
         } catch (FileExistsException $e) {
@@ -59,7 +59,7 @@ class PostRepositoryWriter
     {
         try {
             $this->filesystem->write(
-                $entry->getFilePath().".json",
+                "posts/".$entry->getFilePath().".json",
                 $entry->asJson()
             );
         } catch (FileExistsException $e) {
