@@ -42,6 +42,14 @@ class RenderPost
             return null;
         }
 
+        if (isset($post->get("photo")["alt"]) && isset($post->get("photo")["value"])) {
+            return sprintf(
+                '<img class="u-photo post-photo" alt="%s" src="%s" />',
+                $post->get("photo")["alt"],
+                $post->get("photo")["value"]
+            );
+        }
+
         $out = array_map(
             function ($photo) {
                 return sprintf(
