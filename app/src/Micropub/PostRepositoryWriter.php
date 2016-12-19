@@ -109,16 +109,4 @@ class PostRepositoryWriter
         ];
         $r->execute($data);
     }
-
-    private function fetchPostByID($post_id)
-    {
-        $q = "SELECT post FROM posts WHERE id = :post_id";
-        $r = $this->db->prepare($q);
-        $data = [
-            ":post_id" => $post_id,
-        ];
-        $r->execute($data);
-        $post = $r->fetch();
-        return json_decode($post["post"], true);
-    }
 }
