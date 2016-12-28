@@ -17,6 +17,7 @@ class App
         $app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
         $app['token_endpoint'] = "https://tokens.indieauth.com/token";
         $app['me_endpoint'] = "https://j4y.co/";
+        $app['media_endpoint'] = "https://media.j4y.co/";
 
         // PROVIDERS
         $app->register(new \Silex\Provider\ServiceControllerServiceProvider());

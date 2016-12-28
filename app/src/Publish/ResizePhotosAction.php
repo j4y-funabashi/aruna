@@ -22,10 +22,16 @@ class ResizePhotosAction
     {
         foreach ($this->eventStore->findByExtension('media', 'jpg') as $photo_file) {
             try {
-                $this->resizer->resize(
-                    $photo_file['path'],
-                    str_replace("media/", "", $photo_file['path'])
-                );
+                $widths = ["600"];
+                foreach ($widths as $width) {
+                    if (false === strpos($photo_file['path'], "media/resized/")) {
+                        $this->resizer->resize(
+                            $photo_file['path'],
+                            str_replace("media/", "media/resized/".$width."/", $photo_file['path']),
+                            $width
+                        );
+                    }
+                }
             } catch (\Exception $e) {
                 $this->log->critical(sprintf("Resize failed [%s] %s", $photo_file['path'], $e->getMessage()));
             }

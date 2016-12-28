@@ -9,6 +9,7 @@ $app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
 $app['thumbnails_root'] = getenv("ROOT_DIR")."/thumbnails";
 $app['pushover_user_token'] = getenv("PUSHOVER_USER_TOKEN");
 $app['pushover_api_token'] = getenv("PUSHOVER_API_TOKEN");
+$app['media_endpoint'] = "https://media.j4y.co/";
 
 // SERVICES
 $app['monolog'] = $app->share(function () use ($app) {

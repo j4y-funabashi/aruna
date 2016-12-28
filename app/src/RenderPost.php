@@ -54,7 +54,7 @@ class RenderPost
             function ($photo) {
                 return sprintf(
                     '<img class="u-photo post-photo" alt="photo" src="%s" />',
-                    $this->getPhoto($photo)
+                    $this->getResizedPhoto($photo, "600")
                 );
             },
             $post->photo()
@@ -62,13 +62,13 @@ class RenderPost
         return implode('', $out);
     }
 
-    private function getPhoto($photo)
+    private function getResizedPhoto($photo, $size)
     {
         $photo_url = parse_url($photo);
-        if (!isset($photo_url["host"])) {
-            return "/".$photo;
+        if ($photo_url["host"] != "media.j4y.co") {
+            return $photo;
         }
-        return $photo;
+        return str_replace($photo_url["path"], "/resized/".$size.$photo_url["path"], $photo);
     }
 
     private function renderUrl($post)

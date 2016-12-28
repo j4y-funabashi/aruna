@@ -18,10 +18,10 @@ class ImageResizer
         Image::configure(array('driver' => 'imagick'));
     }
 
-    public function resize($in_path, $out_path)
+    public function resize($in_path, $out_path, $width)
     {
         $in_path = $this->root_dir."/".$in_path;
-        $out_path = $this->thumbnails_dir."/".$out_path;
+        $out_path = $this->root_dir."/".$out_path;
         if (file_exists($out_path)) {
             return;
         }
@@ -37,7 +37,11 @@ class ImageResizer
 
         $this->ensureDirectory(dirname($out_path));
         $img = Image::make($in_path);
-        $img->fit(640);
+        $img->orientate();
+        $img->fit($width, null, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
         $img->save($out_path);
 
         $m = sprintf("Resized [%s] to [%s]", $in_path, $out_path);

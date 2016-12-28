@@ -16,10 +16,14 @@ class ProcessingPipelineFactory
     public function build($type)
     {
         switch ($type) {
+
             case 'PostCreated':
                 return (new Pipeline())
                     ->pipe(
                         new ParseCategories()
+                    )
+                    ->pipe(
+                        new CleanupPhotoUrl($this->app['media_endpoint'])
                     )
                     ->pipe(
                         new CacheToSql(
@@ -35,6 +39,7 @@ class ProcessingPipelineFactory
                         )
                     );
                 break;
+
             case 'PostUpdated':
                 return (new Pipeline())
                     ->pipe(
@@ -50,6 +55,7 @@ class ProcessingPipelineFactory
                         )
                     );
                 break;
+
             case 'PostDeleted':
                 return (new Pipeline())
                     ->pipe(
@@ -63,6 +69,7 @@ class ProcessingPipelineFactory
                         )
                     );
                 break;
+
             case 'PostUndeleted':
                 return (new Pipeline())
                     ->pipe(

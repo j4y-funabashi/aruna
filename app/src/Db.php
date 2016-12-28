@@ -31,5 +31,10 @@ class Db extends \PDO
             PRIMARY KEY (id)
         );";
         $r = $this->exec($q);
+
+        $q = "PRAGMA synchronous = off;";
+        $r = $this->exec($q);
+        $q = "PRAGMA temp_store = memory;";
+        $r = $this->exec($q);
     }
 }

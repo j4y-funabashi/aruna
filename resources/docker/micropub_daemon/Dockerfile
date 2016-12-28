@@ -5,7 +5,8 @@ RUN apt-get update \
         libsqlite3-dev \
         && docker-php-ext-install pdo \
         && docker-php-ext-install pdo_sqlite \
-        && docker-php-ext-install pcntl
+        && docker-php-ext-install pcntl \
+        && docker-php-ext-install exif
 
 RUN apt-get update \
     && apt-get -y install \
