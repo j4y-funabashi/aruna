@@ -27,7 +27,7 @@ class CleanupPhotoUrl
     {
         $photo_url = parse_url($photo);
         if (!isset($photo_url["host"])) {
-            return $this->media_endpoint.$photo;
+            return trim($this->media_endpoint, "/")."/".$photo;
         }
         return $photo;
     }
