@@ -4,6 +4,7 @@ namespace Test;
 
 use Aruna\Micropub\NewPost;
 use Aruna\Micropub\UploadedFile;
+use DateTimeImmutable;
 
 class NewPostTest extends UnitTest
 {
@@ -15,6 +16,7 @@ class NewPostTest extends UnitTest
             "category" => ["test1", "test2"],
             "published" => "2016-01-28 15:00:02"
         ];
+        $this->now = new DateTimeImmutable("2016-01-28 15:00:02");
         $this->uploadedFile = new UploadedFile(
             $real_path = '/tmp/test',
             $original_ext = 'jpg',
@@ -123,7 +125,7 @@ class NewPostTest extends UnitTest
      */
     public function it_creates_a_filepath()
     {
-        $post = new NewPost($this->config);
+        $post = new NewPost($this->config, $this->now);
         $result = $post->getFilePath();
         $expected = "2016/test123";
         $this->assertEquals($expected, $result);

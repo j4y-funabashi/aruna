@@ -16,7 +16,7 @@ class NewPost implements \JsonSerializable
 
     public function __construct(
         array $config,
-        $now = null
+        DateTimeImmutable $now = null
     ) {
         if (isset($config["properties"])) {
             if (isset($config["type"])) {
