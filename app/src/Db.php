@@ -17,8 +17,11 @@ class Db extends \PDO
             );";
         $r = $this->exec($q);
 
-        $q = "CREATE TABLE IF NOT EXISTS seen_ids (
+        $q = "CREATE TABLE IF NOT EXISTS event_log (
                 id,
+                type,
+                version,
+                data,
                 PRIMARY KEY (id)
             );";
         $r = $this->exec($q);
