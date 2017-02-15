@@ -10,47 +10,47 @@ class PublishPostsHandler
 {
     public function __construct(
         $log,
-        $eventStore,
+        $event_log,
         $postsRepositoryReader,
         $pipelineFactory
     ) {
         $this->log = $log;
-        $this->eventStore = $eventStore;
+        $this->event_log = $event_log;
         $this->postsRepositoryReader = $postsRepositoryReader;
         $this->pipelineFactory = $pipelineFactory;
     }
 
-    public function handle($rpp)
+    public function handle()
     {
-        $posts = $this->eventStore->listFromId(
-            "posts",
-            $this->postsRepositoryReader->findLatestId(),
-            $rpp
-        );
-        $this->processPosts($posts);
+        $events = $this->event_log->listFromId(1);
+        foreach ($events as $event) {
+            $this->processEvent($event);
+        }
     }
 
-    private function processPosts($posts)
+    private function processEvent($event)
     {
-        foreach ($posts as $post) {
-            $event_type = $post["eventType"];
-            $pipeline = $this->pipelineFactory->build($event_type);
-            $m = sprintf(
-                "Processing Event [%s][%s]",
-                $event_type,
-                $post["eventID"]
+        $event_type = $event["type"];
+        $pipeline = $this->pipelineFactory->build($event_type);
+
+        $m = sprintf(
+            "Processing Event [%s][%s]",
+            $event_type,
+            $event["id"]
+        );
+        $this->log->debug($m);
+
+        try {
+            $event = $pipeline->process(
+                json_decode($event["data"], true)
             );
-            $this->log->debug($m);
-            try {
-                $post = $pipeline->process($post["eventData"]);
-            } catch (\Exception $e) {
-                $m = sprintf(
-                    "Could not process post %s [%s]",
-                    $post["eventID"],
-                    $e->getMessage() . " " . $e->getTraceAsString()
-                );
-                $this->log->critical($m);
-            }
+        } catch (\Exception $e) {
+            $m = sprintf(
+                "Could not process post %s [%s]",
+                $event["id"],
+                $e->getMessage() . " " . $e->getTraceAsString()
+            );
+            $this->log->critical($m);
         }
     }
 }

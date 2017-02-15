@@ -66,7 +66,7 @@ $app['publish_posts_handler'] = $app->share(function () use ($app) {
     $pipelineFactory = new Aruna\Publish\ProcessingPipelineFactory($app);
     return new Aruna\Publish\PublishPostsHandler(
         $app['monolog'],
-        $app['event_store'],
+        $app['event_log_repository'],
         $app['posts_repository_reader'],
         $pipelineFactory
     );

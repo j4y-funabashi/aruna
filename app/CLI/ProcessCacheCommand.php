@@ -48,15 +48,12 @@ class ProcessCacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $foreverHandler = new ForeverHandler($input->getOption('forever'));
         do {
             $app = $this->getApplication();
             try {
                 $handler = $app->getService("publish_posts_handler");
-                $handler->handle(
-                    $input->getOption('rpp')
-                );
+                $handler->handle();
             } catch (\Exception $e) {
                 $m = sprintf("Failed to run app %s", $e->getMessage());
                 $app->getService('monolog')->critical($m, $e->getTrace());

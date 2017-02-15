@@ -24,4 +24,16 @@ class EventLogRepository
         ];
         $r->execute($data);
     }
+
+    public function listFromId($id)
+    {
+        $events = [];
+        $q = "SELECT * FROM event_log ORDER BY version";
+        $r = $this->db->prepare($q);
+        $r->execute();
+        while ($event = $r->fetch()) {
+            $events[] = $event;
+        }
+        return $events;
+    }
 }
