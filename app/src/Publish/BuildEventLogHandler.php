@@ -17,7 +17,7 @@ class BuildEventLogHandler
     public function handle()
     {
         foreach ($this->event_store->listAll("posts") as $file) {
-            if ($file["extension"] == "json") {
+            if (isset($file["extension"]) && $file["extension"] == "json") {
                 $this->event_log_repository->addEvent(
                     json_decode($this->event_store->readContents($file["path"]), true)
                 );
