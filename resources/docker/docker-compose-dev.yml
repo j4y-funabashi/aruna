@@ -2,15 +2,17 @@ version: '2'
 
 services:
 
-    micropub_daemon:
+    aruna_micropub_daemon:
         build: micropub_daemon
-        command: php app/run.php cache --forever --rpp 1000
+        command: php app/run.php cache --rpp 1000
         env_file: ./.env
         volumes:
             - ../..:/srv/aruna
             - /media/jayr/aruna:/media/jayr/aruna
+        links:
+            - aruna_queue
 
-    resize_daemon:
+    aruna_resize_daemon:
         build: micropub_daemon
         command: php app/run.php resize_photos --forever
         env_file: ./.env
@@ -18,26 +20,32 @@ services:
             - ../..:/srv/aruna
             - /media/jayr/aruna:/media/jayr/aruna
 
-    webserver:
+    aruna_webserver:
         build: webserver
         links:
-            - app_server
+            - aruna_app_server
         ports:
-            - "80:80"
+            - "8080:80"
         environment:
             - NGINX_PORT=80
         volumes:
             - ../..:/srv/aruna
             - /media/jayr/aruna:/media/jayr/aruna
 
-    app_server:
+    aruna_app_server:
         build: app_server
         env_file: .env
         volumes:
             - ../..:/srv/aruna
             - /media/jayr/aruna:/media/jayr/aruna
 
-    build:
+    aruna_queue:
+      image: schickling/beanstalkd
+      volumes:
+        - /media/jayr/aruna:/media/jayr/aruna
+      command: beanstalkd -b /media/jayr/aruna
+
+    aruna_build:
         build: build
         env_file: .env
         volumes:
