@@ -32,6 +32,7 @@ class EventLogRepository
         $r = $this->db->prepare($q);
         $r->execute();
         while ($event = $r->fetch()) {
+            $event["data"] = json_decode($event["data"], true);
             $events[] = $event;
         }
         return $events;

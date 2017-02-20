@@ -1,3 +1,8 @@
+run: stop
+	docker-compose -f resources/docker/docker-compose-dev.yml up
+stop:
+	docker-compose -f resources/docker/docker-compose-dev.yml stop
+
 test:
 	docker-compose -f resources/docker/docker-compose-dev.yml run build vendor/bin/phpunit --config phpunit_ci.xml tests/unit
 
@@ -10,11 +15,6 @@ dev-build:
 
 composer-install:
 	docker-compose -f resources/docker/docker-compose-dev.yml run build composer install
-
-stop:
-	docker-compose -f resources/docker/docker-compose-dev.yml stop
-run: stop
-	docker-compose -f resources/docker/docker-compose-dev.yml up -d
 
 deploy:
 	docker-compose -f resources/docker/docker-compose-prod.yml build

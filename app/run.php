@@ -61,14 +61,20 @@ $app['posts_repository_writer'] = $app->share(function () use ($app) {
     return new \Aruna\Micropub\PostRepositoryWriter($filesystem, $app['db_cache']);
 });
 
+$app["queue"] = $app->share(function () use ($app) {
+    return new \Aruna\Queue(
+        new \Pheanstalk\Pheanstalk(getenv("QUEUE_ADDRESS"))
+    );
+});
+
 // processCacheProvider
 $app['publish_posts_handler'] = $app->share(function () use ($app) {
     $pipelineFactory = new Aruna\Publish\ProcessingPipelineFactory($app);
     return new Aruna\Publish\PublishPostsHandler(
         $app['monolog'],
         $app['event_log_repository'],
-        $app['posts_repository_reader'],
-        $pipelineFactory
+        $pipelineFactory,
+        $app["queue"]
     );
 });
 

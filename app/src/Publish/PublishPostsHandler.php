@@ -11,13 +11,13 @@ class PublishPostsHandler
     public function __construct(
         $log,
         $event_log,
-        $postsRepositoryReader,
-        $pipelineFactory
+        $pipelineFactory,
+        $queue
     ) {
         $this->log = $log;
         $this->event_log = $event_log;
-        $this->postsRepositoryReader = $postsRepositoryReader;
         $this->pipelineFactory = $pipelineFactory;
+        $this->queue = $queue;
     }
 
     public function handle()
@@ -25,6 +25,27 @@ class PublishPostsHandler
         $events = $this->event_log->listFromId(1);
         foreach ($events as $event) {
             $this->processEvent($event);
+        }
+
+        $QUEUE_EVENTS = 'micropub_events';
+        while (true) {
+            $m = sprintf("waiting for jobs");
+            $this->log->debug($m);
+
+            $job = $this->queue->pop($QUEUE_EVENTS);
+            if ($job) {
+                $m = sprintf("Got job: [%s] %s", $job->getId(), $job->getData());
+                $this->log->debug($m);
+
+                $event = json_decode($job->getData(), true);
+                $event = [
+                    "id" => $event["eventID"],
+                    "type" => $event["eventType"],
+                    "data" => $event["eventData"]
+                ];
+                $this->processEvent($event);
+                $this->queue->delete($job);
+            }
         }
     }
 
@@ -42,7 +63,7 @@ class PublishPostsHandler
 
         try {
             $event = $pipeline->process(
-                json_decode($event["data"], true)
+                $event["data"]
             );
         } catch (\Exception $e) {
             $m = sprintf(

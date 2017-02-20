@@ -52,6 +52,8 @@ class ProcessCacheCommand extends Command
         do {
             $app = $this->getApplication();
             try {
+                $handler = $app->getService("build_event_log_handler");
+                $handler->handle();
                 $handler = $app->getService("publish_posts_handler");
                 $handler->handle();
             } catch (\Exception $e) {
