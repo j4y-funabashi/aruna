@@ -72,6 +72,11 @@ class EventStore
         );
     }
 
+    public function listAll($dir = null)
+    {
+        return $this->filesystem->listContents($dir, true);
+    }
+
     public function findByExtension(
         $root_dir = null,
         $extension = "json",

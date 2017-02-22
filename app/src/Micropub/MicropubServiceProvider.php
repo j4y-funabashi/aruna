@@ -68,13 +68,20 @@ class MicropubServiceProvider implements ServiceProviderInterface
             return new CreatePostHandler(
                 $app["monolog"],
                 $app['posts_repository_writer'],
-                $app['access_token']
+                $app['access_token'],
+                $app["queue"]
             );
         });
         $app['posts_repository_writer'] = $app->share(function () use ($app) {
             $adapter = new \League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
             $filesystem = new \League\Flysystem\Filesystem($adapter);
             return new PostRepositoryWriter($filesystem, $app['db_cache']);
+        });
+
+        $app["queue"] = $app->share(function () use ($app) {
+            return new \Aruna\Queue(
+                new \Pheanstalk\Pheanstalk(getenv("QUEUE_ADDRESS"))
+            );
         });
 
         $app->post('/micropub', 'action_create_post:__invoke');

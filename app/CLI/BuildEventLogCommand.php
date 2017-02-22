@@ -8,33 +8,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ProcessCacheCommand extends Command
+class BuildEventLogCommand extends Command
 {
 
     protected function configure()
     {
-        $this
-            ->setName('cache')
-            ->setDescription('Generate read cache')
+        $this->setName("build-event-log")
+            ->setDescription("Rebuild event log")
             ->addOption(
-                'forever',
+                "forever",
                 null,
                 InputOption::VALUE_NONE,
-                'Run the queue continuously'
-            )
-            ->addOption(
-                'sleep',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Sleep this many seconds between queue runs',
-                10
-            )
-            ->addOption(
-                'rpp',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'number of entries to process per run',
-                1
+                "Run the Queue Continuously"
             )
             ;
     }
@@ -53,8 +38,6 @@ class ProcessCacheCommand extends Command
             $app = $this->getApplication();
             try {
                 $handler = $app->getService("build_event_log_handler");
-                $handler->handle();
-                $handler = $app->getService("publish_posts_handler");
                 $handler->handle();
             } catch (\Exception $e) {
                 $m = sprintf("Failed to run app %s", $e->getMessage());

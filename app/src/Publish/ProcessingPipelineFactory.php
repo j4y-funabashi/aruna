@@ -53,11 +53,7 @@ class ProcessingPipelineFactory
                             new ApplyUpdate()
                         )
                     )
-                    ->pipe(
-                        new CacheToSql(
-                            $this->app['db_cache']
-                        )
-                    );
+                    ;
                 break;
 
             case 'PostDeleted':
@@ -67,11 +63,7 @@ class ProcessingPipelineFactory
                             $this->app['posts_repository_writer']
                         )
                     )
-                    ->pipe(
-                        new CacheToSql(
-                            $this->app['db_cache']
-                        )
-                    );
+                    ;
                 break;
 
             case 'PostUndeleted':
@@ -81,11 +73,7 @@ class ProcessingPipelineFactory
                             $this->app['posts_repository_writer']
                         )
                     )
-                    ->pipe(
-                        new CacheToSql(
-                            $this->app['db_cache']
-                        )
-                    );
+                    ;
                 break;
         }
     }

@@ -17,11 +17,13 @@ class CreatePostHandler
     public function __construct(
         $log,
         PostRepositoryWriter $postRepository,
-        $accessToken
+        $accessToken,
+        $queue
     ) {
         $this->log = $log;
         $this->postRepository = $postRepository;
         $this->accessTokenRepository = $accessToken;
+        $this->queue = $queue;
     }
 
     public function handle(CreatePostCommand $command)
@@ -40,6 +42,15 @@ class CreatePostHandler
 
             $m = sprintf("Created new event %s", $post->asJson());
             $this->log->info($m);
+
+            $job_id = $this->queue->push(
+                'micropub_events',
+                $post->asJson()
+            );
+
+            $m = sprintf("Added event to queue [%s] %s", $job_id, $post->asJson());
+            $this->log->info($m);
+
             if (isset($command->getEntry()["action"])) {
                 return new OK([]);
             }
