@@ -44,7 +44,7 @@ class RenderPost
 
         if (isset($post->get("photo")["alt"]) && isset($post->get("photo")["value"])) {
             return sprintf(
-                '<img class="u-photo post-photo" alt="%s" src="%s" />',
+                '<img class="u-photo" alt="%s" src="%s" />',
                 $post->get("photo")["alt"],
                 $post->get("photo")["value"]
             );
@@ -53,7 +53,7 @@ class RenderPost
         $out = array_map(
             function ($photo) {
                 return sprintf(
-                    '<img class="u-photo post-photo" alt="photo" src="%s" />',
+                    '<img class="u-photo" alt="photo" src="%s" />',
                     $this->getResizedPhoto($photo, "600")
                 );
             },
@@ -95,7 +95,7 @@ class RenderPost
         }
         $out = array();
         $tags = array();
-        $out[] = '<div class="post-tags">';
+        $out[] = '<div class="">';
         foreach ($category as $cat) {
             if (is_string($cat)) {
                 $tags[] = sprintf('<a class="p-category" href="/tag/%s">%s</a>', $cat, $cat);
