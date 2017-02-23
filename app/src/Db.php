@@ -17,6 +17,20 @@ class Db extends \PDO
             );";
         $r = $this->exec($q);
 
+        $q = "CREATE TABLE IF NOT EXISTS tags (
+                id,
+                tag,
+                PRIMARY KEY (id)
+            );";
+        $r = $this->exec($q);
+
+        $q = "CREATE TABLE IF NOT EXISTS posts_tags (
+                post_id,
+                tag_id,
+                PRIMARY KEY (post_id,tag_id)
+            );";
+        $r = $this->exec($q);
+
         $q = "CREATE TABLE IF NOT EXISTS event_log (
                 id,
                 type,

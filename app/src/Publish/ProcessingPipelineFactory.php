@@ -26,6 +26,10 @@ class ProcessingPipelineFactory
                         new CleanupPhotoUrl($this->app['media_endpoint'])
                     )
                     ->pipe(
+                        new CacheTags(
+                        )
+                    )
+                    ->pipe(
                         new CacheToSql(
                             $this->app['db_cache']
                         )

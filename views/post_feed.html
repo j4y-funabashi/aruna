@@ -1,9 +1,9 @@
-<div class="h-feed">
+<div class="h-feed post--feed">
     <h2 class="p-name">{{ feed_title }}</h2>
     {{ items|raw }}
 
     <nav>
-        <a class="pure-button pure-button-primary" rel="prev" href="{{ nav_next }}">More</a>
+        <a class="btn" rel="prev" href="{{ nav_next }}">More</a>
     </nav>
 
     {% include 'hcard.html' %}

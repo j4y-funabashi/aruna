@@ -134,6 +134,35 @@ class PostRepositoryReader
         return $out;
     }
 
+    public function listByTag($tag, $limit, $offset = 0)
+    {
+        $q = "SELECT
+            posts.id,
+            posts.published,
+            posts.post
+            FROM posts
+            INNER JOIN posts_tags ON posts.id = posts_tags.post_id
+            INNER JOIN tags ON tags.id = posts_tags.tag_id
+            AND date_deleted IS NULL
+            AND tags.tag = :tag
+            ORDER BY published DESC
+            LIMIT :offset,:limit";
+        $r = $this->db->prepare($q);
+        $r->execute(
+            array(
+                ":tag" => $tag,
+                ":limit" => $limit,
+                ":offset" => $offset
+            )
+        );
+
+        $out = [];
+        while ($post = $r->fetch()) {
+            $out[] = new \Aruna\PostViewModel(json_decode($post['post'], true));
+        }
+        return $out;
+    }
+
     public function listByType($post_type, $limit, $offset = 0)
     {
         $q = "SELECT

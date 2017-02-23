@@ -37,6 +37,21 @@ class ReaderServiceProvider implements ServiceProviderInterface
             );
         });
 
+        $app['action.show.tagged'] = $app->share(function () use ($app) {
+            $handler = new ShowTaggedHandler(
+                $app['posts_repository_reader'],
+                $app['url_generator']
+            );
+            return new ShowTaggedAction(
+                $handler,
+                new ShowTaggedResponder(
+                    $app['response'],
+                    $app['twig'],
+                    new RenderPost($app['twig'])
+                )
+            );
+        });
+
         $app['action.show_post'] = $app->share(function () use ($app) {
             $handler = new ShowPostHandler(
                 $app['posts_repository_reader'],
@@ -78,6 +93,9 @@ class ReaderServiceProvider implements ServiceProviderInterface
 
         $app->get("/photos", "action.show.photos:__invoke")
             ->bind("photos");
+
+        $app->get("/tag/{tag}", "action.show.tagged:__invoke")
+            ->bind("tagged");
 
         $app->get("/{year}/{month}/{day}", 'action.show_date_feed:__invoke')
             ->value('month', '*')

@@ -17,8 +17,11 @@ class ParseCategories
         $out = [];
         foreach ($post["properties"]["category"] as $cat) {
             $cat = array_map(
-                "trim",
-                explode(",", $cat)
+                "strtolower",
+                array_map(
+                    "trim",
+                    explode(",", $cat)
+                )
             );
             $out = array_merge($out, $cat);
         }

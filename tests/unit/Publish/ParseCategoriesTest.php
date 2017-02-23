@@ -30,7 +30,7 @@ class ParseCategoriesTest extends UnitTest
     */
     public function it_splits_tags_by_comma()
     {
-        $post = array("properties" => ["category" => ["test ,test2","test3", "test,test5"]]);
+        $post = array("properties" => ["category" => ["test ,test2","test3", "test,Test5"]]);
         $expected = array("properties" => ["category" => ["test","test2","test3","test5"]]);
         $result = $this->SUT->__invoke($post);
         $this->assertEquals($expected, $result);

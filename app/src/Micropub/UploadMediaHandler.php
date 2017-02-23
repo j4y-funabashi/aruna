@@ -33,6 +33,7 @@ class UploadMediaHandler
             $message = sprintf("Invalid access token [%s]", $e->getMessage());
             return new Unauthorized(["message" => $message]);
         }
+        // TODO throw badRequest if file is null
         try {
             $files = $this->postRepository->saveMediaFiles([[$command->getFile()]]);
             $out = [
