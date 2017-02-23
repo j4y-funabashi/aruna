@@ -1,8 +1,8 @@
-<article class="h-entry">
+<article class="post h-entry">
 
     {{ photo|raw }}
 
-    <div class="">
+    <div class="post--content">
 
         {% if post.get('summary') is not null %}
         <p>{{ post.get('summary') }} </p>
@@ -27,7 +27,7 @@
         {{ content|raw }}
     </div>
 
-    <div class="">
+    <div class="post--meta">
 
         <a class="u-url" href="{{ url }}">
             <time class="dt-published" datetime="{{ post.get('published') }}">{{ post.get('published') }}</time>

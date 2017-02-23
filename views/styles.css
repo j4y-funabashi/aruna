@@ -1,2 +1,72 @@
-img {
+body {
+    color: #373b41;
+    background-color: #e0e0e0;
+}
+p {
+    margin: 0.2em;
+}
+
+a {
+    color: #cc6666;
+}
+a:hover {
+    text-decoration: none;
+}
+
+.menu--top {
+    margin: 0;
+    padding: 0.5em;
+    overflow: hidden;
+    background-color: #333;
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    width: 100%; /* Full width */
+    text-align: center;
+}
+
+.page--body {
+    padding-top: 1.5em;
+    max-width: 640px;
+    margin: auto;
+}
+
+.post {
+    background-color: #fff;
+    margin: 1em 0 1em 0;
+}
+.post--content * {
+    word-wrap: break-word;
+}
+.post--photo {
+    width: 100%;
+}
+.post--content {
+    padding: 0.4em 0.4em 0 0.4em;
+}
+.post--meta {
+    padding: 0 0.4em 0.4em 0.4em;
+}
+.post--meta * {
+    font-size: 0.8em;
+}
+
+.post--author {
+    padding: 0.8em 0 0.8em 0;
+}
+.post--author-photo {
+    width: 76px;
+    vertical-align: middle;
+    border-radius: 50%;
+}
+
+.btn {
+    display: block;
+    padding: 0.8em;
+    margin: 0.2em 0 0.2em 0;
+    text-align: center;
+    background-color: #cc6666;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
 }
