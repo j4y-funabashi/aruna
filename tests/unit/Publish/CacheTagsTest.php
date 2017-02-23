@@ -28,10 +28,27 @@ class CacheTagsTest extends UnitTest
     {
         $post = [
             "properties" => [
+                "uid" => ["test_uid"],
                 "category" => ["hello"]
             ]
         ];
         $result = $this->SUT->__invoke($post);
-        $this->assertEquals($result, $post);
+        $expected = [
+            "properties" => [
+                "uid" => ["test_uid"],
+                "category" => ["hello"]
+            ],
+            "sql_statements" => [
+                [
+                    "REPLACE INTO tags (id, tag) VALUES (?, ?)",
+                    ["5d41402abc4b2a76b9719d911017c592", "hello"]
+                ],
+                [
+                    "REPLACE INTO posts_tags (post_id, tag_id) VALUES (?, ?)",
+                    ["test_uid","5d41402abc4b2a76b9719d911017c592"]
+                ]
+            ]
+        ];
+        $this->assertEquals($result, $expected);
     }
 }
