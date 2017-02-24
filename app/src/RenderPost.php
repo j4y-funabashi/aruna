@@ -82,7 +82,7 @@ class RenderPost
             $content = $post->content();
             $markdown = new \cebe\markdown\GithubMarkdown();
             return sprintf(
-                '<div class="e-content">%s</div>',
+                '<div class="p-name e-content">%s</div>',
                 $markdown->parse($content)
             );
         }
