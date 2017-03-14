@@ -17,33 +17,18 @@ use GuzzleHttp\Exception\RequestException;
  */
 class VerifyWebmentionTest extends UnitTest
 {
-    private function getGuzzle($response_body)
-    {
-        $mock = new MockHandler([
-            new Response(200, [], $response_body)
-        ]);
-        $handler = HandlerStack::create($mock);
-        return new Client(['handler' => $handler]);
-    }
-
     /**
      * @test
      * @expectedException Exception
      */
     public function it_throws_exception_when_html_does_not_contain_target()
     {
-        $response_body = "";
         $mention = array(
             "source" => "http://example.com",
-            "target" => "http://j4y.co/1"
+            "target" => "http://j4y.co/1",
+            "mention_source_html" => ""
         );
-        $http = $this->getGuzzle($response_body);
-        $log = $this->prophesize("Monolog\Logger");
-        $SUT = new VerifyWebmention(
-            $log,
-            $http
-        );
-
+        $SUT = new VerifyWebmention();
         $SUT->__invoke($mention);
     }
 
@@ -52,20 +37,13 @@ class VerifyWebmentionTest extends UnitTest
      */
     public function it_returns_html_when_html_contains_target()
     {
-        $response_body = "<a href='http://j4y.co/1'>hello</a>";
         $mention = array(
             "source" => "http://example.com",
-            "target" => "http://j4y.co/1"
+            "target" => "http://j4y.co/1",
+            "mention_source_html" => "<a href='http://j4y.co/1'>hello</a>"
         );
-        $http = $this->getGuzzle($response_body);
-        $log = $this->prophesize("Monolog\Logger");
-        $SUT = new VerifyWebmention(
-            $log,
-            $http
-        );
-
+        $SUT = new VerifyWebmention();
         $result = $SUT->__invoke($mention);
-        $expected = $response_body;
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($mention, $result);
     }
 }
