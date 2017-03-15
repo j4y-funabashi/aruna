@@ -45,7 +45,7 @@ class Db extends \PDO
             published,
             post_id,
             mention,
-            PRIMARY KEY (id)
+            PRIMARY KEY (id,post_id)
         );";
         $r = $this->exec($q);
 
