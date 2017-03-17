@@ -7,8 +7,6 @@ $app = new Cilex\Application("aruna");
 $app['posts_root'] = getenv("ROOT_DIR")."/posts";
 $app['db_file'] = getenv("ROOT_DIR")."/aruna_db.sq3";
 $app['thumbnails_root'] = getenv("ROOT_DIR")."/thumbnails";
-$app['pushover_user_token'] = getenv("PUSHOVER_USER_TOKEN");
-$app['pushover_api_token'] = getenv("PUSHOVER_API_TOKEN");
 $app['media_endpoint'] = "https://media.j4y.co/";
 
 // SERVICES
@@ -98,7 +96,7 @@ $app['remote_data_store'] = $app->share(function () use ($app) {
 $app['convert_data_handler'] = $app->share(function () use ($app) {
     return new Aruna\ConvertDataHandler(
         $app['monolog'],
-        $app['remote_data_store']
+        $app['event_store']
     );
 });
 
@@ -134,10 +132,7 @@ $app['handler.process_webmentions'] = $app->share(function () use ($app) {
         $app['posts_repository_reader'],
         new Aruna\Webmention\WebmentionNotification(),
         new Aruna\NotifyService(
-            $app['http_client'],
-            $app['monolog'],
-            $app['pushover_api_token'],
-            $app['pushover_user_token']
+            $app['monolog']
         )
     );
 });
