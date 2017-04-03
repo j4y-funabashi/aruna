@@ -2,12 +2,6 @@
 
 namespace Test;
 
-use Aruna\Micropub\CreatePostCommand;
-use Aruna\Response\Unauthorized;
-use Aruna\Response\Accepted;
-use Aruna\Micropub\UploadedFile;
-use Aruna\Micropub\NewPost;
-
 class CreatePostTest extends SystemTest
 {
 
@@ -16,49 +10,45 @@ class CreatePostTest extends SystemTest
      */
     public function it_returns_unauthorized_when_token_is_invalid()
     {
-        $fake_token = $this->prophesize("\Aruna\Micropub\VerifyAccessToken");
-        $fake_token->getTokenFromAuthCode("Bearer xxx")
-            ->willThrow(new \Exception());
-        $this->app['access_token'] = $fake_token->reveal();
-        $SUT = $this->app['create_post_handler'];
-
-        $command = new CreatePostCommand(
-            $post = [],
-            $files = [],
-            $access_token = "Bearer xxx"
+        $config = [
+            "form_params" => [
+                "h" => "entry"
+            ],
+            "http_errors" => false
+        ];
+        $res = $this->app["http_client"]->request(
+            "POST",
+            $this->base_url."/micropub",
+            $config
         );
-        $result = $SUT->handle($command);
-
-        $this->assertInstanceOf(Unauthorized::class, $result);
+        $expected = 401;
+        $this->assertEquals($expected, $res->getStatusCode());
     }
 
     /**
      * @test
      */
-    public function it_creates_a_post_with_file_when_token_is_valid()
+    public function it_creates_a_post_when_token_is_valid()
     {
-        $fake_token = $this->prophesize("\Aruna\Micropub\VerifyAccessToken");
-        $this->app['access_token'] = $fake_token->reveal();
-        $SUT = $this->app['create_post_handler'];
-
-        $command = new CreatePostCommand(
-            $post = [
-                "uid" => "test123",
-                "content" => "this is a test",
-                "category" => array("test1", "test2"),
-                "published" => "2016-01-28T15:00:02+00:00"
+        $config = [
+            "form_params" => [
+                "h" => "entry"
             ],
-            $files = [
-                "photo" => new UploadedFile(
-                    __DIR__."/test.jpg",
-                    "jpg",
-                    true,
-                    true
-                )
+            "headers" => [
+                "Authorization" => getenv("AUTH_TOKEN")
             ],
-            $access_token = "Bearer xxx"
+            "http_errors" => false
+        ];
+        $res = $this->app["http_client"]->request(
+            "POST",
+            $this->base_url."/micropub",
+            $config
         );
-        $result = $SUT->handle($command);
-        $this->assertInstanceOf(Accepted::class, $result);
+        $this->assertTrue($res->hasHeader("Location"));
+        $url = parse_url($res->getHeader("Location")[0]);
+        $this->assertArrayHasKey("host", $url);
+        $this->assertArrayHasKey("scheme", $url);
+        $this->assertArrayHasKey("path", $url);
+        $this->assertEquals(202, $res->getStatusCode());
     }
 }

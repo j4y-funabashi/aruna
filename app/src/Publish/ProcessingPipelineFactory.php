@@ -5,6 +5,8 @@ namespace Aruna\Publish;
 use League\Pipeline\Pipeline;
 use Aruna\Webmention\DiscoverEndpoints;
 use Aruna\Webmention\FindUrls;
+use Aruna\Webmention\SaveWebmentionToSql;
+use Aruna\Webmention\LoadWebmentionHtml;
 
 class ProcessingPipelineFactory
 {
@@ -73,6 +75,33 @@ class ProcessingPipelineFactory
                             $this->app['posts_repository_writer']
                         )
                     )
+                    ;
+                break;
+
+            case 'WebmentionReceived':
+                return (new Pipeline())
+                    ->pipe(
+                        new LoadWebmentionHtml(
+                            $this->app["monolog"],
+                            $this->app["http_client"]
+                        )
+                    )
+                    ->pipe(
+                        new SaveWebmentionToSql(
+                            $this->app["monolog"],
+                            $this->app["mentions_repository_writer"]
+                        )
+                    )
+                    //->pipe(
+                        //new ValidateWebmention(
+                            //$this->app["monolog"]
+                        //)
+                    //)
+                    //->pipe(
+                        //new SummarizeWebmention(
+                            //$this->app["monolog"]
+                        //)
+                    //)
                     ;
                 break;
         }

@@ -8,27 +8,10 @@ namespace Aruna\Webmention;
  */
 class VerifyWebmention
 {
-
-    public function __construct(
-        $log,
-        $http
-    ) {
-        $this->log = $log;
-        $this->http = $http;
-    }
-
     public function __invoke(array $mention)
     {
-        $mention_html = $this->fetchMentionHtml($mention['source']);
-        $this->htmlContainsLink($mention_html, $mention['target']);
-        return $mention_html;
-    }
-
-    private function fetchMentionHtml($url)
-    {
-        $this->log->debug(sprintf("Fetching HTML from %s", $url));
-        $result = $this->http->request("GET", $url);
-        return (string) $result->getBody();
+        $this->htmlContainsLink($mention["mention_source_html"], $mention['target']);
+        return $mention;
     }
 
     private function htmlContainsLink($html, $url)

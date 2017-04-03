@@ -106,6 +106,11 @@ class PostViewModel
         return array();
     }
 
+    public function authorName()
+    {
+        return $this->author()["name"];
+    }
+
     public function type()
     {
         if (null !== ($this->date_deleted)) {

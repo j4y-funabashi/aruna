@@ -15,22 +15,27 @@ class ConvertDataHandler
     public function handle($rpp)
     {
         $posts = $this->dataStore->findByExtension(
-            "posts",
+            "webmentions",
             "json",
             $rpp
         );
-        foreach ($posts as $post) {
-            $out_path = "events/".$post["basename"];
+        foreach ($posts as $post_file) {
+            $post_data = json_decode(
+                $this->dataStore->readContents($post_file["path"]),
+                true
+            );
+            $out_path = sprintf(
+                "posts/%s/%s",
+                (new \DateTimeImmutable($post_data["published"]))->format("Y"),
+                $post_file["basename"]
+            );
             try {
-                if ($this->dataStore->exists($out_path)) {
-                    $this->dataStore->delete($out_path);
-                }
                 $this->dataStore->save(
                     $out_path,
-                    $this->convertPostToEvent($post)
+                    $this->convertPostToEvent($post_data)
                 );
             } catch (\League\Flysystem\FileExistsException $e) {
-                $m = sprintf("Skipping s3 write: Event exists %s", $out_path);
+                $m = sprintf("Skipping write: Event exists %s", $out_path);
                 $this->log->notice($m);
             }
         }
@@ -38,77 +43,13 @@ class ConvertDataHandler
 
     private function convertPostToEvent($post)
     {
-        $post = json_decode(
-            $this->dataStore->readContents($post["path"]),
-            true
-        );
         return json_encode(
             [
-                "eventType" => $this->getEventType($post),
+                "eventType" => "WebmentionReceived",
                 "eventVersion" => $post["uid"],
                 "eventID" => $post["uid"],
-                "eventData" => $this->convertPostData($post)
+                "eventData" => $post
             ]
         );
-    }
-
-    private function getEventType($post)
-    {
-        if (isset($post["action"]) && $post["action"] == "delete") {
-            return "PostDeleted";
-        }
-        return "PostCreated";
-    }
-
-    private function convertPostData($post)
-    {
-        $post = $this->rmAccessToken($post);
-        $post = $this->replaceFilesArray($post);
-        $post = $this->convertHtoType($post);
-        $post = $this->stringsToArrays($post);
-        $post = $this->convertToMf2($post);
-        return $post;
-    }
-
-    private function rmAccessToken($post)
-    {
-        unset($post["access_token"]);
-        return $post;
-    }
-
-    private function replaceFilesArray($post)
-    {
-        if (isset($post["files"])) {
-            foreach ($post["files"] as $k => $v) {
-                $post[$k] = $v;
-            }
-            unset($post["files"]);
-        }
-        return $post;
-    }
-
-    private function convertHtoType($post)
-    {
-        $post["type"] = "h-".$post["h"];
-        unset($post["h"]);
-        return $post;
-    }
-
-    private function stringsToArrays($post)
-    {
-        foreach ($post as $k => $v) {
-            if (!is_array($v)) {
-                $post[$k] = array($v);
-            }
-        }
-        return $post;
-    }
-
-    private function convertToMf2($post)
-    {
-        $type = $post["type"];
-        unset($post["type"]);
-        $out = ["type" => $type, "properties" => $post];
-        return $out;
     }
 }
