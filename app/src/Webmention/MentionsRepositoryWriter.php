@@ -2,10 +2,6 @@
 
 namespace Aruna\Webmention;
 
-/**
- * Class MentionsRepositoryWriter
- * @author yourname
- */
 class MentionsRepositoryWriter
 {
     public function __construct($db)
@@ -13,30 +9,34 @@ class MentionsRepositoryWriter
         $this->db = $db;
     }
 
-    public function save($mention_id, $post_id, $mention)
+    public function save($mention)
     {
         $mention_properties = array(
-            ":uid" => $mention_id,
-            ":published" => $mention->published(),
-            ":post_uid" => $post_id,
-            ":mention" => $mention->toJson()
+            ":id" => $mention["mention_id"],
+            ":published" => $mention["published"],
+            ":source" => $mention["source"],
+            ":target" => $mention["target"],
+            ":error" => $mention["error"],
+            ":source_html" => $mention["mention_source_html"]
         );
 
-        $q = "REPLACE INTO mentions (
+        $qry = "REPLACE INTO mentions (
             id,
             published,
-            post_id,
-            mention
+            source,
+            target,
+            error,
+            source_html
         ) VALUES (
-            :uid,
+            :id,
             :published,
-            :post_uid,
-            :mention
+            :source,
+            :target,
+            :error,
+            :source_html
         )";
-        $r = $this->db->prepare($q);
 
-        $r->execute(
-            $mention_properties
-        );
+        $res = $this->db->prepare($qry);
+        $res->execute($mention_properties);
     }
 }

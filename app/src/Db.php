@@ -40,12 +40,16 @@ class Db extends \PDO
             );";
         $r = $this->exec($q);
 
+        $q = "DROP TABLE IF EXISTS mentions;";
+        $r = $this->exec($q);
         $q = "CREATE TABLE IF NOT EXISTS mentions (
             id,
             published,
-            post_id,
-            mention,
-            PRIMARY KEY (id,post_id)
+            source,
+            target,
+            error,
+            source_html,
+            PRIMARY KEY (id)
         );";
         $r = $this->exec($q);
 
