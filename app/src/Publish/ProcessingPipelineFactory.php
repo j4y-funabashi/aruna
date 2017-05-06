@@ -3,16 +3,19 @@
 namespace Aruna\Publish;
 
 use League\Pipeline\Pipeline;
+
 use Aruna\Webmention\DiscoverEndpoints;
 use Aruna\Webmention\FindUrls;
 use Aruna\Webmention\SaveWebmentionToSql;
 use Aruna\Webmention\LoadWebmentionHtml;
+use Aruna\Webmention\ValidateWebmention;
 
 class ProcessingPipelineFactory
 {
     public function __construct($app)
     {
         $this->app = $app;
+
     }
 
     public function build($type)
@@ -83,18 +86,19 @@ class ProcessingPipelineFactory
                     ->pipe(
                         new LoadWebmentionHtml(
                             $this->app["monolog"],
-                            $this->app["http_client"]
+                            $this->app["http_client"],
+                            $this->app["event_store"]
                         )
                     )
                     ->pipe(
-                        new SaveWebmentionToSql(
-                            $this->app["monolog"],
-                            $this->app["mentions_repository_writer"]
+                        new ValidateWebmention(
+                            $this->app["monolog"]
                         )
                     )
                     //->pipe(
-                        //new ValidateWebmention(
-                            //$this->app["monolog"]
+                        //new SaveWebmentionToSql(
+                            //$this->app["monolog"],
+                            //$this->app["mentions_repository_writer"]
                         //)
                     //)
                     //->pipe(

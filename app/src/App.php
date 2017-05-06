@@ -19,6 +19,12 @@ class App
         $app['me_endpoint'] = "https://j4y.co/";
         $app['media_endpoint'] = "https://media.j4y.co/";
 
+        $app['event_store'] = $app->share(function () use ($app) {
+            $adapter = new \League\Flysystem\Adapter\Local(getenv("ROOT_DIR"));
+            $filesystem = new \League\Flysystem\Filesystem($adapter);
+            return new \Aruna\EventStore($filesystem);
+        });
+
         // PROVIDERS
         $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
         $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());

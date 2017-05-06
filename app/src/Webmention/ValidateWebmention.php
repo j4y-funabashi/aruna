@@ -11,12 +11,14 @@ class ValidateWebmention
 
     public function __invoke($event)
     {
-        if ($event["error"] != null) {
+        $event["valid"] = false;
+        if ($event["error"]) {
             return $event;
         }
         try {
             $mention = (new VerifyWebmentionRequest())->__invoke($event);
             $mention = (new VerifyWebmention())->__invoke($mention);
+            $event["valid"] = true;
         } catch (\Exception $e) {
             $this->log->error(sprintf("Invalid webmention %s", $e->getMessage()));
             $event["error"] = $e->getMessage();

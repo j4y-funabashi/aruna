@@ -50,3 +50,4 @@ services:
         env_file: .env
         volumes:
             - ../..:/srv/aruna
+            - /media/jayr/aruna:/media/jayr/aruna
