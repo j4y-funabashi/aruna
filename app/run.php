@@ -68,10 +68,11 @@ $app["queue"] = $app->share(function () use ($app) {
 // processCacheProvider
 $app['publish_posts_handler'] = $app->share(function () use ($app) {
     $pipelineFactory = new Aruna\Publish\ProcessingPipelineFactory($app);
+    $eventProcessor = new Aruna\Publish\EventProcessor($pipelineFactory);
     return new Aruna\Publish\PublishPostsHandler(
         $app['monolog'],
         $app['event_log_repository'],
-        $pipelineFactory,
+        $eventProcessor,
         $app["queue"]
     );
 });

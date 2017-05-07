@@ -11,13 +11,13 @@ class PublishPostsHandler
     public function __construct(
         $log,
         $event_log,
-        $pipelineFactory,
+        $eventProcessor,
         $queue
     ) {
         $this->log = $log;
         $this->event_log = $event_log;
-        $this->pipelineFactory = $pipelineFactory;
         $this->queue = $queue;
+        $this->eventProcessor = $eventProcessor;
     }
 
     public function handle()
@@ -52,7 +52,6 @@ class PublishPostsHandler
     private function processEvent($event)
     {
         $event_type = $event["type"];
-        $pipeline = $this->pipelineFactory->build($event_type);
 
         $m = sprintf(
             "Processing Event [%s][%s]",
@@ -62,8 +61,8 @@ class PublishPostsHandler
         $this->log->debug($m);
 
         try {
-            $event = $pipeline->process(
-                $event["data"]
+            $event = $this->eventProcessor->__invoke(
+                $event
             );
         } catch (\Exception $e) {
             $m = sprintf(

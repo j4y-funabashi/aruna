@@ -47,6 +47,7 @@ class LoadWebmentionHtml
         }
 
         try {
+            sleep(2);
             $host = parse_url($url, PHP_URL_HOST);
             $this->log->debug(sprintf("Fetching HTML from host: %s", $host));
             $result = $this->http->request("GET", $url);
