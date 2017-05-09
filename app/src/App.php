@@ -24,6 +24,11 @@ class App
             $filesystem = new \League\Flysystem\Filesystem($adapter);
             return new \Aruna\EventStore($filesystem);
         });
+        $app['mentions_repository_writer'] = $app->share(function () use ($app) {
+            return new \Aruna\Webmention\MentionsRepositoryWriter(
+                $app['db_cache']
+            );
+        });
 
         // PROVIDERS
         $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
@@ -43,7 +48,7 @@ class App
             return $log;
         });
         $app['db_cache'] = $app->share(function () use ($app) {
-            $db = new \PDO("sqlite:".$app['db_file']);
+            $db = new \Aruna\Db("sqlite:".$app['db_file']);
             $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $db->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             return $db;

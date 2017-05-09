@@ -47,6 +47,7 @@ class Db extends \PDO
             published,
             source,
             target,
+            valid,
             error,
             source_html,
             PRIMARY KEY (id)

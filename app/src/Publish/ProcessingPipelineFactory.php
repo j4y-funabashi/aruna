@@ -95,12 +95,12 @@ class ProcessingPipelineFactory
                             $this->app["monolog"]
                         )
                     )
-                    //->pipe(
-                        //new SaveWebmentionToSql(
-                            //$this->app["monolog"],
-                            //$this->app["mentions_repository_writer"]
-                        //)
-                    //)
+                    ->pipe(
+                        new SaveWebmentionToSql(
+                            $this->app["monolog"],
+                            $this->app["mentions_repository_writer"]
+                        )
+                    )
                     //->pipe(
                         //new SummarizeWebmention(
                             //$this->app["monolog"]

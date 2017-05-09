@@ -21,7 +21,8 @@ class EventProcessorTest extends SystemTest
             "data" => [
                 "source" => "https://j4y.co/p/20170506185314_590e1b9a3faf9",
                 "target" => "https://j4y.co/p/20170506185225_590e1b69240f8",
-                "uid" => "test_WebmentionReceived_source"
+                "uid" => "test_WebmentionReceived_source",
+                "published" => "2016-12-18T10:18:44+00:00"
             ]
         ];
 

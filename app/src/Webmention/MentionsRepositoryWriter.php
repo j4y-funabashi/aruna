@@ -17,6 +17,7 @@ class MentionsRepositoryWriter
             ":source" => $mention["source"],
             ":target" => $mention["target"],
             ":error" => $mention["error"],
+            ":valid" => (string) $mention["valid"],
             ":source_html" => $mention["mention_source_html"]
         );
 
@@ -26,6 +27,7 @@ class MentionsRepositoryWriter
             source,
             target,
             error,
+            valid,
             source_html
         ) VALUES (
             :id,
@@ -33,6 +35,7 @@ class MentionsRepositoryWriter
             :source,
             :target,
             :error,
+            :valid,
             :source_html
         )";
 
