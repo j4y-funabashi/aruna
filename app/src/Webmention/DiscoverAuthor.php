@@ -22,11 +22,17 @@ class DiscoverAuthor
         $source_parts = parse_url($url);
         return $source_parts['scheme']."://".$source_parts['host'];
     }
+    private function isUrl($url)
+    {
+        $source_parts = parse_url($url);
+        return (isset($source_parts['scheme']) && isset($source_parts['host']));
+    }
     private function findAuthor($mf2)
     {
         if (empty($mf2["items"])) {
             return null;
         }
+
         $entry = $this->findFirst($mf2, "h-entry");
         if (isset($entry["properties"]["author"][0]["type"]) && $entry["properties"]["author"][0]["type"][0] == "h-card") {
             return $entry["properties"]["author"][0];
@@ -35,6 +41,38 @@ class DiscoverAuthor
         if (isset($feed["properties"]["author"][0]["type"]) && $feed["properties"]["author"][0]["type"][0] == "h-card") {
             return $feed["properties"]["author"][0];
         }
+
+        if (isset($entry["properties"]["author"][0])) {
+            if (false === $this->isUrl($entry["properties"]["author"][0])) {
+                return $this->createHcardWithAuthor($entry["properties"]["author"][0]);
+            }
+            if ($this->isUrl($entry["properties"]["author"][0])) {
+                return $this->findRepresentativeHCard($entry["properties"]["author"][0]);
+            }
+        }
+        if (isset($feed["properties"]["author"][0])) {
+            if (false === $this->isUrl($feed["properties"]["author"][0])) {
+                return $this->createHcardWithAuthor($feed["properties"]["author"][0]);
+            }
+            if ($this->isUrl($feed["properties"]["author"][0])) {
+                return $this->findRepresentativeHCard($feed["properties"]["author"][0]);
+            }
+        }
+
+        if ($this->isUrl($mf2["rels"]["author"][0])) {
+            return $this->findRepresentativeHCard($mf2["rels"]["author"][0]);
+        }
+    }
+    private function createHcardWithAuthor($author_name)
+    {
+        return [
+            "type" => ["h-card"],
+            "properties" => [
+                "name" => [$author_name],
+                "url" => [],
+                "photo" => [],
+            ]
+        ];
     }
     private function findFirst($mf2, $type)
     {
@@ -43,5 +81,10 @@ class DiscoverAuthor
                 return $item;
             }
         }
+    }
+    private function findRepresentativeHCard($url)
+    {
+        $mf2 = \Mf2\fetch($url);
+        return \BarnabyWalters\Mf2\getRepresentativeHCard($mf2, $url);
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "65ecd6a5f1ac82a704ae909129173761",
+    "content-hash": "59fa0c78ab5fe6854ac18f289944ae2b",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -85,6 +85,46 @@
                 "sdk"
             ],
             "time": "2016-09-01T21:37:32+00:00"
+        },
+        {
+            "name": "barnabywalters/mf-cleaner",
+            "version": "v0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barnabywalters/php-mf-cleaner.git",
+                "reference": "ef6a16628db6e8aee2b4f8bb8093d18c24b74cd4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barnabywalters/php-mf-cleaner/zipball/ef6a16628db6e8aee2b4f8bb8093d18c24b74cd4",
+                "reference": "ef6a16628db6e8aee2b4f8bb8093d18c24b74cd4",
+                "shasum": ""
+            },
+            "require-dev": {
+                "php": ">=5.3",
+                "phpunit/phpunit": "*"
+            },
+            "suggest": {
+                "mf2/mf2": "To parse microformats2 structures from (X)HTML"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/BarnabyWalters/Mf2/Functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Barnaby Walters",
+                    "email": "barnaby@waterpigs.co.uk"
+                }
+            ],
+            "description": "Cleans up microformats2 array structures",
+            "time": "2014-10-06T23:11:15+00:00"
         },
         {
             "name": "cebe/markdown",
