@@ -29,7 +29,34 @@ class DiscoverAuthorTest extends SystemTest
     /**
      * @test
      */
-    public function it_returns_hcard_when_author_is_a_hcard()
+    public function it_returns_hcard_when_entry_has_multiple_types()
+    {
+        $SUT = new DiscoverAuthor();
+        $html = $this->loadFixture("authorship/h-entry_with_multiple_types.html");
+        $event = [
+            "source" => "",
+            "mention_source_html" => $html
+        ];
+        $result = $SUT->__invoke($event);
+        $expected = [
+            "type" => ["h-card"],
+            "properties" => [
+                "name" => ["John Doe"],
+                "url" => ["http://example.com/johndoe/"],
+                "photo" => ["http://www.gravatar.com/avatar/fd876f8cd6a58277fc664d47ea10ad19.jpg"],
+            ],
+            "value" => "John Doe"
+        ];
+        $this->assertEquals(
+            $expected,
+            $result["author"]
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_hcard_when_entry_author_is_a_hcard()
     {
         $SUT = new DiscoverAuthor();
         $html = $this->loadFixture("authorship/h-entry_with_p-author_hcard.html");

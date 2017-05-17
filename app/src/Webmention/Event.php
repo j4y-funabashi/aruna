@@ -23,10 +23,25 @@ class Event implements \JsonSerializable
         return $this->properties['uid'];
     }
 
+    public function getFilePath()
+    {
+        return sprintf(
+            "%s/%s",
+            $this->properties["published"]->format("Y"),
+            $this->getUid()
+        );
+    }
+
     public function jsonSerialize()
     {
-        $out = $this->properties;
-        $out['published'] = $this->properties['published']->format("c");
+        $eventData = $this->properties;
+        $eventData['published'] = $this->properties['published']->format("c");
+        $out = [
+            "eventType" => "WebmentionReceived",
+            "eventVersion" => $this->getUid(),
+            "eventID" => $this->getUid(),
+            "eventData" => $eventData
+        ];
         return $out;
     }
 

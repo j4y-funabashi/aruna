@@ -64,7 +64,7 @@ class PublishPostsHandler
             $event = $this->eventProcessor->__invoke(
                 $event
             );
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $m = sprintf(
                 "Could not process post %s [%s]",
                 $event["id"],

@@ -9,10 +9,12 @@ class ReceiveWebmentionHandler
 {
     public function __construct(
         $verifyWebmentionRequest,
-        $eventWriter
+        $eventWriter,
+        $queue
     ) {
         $this->verify = $verifyWebmentionRequest;
         $this->eventWriter = $eventWriter;
+        $this->queue = $queue;
     }
 
     public function handle($command)
@@ -28,6 +30,10 @@ class ReceiveWebmentionHandler
             );
             $event = new Event($mention);
             $this->eventWriter->save($event);
+            $job_id = $this->queue->push(
+                'micropub_events',
+                json_encode($event)
+            );
             return new Accepted($payload);
         } catch (\Exception $e) {
             $payload = array(

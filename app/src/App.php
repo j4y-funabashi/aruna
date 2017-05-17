@@ -30,6 +30,12 @@ class App
             );
         });
 
+        $app["queue"] = $app->share(function () use ($app) {
+            return new \Aruna\Queue(
+                new \Pheanstalk\Pheanstalk(getenv("QUEUE_ADDRESS"))
+            );
+        });
+
         // PROVIDERS
         $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
         $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());

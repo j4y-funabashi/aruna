@@ -21,7 +21,7 @@ class WebmentionServiceProvider implements ServiceProviderInterface
         $app['webmentions_root'] = getenv("ROOT_DIR")."/webmentions";
 
         $app['action.receive_webmention'] = $app->share(function () use ($app) {
-            $adapter = new Local($app['webmentions_root']);
+            $adapter = new Local($app['posts_root']);
             $filesystem = new Filesystem($adapter);
             $eventWriter = new EventWriter($filesystem);
 
@@ -33,12 +33,27 @@ class WebmentionServiceProvider implements ServiceProviderInterface
                 ),
                 new ReceiveWebmentionHandler(
                     new VerifyWebmentionRequest(),
-                    $eventWriter
+                    $eventWriter,
+                    $app["queue"]
+                )
+            );
+        });
+
+        $app['action.list_webmentions'] = $app->share(function () use ($app) {
+            return new ListWebmentionsAction(
+                new ListWebmentionsHandler(
+                    new MentionsRepositoryReader($app["db_cache"])
+                ),
+                new ListWebmentionsResponder(
+                    $app['response'],
+                    $app['twig'],
+                    new RenderPost($app['twig'])
                 )
             );
         });
 
         $app->post('/webmention', 'action.receive_webmention:__invoke');
+        $app->get('/webmentions', 'action.list_webmentions:__invoke');
     }
 
     public function boot(Application $app)

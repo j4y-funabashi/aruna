@@ -78,12 +78,6 @@ class MicropubServiceProvider implements ServiceProviderInterface
             return new PostRepositoryWriter($filesystem, $app['db_cache']);
         });
 
-        $app["queue"] = $app->share(function () use ($app) {
-            return new \Aruna\Queue(
-                new \Pheanstalk\Pheanstalk(getenv("QUEUE_ADDRESS"))
-            );
-        });
-
         $app->post('/micropub', 'action_create_post:__invoke');
         $app->get("/micropub", "action_micropub_query:__invoke");
         $app->post("/micropub/media", "action_upload_media:__invoke");

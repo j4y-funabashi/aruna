@@ -22,7 +22,7 @@ class EventWriter
 
         try {
             $this->filesystem->write(
-                $event->getUid().".json",
+                $event->getFilePath().".json",
                 json_encode($event)
             );
         } catch (\Exception $e) {

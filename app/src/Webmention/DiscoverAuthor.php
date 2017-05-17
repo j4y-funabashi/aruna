@@ -80,7 +80,7 @@ class DiscoverAuthor
     private function findFirst($mf2, $type)
     {
         foreach ($mf2["items"] as $item) {
-            if ($item["type"][0] == $type) {
+            if (in_array($type, $item["type"])) {
                 return $item;
             }
         }
