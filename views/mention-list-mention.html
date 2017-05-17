@@ -7,13 +7,13 @@
     </div>
     {% endif %}
 
-        mentioned
-        <a href="{{ mention.target }}">{{ mention.target }}</a>
-        <div class="post--meta">
-            <a class="u-url" href="/webmention/{{ mention.id }}">
-                <time class="dt-published" datetime="{{ mention.published }}">{{ mention.published }}</time>
-            </a>
-        </div>
+    mentioned
 
-    <p>{{ mention.error }}</p>
+    <a href="{{ mention.target }}">{{ mention.target }}</a>
+    <div class="post--meta">
+        <a class="u-url" href="/webmention/{{ mention.id }}">
+            <time class="dt-published" datetime="{{ mention.published }}">{{ mention.published }}</time>
+        </a>
+    </div>
+
 </div>

@@ -1,0 +1,20 @@
+<div class="webmention webmention-valid">
+
+    <div class="media">
+
+        <div class="media-left media-middle">
+            {% if author is not null %}
+            <span class="p-author h-card post--author">
+                <img class="u-photo post--author-photo" src="{{ author.properties.photo.0 }}" alt="" />
+            </span>
+            {% endif %}
+        </div>
+
+        <div class="media-body">
+            <a class="p-name u-url" href="{{ author.properties.url.0 }}">{{ author.properties.name.0 }}</a>
+            liked <a href="{{ mention.target }}">your post</a>
+        </div>
+
+    </div>
+
+</div>

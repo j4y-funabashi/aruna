@@ -1,4 +1,5 @@
 body {
+    padding-top: 70px;
     color: #373b41;
     background-color: #e0e0e0;
 }
@@ -8,24 +9,17 @@ p {
 
 a {
     color: #cc6666;
+    text-decoration: none;
 }
 a:hover {
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 .menu--top {
-    margin: 0;
-    padding: 0.5em;
-    overflow: hidden;
     background-color: #333;
-    position: fixed; /* Set the navbar to fixed position */
-    top: 0; /* Position the navbar at the top of the page */
-    width: 100%; /* Full width */
-    text-align: center;
 }
 
 .page--body {
-    padding-top: 1.5em;
     max-width: 640px;
     margin: auto;
 }
@@ -54,7 +48,7 @@ a:hover {
     padding: 0.8em 0 0.8em 0;
 }
 .post--author-photo {
-    width: 76px;
+    width: 50px;
     vertical-align: middle;
     border-radius: 50%;
 }
@@ -69,4 +63,18 @@ a:hover {
     text-decoration: none;
     border-radius: 6px;
     font-weight: bold;
+}
+
+.webmention {
+    background-color: #fff;
+    padding: 0.4em;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    margin-bottom: 0.2em;
+}
+.webmention-invalid {
+    border-left: 4px #cc6666 solid;
+}
+.webmention-valid {
+    border-left: 4px #b5bd68 solid;
 }
