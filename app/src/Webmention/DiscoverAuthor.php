@@ -6,6 +6,9 @@ class DiscoverAuthor
 {
     public function __invoke($event)
     {
+        if ($event["error"]) {
+            return $event;
+        }
         $event = $this->getMicroformats($event);
         $event["author"] = $this->findAuthor($event["mf2"]);
         return $event;

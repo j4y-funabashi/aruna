@@ -48,8 +48,10 @@ class Db extends \PDO
             source,
             target,
             valid,
+            type,
             error,
-            source_html,
+            author,
+            source_mf2,
             PRIMARY KEY (id)
         );";
         $r = $this->exec($q);

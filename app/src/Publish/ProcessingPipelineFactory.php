@@ -9,6 +9,8 @@ use Aruna\Webmention\FindUrls;
 use Aruna\Webmention\SaveWebmentionToSql;
 use Aruna\Webmention\LoadWebmentionHtml;
 use Aruna\Webmention\ValidateWebmention;
+use Aruna\Webmention\DiscoverAuthor;
+use Aruna\Webmention\DiscoverWebmentionType;
 
 class ProcessingPipelineFactory
 {
@@ -93,6 +95,14 @@ class ProcessingPipelineFactory
                     ->pipe(
                         new ValidateWebmention(
                             $this->app["monolog"]
+                        )
+                    )
+                    ->pipe(
+                        new DiscoverAuthor(
+                        )
+                    )
+                    ->pipe(
+                        new DiscoverWebmentionType(
                         )
                     )
                     ->pipe(

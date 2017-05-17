@@ -18,7 +18,9 @@ class MentionsRepositoryWriter
             ":target" => $mention["target"],
             ":error" => $mention["error"],
             ":valid" => (string) $mention["valid"],
-            ":source_html" => $mention["mention_source_html"]
+            ":author" => json_encode($mention["author"]),
+            ":source_mf2" => json_encode($mention["mf2"]),
+            ":type" => $mention["type"]
         );
 
         $qry = "REPLACE INTO mentions (
@@ -28,7 +30,9 @@ class MentionsRepositoryWriter
             target,
             error,
             valid,
-            source_html
+            author,
+            type,
+            source_mf2
         ) VALUES (
             :id,
             :published,
@@ -36,7 +40,9 @@ class MentionsRepositoryWriter
             :target,
             :error,
             :valid,
-            :source_html
+            :author,
+            :type,
+            :source_mf2
         )";
 
         $res = $this->db->prepare($qry);
