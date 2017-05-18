@@ -34,6 +34,7 @@ class ListWebmentionsResponder extends Responder
 
     private function renderMention($mention)
     {
+        $mention["published_human"] = (new \DateTimeImmutable($mention["published"]))->format("dS M, Y");
         return $this->view->render(
             "mention-list-".$mention["type"].".html",
             array(

@@ -2,6 +2,8 @@
 
 namespace Aruna\Webmention;
 
+use BarnabyWalters\Mf2;
+
 class SaveWebmentionToSql
 {
 
@@ -15,6 +17,14 @@ class SaveWebmentionToSql
 
     public function __invoke($event)
     {
+
+        if ($event["mf2"]) {
+            $published = Mf2\getPublished(Mf2\findMicroformatsByType($event["mf2"], 'h-entry')[0], true, null);
+            if ($published) {
+                $event["published"] = $published;
+            }
+        }
+
         try {
             $this->repository->save($event);
         } catch (\Exception $e) {
