@@ -21,17 +21,17 @@ class SaveAuthorHCard
         if ($event["error"]) {
             return $event;
         }
-        $photo = $this->downloadAuthorPhoto($event);
-        $event["author"]["properties"]["photo"][0] = "/author_photo/".$photo["file"].$photo["ext"];
-        return $event;
-    }
-
-    private function downloadAuthorPhoto($event)
-    {
         $hcard = Mf2\findMicroformatsByType($event["author"], 'h-card')[0];
         if (!Mf2\hasProp($hcard, "photo")) {
             return $event;
         }
+        $photo = $this->downloadAuthorPhoto($hcard);
+        $event["author"]["properties"]["photo"][0] = "/author_photo/".$photo["file"].$photo["ext"];
+        return $event;
+    }
+
+    private function downloadAuthorPhoto($hcard)
+    {
         $ext_photo_url = Mf2\getPlaintext($hcard, "photo");
         $result = $this->http->request("GET", $ext_photo_url);
         $out = [
