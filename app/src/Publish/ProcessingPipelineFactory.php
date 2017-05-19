@@ -11,6 +11,7 @@ use Aruna\Webmention\LoadWebmentionHtml;
 use Aruna\Webmention\ValidateWebmention;
 use Aruna\Webmention\DiscoverAuthor;
 use Aruna\Webmention\DiscoverWebmentionType;
+use Aruna\Webmention\SaveAuthorHCard;
 
 class ProcessingPipelineFactory
 {
@@ -106,16 +107,17 @@ class ProcessingPipelineFactory
                         )
                     )
                     ->pipe(
+                        new SaveAuthorHCard(
+                            $this->app["http_client"],
+                            $this->app["event_store"]
+                        )
+                    )
+                    ->pipe(
                         new SaveWebmentionToSql(
                             $this->app["monolog"],
                             $this->app["mentions_repository_writer"]
                         )
                     )
-                    //->pipe(
-                        //new SummarizeWebmention(
-                            //$this->app["monolog"]
-                        //)
-                    //)
                     ;
                 break;
         }
