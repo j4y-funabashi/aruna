@@ -21,6 +21,9 @@ class SaveAuthorHCard
         if ($event["error"]) {
             return $event;
         }
+        if (!isset($event["author"])) {
+            return $event;
+        }
         $hcard = Mf2\findMicroformatsByType($event["author"], 'h-card')[0];
         if (!Mf2\hasProp($hcard, "photo")) {
             return $event;
