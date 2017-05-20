@@ -38,8 +38,8 @@ class SaveAuthorHCard
             "data" => (string) $result->getBody(),
             "file" => md5($ext_photo_url),
             "ext" => $this->typeToExt($result->getHeader("Content-Type")[0]),
-            "path" => $this->EXT_DIR."/".$out["file"].$out["ext"]
         ];
+        $out["path"] = $this->EXT_DIR."/".$out["file"].$out["ext"];
         if (!$this->fileStore->exists($out["path"])) {
             $this->fileStore->save($out["path"], $out["data"]);
         }
