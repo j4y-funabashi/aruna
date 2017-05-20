@@ -4,6 +4,7 @@ namespace Aruna\Webmention;
 
 class DiscoverWebmentionType
 {
+    private $base_url_host = "j4y.co";
 
     public function __invoke($event)
     {
@@ -11,12 +12,18 @@ class DiscoverWebmentionType
             $event["type"] = "error";
             return $event;
         }
-        $event["type"] = $this->discoverType($event["mf2"]["items"][0]);
+        $event["type"] = $this->discoverType($event);
         return $event;
     }
 
-    private function discoverType($mf2)
+    private function discoverType($event)
     {
+        $target_url = parse_url($event["target"]);
+        if ($target_url["host"] == $this->base_url_host && ($target_url["path"] == "" || $target_url["path"] == "/")) {
+            return "homepage";
+        }
+
+        $mf2 = $event["mf2"]["items"][0];
         if (isset($mf2["properties"]["in-reply-to"])) {
             return "comment";
         }

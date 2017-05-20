@@ -12,7 +12,7 @@ class ListWebmentionsResponder extends Responder
         $out = $this->view->render(
             "page_wrapper.html",
             array(
-                "page_title" => "mentions",
+                "page_title" => "Notifications",
                 "body" => $this->view->render(
                     "mentions-list.html",
                     ["mentions" => $this->renderMentions()]

@@ -1,0 +1,23 @@
+<div class="h-cite webmention webmention-valid">
+
+    <div class="media">
+        <div class="media-left media-middle">
+            {% if author is not null %}
+            <span class="u-author h-card post--author">
+                <a class="p-name u-url" href="{{ author.properties.url.0 }}">
+                    <img class="u-photo post--author-photo" src="{{ author.properties.photo.0 }}" alt="{{ author.properties.name.0 }}" />
+                </a>
+            </span>
+            {% endif %}
+        </div>
+        <div class="media-body">
+            <p class="p-content p-name">
+            {% if author is not null %}
+                <a href="{{ author.properties.url.0 }}">{{ author.properties.name.0 }}</a> mentioned you on <a href="{{ mention.source }}">their post</a> <time class="dt-published" datetime="{{ mention.published }}">{{ mention.published_human }}</time>
+            {% endif %}
+            </p>
+        </div>
+    </div>
+
+</div>
+
