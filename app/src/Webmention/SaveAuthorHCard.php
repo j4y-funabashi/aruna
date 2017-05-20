@@ -53,6 +53,9 @@ class SaveAuthorHCard
             'image/jpeg'        => '.jpg',
             'image/png'         => '.png'
         );
+        if (!isset($map[$type])) {
+            return ".jpg";
+        }
         return $map[$type];
     }
 }
