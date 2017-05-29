@@ -21,10 +21,7 @@ class SendWebmention
 
     public function __invoke($post)
     {
-        return $post;
         foreach ($this->findUrls->__invoke($post->toString()) as $url) {
-
-            $this->log->info("Finding webmention endpoint [".$url."]");
 
             try {
                 $result = $this->http->request("GET", $url);
@@ -34,27 +31,27 @@ class SendWebmention
                 continue;
             }
 
-
             $mention_endpoint = $this->discoverEndpoint->__invoke($url, $result, "webmention");
 
-            $source_url = $post->get('url');
+            if ($mention_endpoint === "") {
+                continue;
+            }
+
+            $source_url = $post->url();
             $form_params = array("source" => $source_url, "target" => $url);
 
-            if ($mention_endpoint != "") {
-                $this->log->info("sending mention to [".$mention_endpoint."]", $form_params);
+            $this->log->info("sending mention to [".$mention_endpoint."]", $form_params);
 
-                try {
-                    $response = $this->http->request(
-                        "POST",
-                        $mention_endpoint,
-                        ["form_params" => $form_params]
-                    );
-                } catch (\Exception $e) {
-                    $m = "Failed to POST to ".$mention_endpoint." ".$e->getMessage();
-                    $this->log->error($m);
-                    continue;
-                }
-            }
+            $response = $this->http->request(
+                "POST",
+                $mention_endpoint,
+                ["form_params" => $form_params, 'http_errors' => false]
+            );
+
+            $form_params["response_status_code"] = $response->getStatusCode();
+            $form_params["response_location"] = $response->getHeader("Location");
+
+            $this->log->info("Got response: ", $form_params);
         }
         return $post;
     }

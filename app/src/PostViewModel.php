@@ -44,6 +44,11 @@ class PostViewModel
         return null;
     }
 
+    public function url()
+    {
+        return "https://j4y.co/p/".$this->get("uid");
+    }
+
     public function published()
     {
         if (null !== $this->get("published")) {
