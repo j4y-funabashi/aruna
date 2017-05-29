@@ -51,7 +51,7 @@ class DiscoverEndpoints
     {
         $xpath = new \DOMXpath($dom);
         foreach ($xpath->query('//a | //link') as $link) {
-            if ($this->relExists($link->getAttribute("rel"), $rel_value)) {
+            if ($this->relExists($link->getAttribute("rel"), $rel_value) && $link->hasAttribute("href")) {
                 return $link->getAttribute("href");
             }
         }
@@ -74,7 +74,10 @@ class DiscoverEndpoints
         if ($relative_url == "") {
             return $source_url;
         }
-        $parsed_url = array_merge(parse_url($source_url), parse_url($relative_url));
+        $parsed_url = array_merge(
+            parse_url($relative_url),
+            parse_url($source_url)
+        );
         $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
         $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
         $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';

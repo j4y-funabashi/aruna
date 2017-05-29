@@ -42,11 +42,17 @@ class SendWebmention
 
             $this->log->info("sending mention to [".$mention_endpoint."]", $form_params);
 
-            $response = $this->http->request(
-                "POST",
-                $mention_endpoint,
-                ["form_params" => $form_params, 'http_errors' => false]
-            );
+            try {
+                $response = $this->http->request(
+                    "POST",
+                    $mention_endpoint,
+                    ["form_params" => $form_params, 'http_errors' => false]
+                );
+            } catch (\Exception $e) {
+                $m = "Failed to send mention to ".$mention_endpoint." ".$e->getMessage();
+                $this->log->error($m);
+                continue;
+            }
 
             $form_params["response_status_code"] = $response->getStatusCode();
             $form_params["response_location"] = $response->getHeader("Location");

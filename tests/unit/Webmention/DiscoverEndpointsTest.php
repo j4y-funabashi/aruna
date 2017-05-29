@@ -431,7 +431,7 @@ class DiscoverEndpointsTest extends UnitTest
      * @test
      * https://webmention.rocks/test/20
      */
-    public function it_discovers_endpoint_in_anchor_when_anchor_is_followed_by_link_tag_with_no_href()
+    public function it_discovers_endpoint_in_anchor_when_anchor_follows_a_link_tag_with_no_href()
     {
         $body = '
             <!DOCTYPE html>
@@ -439,14 +439,14 @@ class DiscoverEndpointsTest extends UnitTest
             <head>
             </head>
             <body>
-            <a href="/webmention?test=true" rel="webmention">&lt;a&gt; tag</a>
             <link rel="webmention">
+            <a href="http://example.com/webmention" rel="webmention">this endpoint</a> instead.
             </body>
             </html>
             ';
         $headers = [];
         $SUT = $this->getSUT($headers, $body);
-        $expected = "http://example.com/webmention?test=true";
+        $expected = "http://example.com/webmention";
         $result = $SUT->__invoke($this->url, $this->result, $this->rel_value);
         $this->assertEquals($expected, $result);
     }
