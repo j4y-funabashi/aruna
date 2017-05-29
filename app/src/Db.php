@@ -31,6 +31,8 @@ class Db extends \PDO
             );";
         $r = $this->exec($q);
 
+        $q = "DROP TABLE IF EXISTS event_log;";
+        $r = $this->exec($q);
         $q = "CREATE TABLE IF NOT EXISTS event_log (
                 id,
                 type,
