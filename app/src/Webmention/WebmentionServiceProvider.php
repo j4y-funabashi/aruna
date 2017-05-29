@@ -47,7 +47,7 @@ class WebmentionServiceProvider implements ServiceProviderInterface
                 new ListWebmentionsResponder(
                     $app['response'],
                     $app['twig'],
-                    new RenderPost($app['twig'])
+                    $app["purifier"]
                 )
             );
         });

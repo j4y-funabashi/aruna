@@ -36,6 +36,11 @@ class App
             );
         });
 
+        $app['purifier'] = $app->share(function () use ($app) {
+            $config = \HTMLPurifier_Config::createDefault();
+            return new \HTMLPurifier($config);
+        });
+
         // PROVIDERS
         $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
         $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());

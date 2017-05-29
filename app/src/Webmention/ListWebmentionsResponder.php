@@ -6,6 +6,20 @@ use Aruna\Responder;
 
 class ListWebmentionsResponder extends Responder
 {
+    /**
+     * undocumented function
+     *
+     * @return void
+     */
+    public function __construct(
+        $response,
+        $twig,
+        $purifier
+    ) {
+        $this->response = $response;
+        $this->view = $twig;
+        $this->purifier = $purifier;
+    }
 
     public function found()
     {
@@ -35,8 +49,17 @@ class ListWebmentionsResponder extends Responder
     private function renderMention($mention)
     {
         $mention["published_human"] = (new \DateTimeImmutable($mention["published"]))->format("dS M, Y");
+        $mention["body"] = $this->purifier->purify(
+            $this->view->render(
+                "mention-list-".$mention["type"].".html",
+                array(
+                    "mention" => $mention,
+                    "author" => $mention["author"]
+                )
+            )
+        );
         return $this->view->render(
-            "mention-list-".$mention["type"].".html",
+            "mention-wrapper.html",
             array(
                 "mention" => $mention,
                 "author" => $mention["author"]

@@ -138,6 +138,11 @@ $app['handler.process_webmentions'] = $app->share(function () use ($app) {
     );
 });
 
+$app['purifier'] = $app->share(function () use ($app) {
+    $config = HTMLPurifier_Config::createDefault();
+    return new HTMLPurifier($config);
+});
+
 $app->command(new CLI\BuildEventLogCommand());
 $app->command(new CLI\ProcessCacheCommand());
 $app->command(new CLI\ResizePhotoCommand());
