@@ -75,8 +75,8 @@ class DiscoverEndpoints
             return $source_url;
         }
         $parsed_url = array_merge(
-            parse_url($relative_url),
-            parse_url($source_url)
+            parse_url($source_url),
+            parse_url($relative_url)
         );
         $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
         $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';

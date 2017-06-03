@@ -84,6 +84,7 @@ class SendWebmention
         );
         $form_params["response_status_code"] = $response->getStatusCode();
         $form_params["response_location"] = $response->getHeader("Location");
+
         $this->log->info("Got response: ", $form_params);
     }
 }
