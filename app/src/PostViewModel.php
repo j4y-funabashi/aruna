@@ -51,10 +51,13 @@ class PostViewModel
 
     public function published()
     {
-        if (null !== $this->get("published")) {
-            return $this->get("published");
-        }
-        return date("c");
+        return $this->get("published");
+    }
+
+    public function publishedHuman()
+    {
+        $published = new \DateTimeImmutable($this->published());
+        return $published->format("j F, Y");
     }
 
     public function content()

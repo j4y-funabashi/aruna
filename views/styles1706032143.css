@@ -1,4 +1,5 @@
 body {
+    font-size: 18px;
     padding-top: 70px;
     color: #373b41;
     background-color: #e0e0e0;
@@ -8,8 +9,9 @@ p {
 }
 
 a {
-    color: #cc6666;
+    color: #333;
     text-decoration: none;
+    font-weight: bold;
 }
 a:hover {
     text-decoration: underline;
@@ -26,7 +28,7 @@ a:hover {
 
 .post {
     background-color: #fff;
-    margin: 1em 0 1em 0;
+    margin: 0.3em;
 }
 .post--content * {
     word-wrap: break-word;
@@ -35,10 +37,11 @@ a:hover {
     width: 100%;
 }
 .post--content {
-    padding: 0.4em 0.4em 0 0.4em;
+    padding: 0.4em;
 }
 .post--meta {
-    padding: 0 0.4em 0.4em 0.4em;
+    padding: 0.4em;
+    border-top: 0.1em solid #e0e0e0;
 }
 .post--meta * {
     font-size: 0.8em;
@@ -51,18 +54,6 @@ a:hover {
     width: 50px;
     vertical-align: middle;
     border-radius: 50%;
-}
-
-.btn {
-    display: block;
-    padding: 0.8em;
-    margin: 0.2em 0 0.2em 0;
-    text-align: center;
-    background-color: #cc6666;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: bold;
 }
 
 .webmention {
