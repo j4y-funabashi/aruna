@@ -2,6 +2,8 @@
 
 namespace Aruna\Publish;
 
+use \Aruna\PostViewModel;
+
 /**
  * Class CacheToSql
  * @author yourname
@@ -28,7 +30,7 @@ class CacheToSql
             (:id, :published, :post, :type)";
         $r = $this->db->prepare($q);
 
-        $post = new \Aruna\PostViewModel($post);
+        $post = new PostViewModel($post);
 
         $r->execute(
             [

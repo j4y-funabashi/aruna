@@ -117,26 +117,6 @@ $app["build_event_log_handler"] = $app->share(function () use ($app) {
     );
 });
 
-$app['action.process_webmentions'] = $app->share(function () use ($app) {
-    return new Aruna\Webmention\ProcessWebmentionsAction(
-        $app['monolog'],
-        $app['event_store'],
-        $app['handler.process_webmentions']
-    );
-});
-$app['handler.process_webmentions'] = $app->share(function () use ($app) {
-    return new Aruna\Webmention\ProcessWebmentionsHandler(
-        $app['monolog'],
-        $app['event_store'],
-        $app['http_client'],
-        $app['mentions_repository_writer'],
-        $app['posts_repository_reader'],
-        new Aruna\Webmention\WebmentionNotification(),
-        new Aruna\NotifyService(
-            $app['monolog']
-        )
-    );
-});
 
 $app['purifier'] = $app->share(function () use ($app) {
     $config = HTMLPurifier_Config::createDefault();
@@ -147,6 +127,5 @@ $app->command(new CLI\BuildEventLogCommand());
 $app->command(new CLI\ProcessCacheCommand());
 $app->command(new CLI\ResizePhotoCommand());
 $app->command(new CLI\ConvertJsonToMf2());
-$app->command(new CLI\ProcessWebmentionsCommand());
 
 $app->run();

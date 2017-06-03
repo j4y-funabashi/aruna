@@ -2,8 +2,6 @@
 
 namespace Aruna\Publish;
 
-use Aruna\PostViewModel;
-
 class SendWebmention
 {
 
