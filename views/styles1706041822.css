@@ -7,7 +7,6 @@ p {
 }
 
 a {
-    color: #333;
     text-decoration: none;
     font-weight: bold;
 }
@@ -30,11 +29,10 @@ a:hover {
     width: 100%;
 }
 .post--pad {
-    padding: 0.4em;
+    padding: 0.2em 0.4em 0.3em 0.4em;
 }
 .post--meta {
     line-height: 0.9em;
-    text-align: right;
 }
 .post--meta * {
     color: #c5c8c6;

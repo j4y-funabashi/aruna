@@ -33,12 +33,18 @@
     {% endif %}
 
     <div class="post--meta base07-background post--pad">
-        {{ category|raw }}
-        <a class="u-url u-uid" href="{{ url }}">
-            <time class="dt-published" datetime="{{ post.published() }}">{{ post.publishedHuman() }}</time>
-        </a>
-        <a href="https://brid.gy/publish/facebook"></a>
-        <a class="u-author" href="https://j4y.co"></a>
+        <div class="row">
+            <div class="col-xs-6">
+                <a class="u-url u-uid" href="{{ url }}">
+                    <time class="dt-published" datetime="{{ post.published() }}">{{ post.publishedHuman() }}</time>
+                </a>
+                <a href="https://brid.gy/publish/facebook"></a>
+                <a class="u-author" href="https://j4y.co"></a>
+            </div>
+            <div class="col-xs-6 text-right">
+                {{ category|raw }}
+            </div>
+        </div>
     </div>
 
 </div>
