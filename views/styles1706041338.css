@@ -1,11 +1,9 @@
 body {
     font-size: 18px;
     padding-top: 70px;
-    color: #373b41;
-    background-color: #e0e0e0;
 }
 p {
-    margin: 0.2em;
+    margin: 0.1em;
 }
 
 a {
@@ -17,17 +15,12 @@ a:hover {
     text-decoration: underline;
 }
 
-.menu--top {
-    background-color: #333;
-}
-
 .page--body {
     max-width: 640px;
     margin: auto;
 }
 
 .post {
-    background-color: #fff;
     margin: 0.3em;
 }
 .post--content * {
@@ -36,15 +29,17 @@ a:hover {
 .post--photo {
     width: 100%;
 }
-.post--content {
+.post--pad {
     padding: 0.4em;
 }
 .post--meta {
-    padding: 0.4em;
-    border-top: 0.1em solid #e0e0e0;
+    line-height: 0.9em;
+    text-align: right;
 }
 .post--meta * {
-    font-size: 0.8em;
+    color: #c5c8c6;
+    font-size: 0.9em;
+    font-weight: normal;
 }
 
 .post--author {
@@ -57,7 +52,6 @@ a:hover {
 }
 
 .webmention {
-    background-color: #fff;
     padding: 0.4em;
     overflow-wrap: break-word;
     word-wrap: break-word;
