@@ -47,7 +47,8 @@ class ProcessingPipelineFactory
                             $this->app['http_client'],
                             new DiscoverEndpoints(),
                             new FindUrls(),
-                            $this->app['monolog']
+                            $this->app['monolog'],
+                            $this->app["event_store"]
                         )
                     );
                 break;
