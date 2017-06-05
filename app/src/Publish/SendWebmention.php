@@ -69,7 +69,7 @@ class SendWebmention
             return $out;
         }
 
-        $mention_endpoint = $this->discoverEndpoint->__invoke($url, $get_result, "webmention");
+        $mention_endpoint = $this->discoverEndpoint->__invoke($target, $get_result, "webmention");
         $out["mention_endpoint"] = $mention_endpoint;
 
         if ($mention_endpoint === "") {
