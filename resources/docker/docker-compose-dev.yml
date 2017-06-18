@@ -25,7 +25,7 @@ services:
         links:
             - aruna_app_server
         ports:
-            - "8080:80"
+            - "8084:80"
         environment:
             - NGINX_PORT=80
         volumes:
