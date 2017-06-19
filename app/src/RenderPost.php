@@ -13,7 +13,7 @@ class RenderPost
         $this->view = $view;
     }
 
-    public function __invoke($post)
+    public function __invoke(PostViewModel $post)
     {
         if ($post->type() == "tombstone") {
             return $this->view->render(
@@ -36,7 +36,7 @@ class RenderPost
         );
     }
 
-    private function renderPhoto($post)
+    private function renderPhoto(PostViewModel $post)
     {
         if (null === $post->get("photo")) {
             return null;
@@ -71,12 +71,12 @@ class RenderPost
         return str_replace($photo_url["path"], "/resized/".$size.$photo_url["path"], $photo);
     }
 
-    private function renderUrl($post)
+    private function renderUrl(PostViewModel $post)
     {
         return "/p/".$post->get('uid');
     }
 
-    private function renderContent($post)
+    private function renderContent(PostViewModel $post)
     {
         if ($post->content()) {
             $content = $post->content();
