@@ -4,6 +4,12 @@
 
         {{ photo|raw }}
 
+        {% if header %}
+        <div class="panel-heading">
+            {{ header|raw }}
+        </div>
+        {% endif %}
+
         {% if body %}
         <div class="panel-body">
             {{ body|raw }}

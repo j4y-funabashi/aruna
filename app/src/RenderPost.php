@@ -30,6 +30,7 @@ class RenderPost
                 "post" => $post,
                 "url" => $this->renderUrl($post),
                 "body" => $this->renderBody($post),
+                "header" => $this->renderHeader($post),
                 "category" => $this->renderCategory($post->category()),
                 "photo" => $this->renderPhoto($post)
             )
@@ -42,6 +43,13 @@ class RenderPost
         if ($post->get("summary")) {
             $out[] = "<p>".$post->get('summary')."</p>";
         }
+        $out[] = $this->renderContent($post);
+        return implode("", array_filter($out));
+    }
+
+    private function renderHeader(PostViewModel $post)
+    {
+        $out = [];
         if ($post->get("in-reply-to")) {
             $out[] = '<a class="u-in-reply-to" href="'.$post->get('in-reply-to').'">'.$post->get('in-reply-to')."</a>";
         }
@@ -51,7 +59,6 @@ class RenderPost
         if ($post->get("bookmark-of")) {
             $out[] = '<a class="u-bookmark-of" href="'.$post->get('bookmark-of').'">'.$post->get('bookmark-of')."</a>";
         }
-        $out[] = $this->renderContent($post);
         return implode("", array_filter($out));
     }
 
