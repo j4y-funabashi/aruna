@@ -29,11 +29,30 @@ class RenderPost
             array(
                 "post" => $post,
                 "url" => $this->renderUrl($post),
-                "content" => $this->renderContent($post),
+                "body" => $this->renderBody($post),
                 "category" => $this->renderCategory($post->category()),
                 "photo" => $this->renderPhoto($post)
             )
         );
+    }
+
+    private function renderBody(PostViewModel $post)
+    {
+        $out = [];
+        if ($post->get("summary")) {
+            $out[] = "<p>".$post->get('summary')."</p>";
+        }
+        if ($post->get("in-reply-to")) {
+            $out[] = '<a class="u-in-reply-to" href="'.$post->get('in-reply-to').'">'.$post->get('in-reply-to')."</a>";
+        }
+        if ($post->get("like-of")) {
+            $out[] = 'likes <a class="u-like-of" href="'.$post->get('like-of').'">'.$post->get('like-of')."</a>";
+        }
+        if ($post->get("bookmark-of")) {
+            $out[] = '<a class="u-bookmark-of" href="'.$post->get('bookmark-of').'">'.$post->get('bookmark-of')."</a>";
+        }
+        $out[] = $this->renderContent($post);
+        return implode("", array_filter($out));
     }
 
     private function renderPhoto(PostViewModel $post)

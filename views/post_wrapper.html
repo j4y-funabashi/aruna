@@ -1,50 +1,32 @@
 <div class="post h-entry base07-background">
 
-    {{ photo|raw }}
+    <div class="panel panel-default">
 
-    {% if post.get('summary') is not null %}
-    <div class="post--pad">
-        <p>{{ post.get('summary') }} </p>
-    </div>
-    {% endif %}
+        {{ photo|raw }}
 
-    {% if post.get('in-reply-to') is not null %}
-    <div class="post--pad">
-        <a class="u-in-reply-to" href="{{ post.get('in-reply-to') }}">{{ post.get('in-reply-to') }}</a>
-    </div>
-    {% endif %}
+        {% if body %}
+        <div class="panel-body">
+            {{ body|raw }}
+        </div>
+        {% endif %}
 
-    {% if post.get('like-of') is not null %}
-    <div class="post--pad">
-        likes <a class="u-like-of" href="{{ post.get('like-of') }}">{{ post.get('like-of') }}</a>
-    </div>
-    {% endif %}
+        <div class="panel-footer">
+            <div class="post--meta">
 
-    {% if post.get('bookmark-of') is not null %}
-    <div class="post--pad">
-        <a class="u-bookmark-of" href="{{ post.get('bookmark-of') }}">{{ post.get('bookmark-of') }}</a>
-    </div>
-    {% endif %}
+                <div class="">
+                    {{ category|raw }}
+                </div>
 
-    {% if content is not null %}
-    <div class="post--pad">
-        {{ content|raw }}
-    </div>
-    {% endif %}
+                <div class="">
+                    <a class="u-url u-uid" href="{{ url }}">
+                        <time class="dt-published" datetime="{{ post.published() }}">{{ post.publishedHuman() }}</time>
+                    </a>
+                    <a href="https://brid.gy/publish/facebook"></a>
+                    <a class="u-author" href="https://j4y.co/"></a>
+                </div>
 
-    <div class="post--meta base07-background post--pad">
-        <div class="row">
-            <div class="col-xs-6">
-                <a class="u-url u-uid" href="{{ url }}">
-                    <time class="dt-published" datetime="{{ post.published() }}">{{ post.publishedHuman() }}</time>
-                </a>
-                <a href="https://brid.gy/publish/facebook"></a>
-                <a class="u-author" href="https://j4y.co/"></a>
-            </div>
-            <div class="col-xs-6 text-right">
-                {{ category|raw }}
             </div>
         </div>
-    </div>
 
+    </div>
 </div>

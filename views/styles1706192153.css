@@ -1,5 +1,4 @@
 body {
-    font-size: 18px;
     padding-top: 70px;
 }
 p {
@@ -32,11 +31,9 @@ a:hover {
     padding: 0.2em 0.4em 0.3em 0.4em;
 }
 .post--meta {
-    line-height: 0.9em;
 }
 .post--meta * {
     color: #c5c8c6;
-    font-size: 0.9em;
     font-weight: normal;
 }
 
