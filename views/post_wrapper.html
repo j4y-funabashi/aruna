@@ -2,13 +2,13 @@
 
     <div class="panel panel-default">
 
-        {{ photo|raw }}
-
         {% if header %}
         <div class="panel-heading">
             {{ header|raw }}
         </div>
         {% endif %}
+
+        {{ photo|raw }}
 
         {% if body %}
         <div class="panel-body">
@@ -18,19 +18,10 @@
 
         <div class="panel-footer">
             <div class="post--meta">
-
-                <div class="">
-                    {{ category|raw }}
-                </div>
-
-                <div class="">
-                    <a class="u-url u-uid" href="{{ url }}">
-                        <time class="dt-published" datetime="{{ post.published() }}">{{ post.publishedHuman() }}</time>
-                    </a>
-                    <a href="https://brid.gy/publish/facebook"></a>
-                    <a class="u-author" href="https://j4y.co/"></a>
-                </div>
-
+                {{ category|raw }}
+                {{ url|raw }}
+                <a href="https://brid.gy/publish/facebook"></a>
+                <a class="u-author" href="https://j4y.co/"></a>
             </div>
         </div>
 

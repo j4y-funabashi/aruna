@@ -18,7 +18,7 @@ abstract class Responder
     public function __construct(
         Response $response,
         $view,
-        $postRenderer
+        RenderPost $postRenderer
     ) {
         $this->response = $response;
         $this->view = $view;

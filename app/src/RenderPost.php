@@ -27,12 +27,11 @@ class RenderPost
         return $this->view->render(
             "post_wrapper.html",
             array(
-                "post" => $post,
-                "url" => $this->renderUrl($post),
                 "body" => $this->renderBody($post),
                 "header" => $this->renderHeader($post),
-                "category" => $this->renderCategory($post->category()),
-                "photo" => $this->renderPhoto($post)
+                "photo" => $this->renderPhoto($post),
+                "url" => $this->renderUrl($post),
+                "category" => $this->renderCategory($post->category())
             )
         );
     }
@@ -99,7 +98,9 @@ class RenderPost
 
     private function renderUrl(PostViewModel $post)
     {
-        return "/p/".$post->get('uid');
+        return '<a class="u-url u-uid" href="/p/'.$post->get('uid').'">
+                    <time class="dt-published" datetime="'.$post->published().'">'.$post->publishedHuman().'</time>
+                </a>';
     }
 
     private function renderContent(PostViewModel $post)
