@@ -38,7 +38,7 @@ class UploadMediaHandler
             $files = $this->postRepository->saveMediaFiles([[$command->getFile()]]);
             $out = [
                 "location" => $this->base_url.$files[0][0],
-                "body" => $this->getFileMetadata($command->getFile())
+                "body" => array_filter($this->getFileMetadata($command->getFile()))
             ];
             return new OK($out);
         } catch (\Exception $e) {
@@ -53,8 +53,7 @@ class UploadMediaHandler
         $mime_type = mime_content_type($file->getRealPath());
         if (isset($this->extractors[$mime_type])) {
             $extractor = $this->extractors[$mime_type];
-            $out = $extractor->__invoke($file);
+            return $extractor->__invoke($file);
         }
-        return $out;
     }
 }
