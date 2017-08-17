@@ -190,6 +190,18 @@ class PostRepositoryReader
         return $out;
     }
 
+    public function fetchPaginatedData()
+    {
+        $q = "SELECT post FROM posts ORDER BY id DESC LIMIT 50";
+        $r = $this->db->prepare($q);
+        $r->execute();
+        $out = [];
+        while ($post = $r->fetch()) {
+            $out[] = json_decode($post['post'], true);
+        }
+        return $out;
+    }
+
     public function fetchDataById($post_id)
     {
         $q = "SELECT post FROM posts WHERE id = :id";
