@@ -190,14 +190,14 @@ class PostRepositoryReader
         return $out;
     }
 
-    public function fetchPaginatedData()
+    public function fetchPaginatedData($limit)
     {
-        $q = "SELECT post FROM posts ORDER BY id DESC LIMIT 50";
+        $q = "SELECT * FROM posts ORDER BY id DESC LIMIT :limit";
         $r = $this->db->prepare($q);
-        $r->execute();
+        $r->execute([":limit" => $limit]);
         $out = [];
         while ($post = $r->fetch()) {
-            $out[] = json_decode($post['post'], true);
+            $out[] = new \Aruna\PostViewModel(json_decode($post['post'], true));
         }
         return $out;
     }

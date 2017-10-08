@@ -52,7 +52,13 @@ class QueryHandler
     private function getPostSource($post_id, $properties)
     {
         if ($post_id === "") {
-            return $this->postRepository->fetchPaginatedData();
+            return [
+                "items" => $this->postRepository->fetchPaginatedData(10),
+                "rels" => [
+                    "prev" => [],
+                    "next" => []
+                ]
+            ];
         }
         return $this->filterProperties->__invoke(
             $this->postRepository->fetchDataById($post_id),

@@ -6,7 +6,7 @@ namespace Aruna;
  * Class PostViewModel
  * @author yourname
  */
-class PostViewModel
+class PostViewModel implements \JsonSerializable
 {
     private $mf_array;
     private $entry;
@@ -19,6 +19,12 @@ class PostViewModel
         $this->mf_array = $mf_array;
         $this->entry = $mf_array;
         $this->date_deleted = $date_deleted;
+    }
+
+    public function jsonSerialize()
+    {
+        $this->mf_array['properties']['url'] = [$this->url()];
+        return $this->mf_array;
     }
 
     public function toJson()

@@ -34,6 +34,9 @@ class ProcessingPipelineFactory
                         new CleanupPhotoUrl($this->app['media_endpoint'])
                     )
                     ->pipe(
+                        new CleanupAuthor()
+                    )
+                    ->pipe(
                         new CacheTags(
                         )
                     )

@@ -11,5 +11,6 @@ class QueryResponder extends Responder
     public function ok()
     {
         $this->response = new JsonResponse($this->payload->get("body"));
+        $this->response->setEncodingOptions(JSON_PRETTY_PRINT);
     }
 }
