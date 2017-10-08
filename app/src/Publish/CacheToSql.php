@@ -23,6 +23,7 @@ class CacheToSql
                 $r = $this->db->prepare($sql_statement[0]);
                 $r->execute($sql_statement[1]);
             }
+            unset($post['sql_statements']);
         }
 
         $q = "REPLACE INTO posts (id, published, post, type)
